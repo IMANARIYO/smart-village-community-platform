@@ -1,0 +1,85 @@
+smart-village/
+├─ public/
+│  ├─ favicon.ico
+│  └─ images/
+├─ src/
+│  ├─ assets/                # Static assets: images, icons, fonts
+│  ├─ components/            # Reusable UI components
+│  │  ├─ Button.tsx
+│  │  ├─ Card.tsx
+│  │  ├─ Modal.tsx
+│  │  ├─ Navbar.tsx
+│  │  └─ OfflineBanner.tsx   # For offline-first support
+│  ├─ features/              # Feature-based folders
+│  │  ├─ residents/
+│  │  │  ├─ components/      # Resident-specific UI: ResidentCard, VisitorList
+│  │  │  ├─ pages/
+│  │  │  │  ├─ ResidentSignup.tsx
+│  │  │  │  ├─ VisitorRegistration.tsx
+│  │  │  │  └─ ResidentDashboard.tsx
+│  │  │  ├─ service.ts       # API calls for residents/visitors
+│  │  │  └─ types.ts
+│  │  ├─ newsFeed/
+│  │  │  ├─ components/      # PostCard, CommentList
+│  │  │  ├─ pages/NewsFeed.tsx
+│  │  │  ├─ service.ts       # API calls, moderation
+│  │  │  └─ types.ts
+│  │  ├─ events/
+│  │  │  ├─ components/      # Calendar, EventCard
+│  │  │  ├─ pages/EventCalendar.tsx
+│  │  │  ├─ service.ts
+│  │  │  └─ types.ts
+│  │  ├─ contacts/
+│  │  │  ├─ components/      # ContactCard
+│  │  │  ├─ pages/Contacts.tsx
+│  │  │  ├─ service.ts
+│  │  │  └─ types.ts
+│  │  ├─ suggestions/
+│  │  │  ├─ components/      # SuggestionForm, SuggestionList
+│  │  │  ├─ pages/SuggestionBox.tsx
+│  │  │  ├─ service.ts
+│  │  │  └─ types.ts
+│  │  ├─ volunteering/
+│  │  │  ├─ components/      # SkillCard, VolunteerBoard
+│  │  │  ├─ pages/Volunteering.tsx
+│  │  │  ├─ service.ts
+│  │  │  └─ types.ts
+│  │  ├─ incidents/
+│  │  │  ├─ components/      # IncidentCard, ReportForm
+│  │  │  ├─ pages/Incidents.tsx
+│  │  │  ├─ service.ts
+│  │  │  └─ types.ts
+│  │  ├─ emergency/
+│  │  │  ├─ components/      # AlertCard, PushNotification
+│  │  │  ├─ pages/Emergency.tsx
+│  │  │  ├─ service.ts
+│  │  │  └─ types.ts
+│  │  └─ i18n/
+│  │     └─ translations.ts  # Multilingual support
+│  ├─ layouts/               # Layouts like DashboardLayout, AuthLayout
+│  ├─ pages/                 # Top-level pages
+│  │  ├─ Home.tsx
+│  │  ├─ Login.tsx
+│  │  ├─ NotFound.tsx
+│  │  └─ Offline.tsx
+│  ├─ routes/                # React Router configuration
+│  │  └─ AppRoutes.tsx
+│  ├─ store/                 # Global state: residents, newsFeed, events, etc.
+│  │  ├─ residentStore.ts
+│  │  ├─ newsStore.ts
+│  │  └─ eventStore.ts
+│  ├─ hooks/                 # Custom hooks
+│  │  ├─ useOffline.ts
+│  │  ├─ useAuth.ts
+│  │  └─ useTranslation.ts
+│  ├─ utils/                 # Helper functions
+│  │  ├─ api.ts              # API helper
+│  │  ├─ formatDate.ts
+│  │  └─ offlineCache.ts
+│  ├─ types/                 # Global TypeScript types
+│  │  └─ index.ts
+│  ├─ App.tsx
+│  └─ index.tsx
+├─ tailwind.config.js
+├─ package.json
+└─ tsconfig.json
