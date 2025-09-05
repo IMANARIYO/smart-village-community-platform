@@ -1,0 +1,184 @@
+smart-village/
+├─ docs/                        
+│  ├─ ARCHITECTURE.md           # High-level architecture + offline/PWA diagrams
+│  ├─ API_CONTRACTS.md          # REST/OpenAPI contracts & example responses
+│  ├─ DESIGN_TOKENS.md          # Tailwind config, colors, spacing, typography
+│  ├─ COLLABORATION.md          # PR workflow, design handoff, testing checklist
+│  └─ OFFLINE_STRATEGY.md       # Cached resources, sync strategy, fallbacks
+├─ public/
+│  ├─ favicon.ico
+│  ├─ manifest.json             # PWA metadata
+│  ├─ service-worker.js         # Custom SW for caching & offline queue sync
+│  └─ images/
+├─ src/
+│  ├─ assets/                   # Icons, fonts, images
+│  ├─ components/               
+│  │  ├─ ui/                    # Atomic components: Button, Input, Modal, Card
+│  │  ├─ layout/                # Navbar, Sidebar, Footer, Header
+│  │  └─ feedback/              # Toast, OfflineBanner, ErrorBoundary
+│  ├─ features/                 
+│  │  ├─ residents/             
+│  │  │  ├─ components/         # ResidentCard, VisitorList, Forms
+│  │  │  ├─ pages/              # ResidentSignup.tsx, VisitorRegistration.tsx, ResidentDashboard.tsx
+│  │  │  ├─ service.ts          # API + offline queue handling
+│  │  │  ├─ store.ts            # Resident-specific state slice
+│  │  │  └─ types.ts            # Resident & Visitor interfaces, offline requests
+│  │  ├─ newsFeed/              
+│  │  │  ├─ components/         # PostCard, CommentList, ApprovalBadge
+│  │  │  ├─ pages/NewsFeed.tsx
+│  │  │  ├─ service.ts          # Fetch posts, moderate, offline queue
+│  │  │  ├─ store.ts            # newsSlice or Zustand slice
+│  │  │  └─ types.ts
+│  │  ├─ events/                
+│  │  │  ├─ components/         # EventCard, Calendar
+│  │  │  ├─ pages/EventCalendar.tsx
+│  │  │  ├─ service.ts          # Fetch events, offline queue
+│  │  │  ├─ store.ts            # eventSlice
+│  │  │  └─ types.ts
+│  │  ├─ contacts/              
+│  │  │  ├─ components/         # ContactCard, ClickToCallButton
+│  │  │  ├─ pages/Contacts.tsx
+│  │  │  ├─ service.ts
+│  │  │  ├─ store.ts            # cachedContactsSlice
+│  │  │  └─ types.ts
+│  │  ├─ suggestions/           
+│  │  │  ├─ components/         # SuggestionForm, SuggestionList
+│  │  │  ├─ pages/SuggestionBox.tsx
+│  │  │  ├─ service.ts          # Submit suggestions offline/online
+│  │  │  ├─ store.ts
+│  │  │  └─ types.ts
+│  │  ├─ volunteering/          
+│  │  │  ├─ components/         # VolunteerBoard, SkillCard
+│  │  │  ├─ pages/Volunteering.tsx
+│  │  │  ├─ service.ts
+│  │  │  ├─ store.ts
+│  │  │  └─ types.ts
+│  │  ├─ incidents/             
+│  │  │  ├─ components/         # IncidentCard, ReportForm
+│  │  │  ├─ pages/Incidents.tsx
+│  │  │  ├─ service.ts          # Offline queue for incident reports
+│  │  │  ├─ store.ts
+│  │  │  └─ types.ts
+│  │  ├─ emergency/             
+│  │  │  ├─ components/         # AlertCard, PushNotification
+│  │  │  ├─ pages/Emergency.tsx
+│  │  │  ├─ service.ts          # Fetch alerts, offline caching
+│  │  │  ├─ store.ts
+│  │  │  └─ types.ts
+│  │  └─ i18n/                  
+│  │     └─ translations.ts     # Language packs: EN, FR, KW
+│  ├─ layouts/                  
+│  │  ├─ DashboardLayout.tsx
+│  │  └─ AuthLayout.tsx
+│  ├─ pages/                    
+│  │  ├─ Home.tsx
+│  │  ├─ Login.tsx
+│  │  ├─ NotFound.tsx
+│  │  └─ Offline.tsx            # Show offline queued actions & cached content
+│  ├─ routes/                    
+│  │  └─ AppRoutes.tsx           # Nested, protected, role-based routes
+│  ├─ store/                    
+│  │  ├─ rootStore.ts            # Combines slices + offlineQueue
+│  │  ├─ offlineQueue.ts         # IndexedDB queue for offline actions
+│  │  └─ slices/
+│  │     ├─ residentSlice.ts
+│  │     ├─ newsSlice.ts
+│  │     ├─ eventSlice.ts
+│  │     ├─ contactSlice.ts
+│  │     ├─ suggestionSlice.ts
+│  │     ├─ incidentSlice.ts
+│  │     └─ emergencySlice.ts
+│  ├─ hooks/                    
+│  │  ├─ useOffline.ts           # Detect network changes, trigger sync
+│  │  ├─ useAuth.ts
+│  │  ├─ usePwaInstall.ts        # PWA install prompt
+│  │  └─ useTranslation.ts
+│  ├─ utils/                    
+│  │  ├─ api.ts                  # API client + offline handling
+│  │  ├─ offlineCache.ts         # IndexedDB/localStorage helpers
+│  │  ├─ notification.ts         # Local/push notifications
+│  │  └─ formatDate.ts
+│  ├─ types/
+│  │  └─ index.ts                # Global types
+│  ├─ App.tsx
+│  └─ index.tsx
+├─ tailwind.config.js
+├─ package.json
+├─ tsconfig.json
+└─ vite.config.ts / next.config.js
+
+
+
+
+src/features/residents/
+├─ components/                      # Reusable resident-related UI components
+│  ├─ ResidentCard.tsx              # Shows resident info (name, ID, status)
+│  ├─ VisitorList.tsx               # Lists visitors linked to a resident
+│  ├─ ResidentForm.tsx              # Form for creating/updating resident
+│  ├─ VisitorForm.tsx               # Form for adding visitor
+│  ├─ ApprovalBadge.tsx             # Moderator approval status indicator
+│  ├─ OfflineIndicator.tsx          # Shows offline queued actions
+│  └─ SkeletonLoader.tsx            # Placeholder while loading resident data
+│
+├─ pages/                           # Pages/routes for residents
+│  ├─ ResidentSignup.tsx            # Full signup form with validation
+│  ├─ VisitorRegistration.tsx       # Register a visitor linked to resident
+│  ├─ ResidentDashboard.tsx         # Shows resident summary, visitors, posts
+│  └─ ResidentDetails.tsx           # Detailed view of a single resident
+│
+├─ service.ts                        # API client + offline queue handling
+│  ├─ fetchResidents()              # GET /residents, with offline cache
+│  ├─ createResident()              # POST /residents, offline queue if offline
+│  ├─ updateResident()              # PUT /residents/:id, queue offline if needed
+│  ├─ fetchVisitors()               # GET /visitors?residentId=:id
+│  └─ addVisitor()                  # POST /visitors, offline support
+│
+├─ store.ts                          # Resident-specific state slice (Zustand or Context)
+│  ├─ residents: Resident[]         # List of residents
+│  ├─ visitors: Visitor[]           # List of visitors linked to residents
+│  ├─ loading: boolean              # Loading state for UI
+│  ├─ error: string | null          # Error messages
+│  ├─ addResident(resident)         # Action to add resident to store
+│  ├─ updateResident(resident)      # Action to update resident in store
+│  ├─ queueOfflineAction(action)    # Add failed actions to offline queue
+│  └─ syncOfflineQueue()            # Trigger service worker / manual sync
+│
+├─ types.ts                          # TypeScript interfaces & enums
+│  ├─ interface Resident {          # Resident structure
+│  │    id: string                   # UUID
+│  │    slug: string                 # Unique slug
+│  │    name: string
+│  │    phone: string
+│  │    approved: boolean
+│  │    createdAt: string
+│  │    updatedAt: string
+│  │  }
+│  ├─ interface Visitor {           # Visitor structure
+│  │    id: string
+│  │    residentId: string
+│  │    name: string
+│  │    visitDate: string
+│  │  }
+│  └─ interface OfflineAction {     # Offline queued request
+│       id: string
+│       type: 'CREATE_RESIDENT' | 'UPDATE_RESIDENT' | 'ADD_VISITOR'
+│       payload: any
+│       timestamp: number
+│     }
+│
+├─ utils/
+│  ├─ residentValidators.ts         # Form validations (Zod)
+│  ├─ residentMapper.ts             # Map API response to Resident/Visitor types
+│  └─ offlineHelpers.ts             # IndexedDB helpers for resident actions
+│
+├─ hooks/
+│  ├─ useResident.ts                # Fetch, create, update residents & visitors
+│  ├─ useResidentForm.ts            # Handles form state & validation
+│  └─ useOfflineSync.ts             # Detect network & trigger offline queue
+│
+└─ __tests__/                       # Unit & integration tests
+   ├─ ResidentCard.test.tsx
+   ├─ ResidentForm.test.tsx
+   ├─ VisitorForm.test.tsx
+   ├─ service.test.ts
+   └─ store.test.ts
