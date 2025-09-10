@@ -1,17 +1,18 @@
+import './App.css';
+import AppRoutes from './routes/AppRoutes';
+import { LanguageProvider } from './features/i18n/LanguageProvider';
+import NyarucyamoVillage from './pages/LandingPage';
 
-
-import './App.css'
 
 function App() {
-
-
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-    </>
-  )
+    <LanguageProvider>
+      <div className="w-screen h-screen overflow-x-hidden">
+        <NyarucyamoVillage />
+        <AppRoutes />
+      </div>
+    </LanguageProvider>
+  );
 }
 
-export default App
+export default App;
