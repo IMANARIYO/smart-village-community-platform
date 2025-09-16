@@ -47,7 +47,7 @@ export function SignupForm() {
   }
 
   const handleSubmit = () => {
-    // Handle form submission
+
     console.log("Form submitted:", formData)
   }
 

@@ -2,6 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../features/auth/login/page';
 import SignupPage from '../features/auth/signup/page';
+import VillagePage from '../pages/VillagePage';
+import VillageNewsPage from '../features/newsFeed/pages/VillageNewsPage';
+import VolunteeringEvents from '../features/volunteering/pages/VolunteeringEvents ';
+import EmergencyContacts from '../features/emergencies/pages/Emergency';
 
 // import LoginPage from './pages/LoginPage';
 // import SignupPage from './pages/SignupPage';
@@ -29,6 +33,11 @@ export default function AppRouter() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/auth/login" element={<LoginPage />} />
                 <Route path="/auth/signup" element={<SignupPage />} />
+                <Route path="/visitVillage/:villageId" element={<VillagePage />} />
+                <Route path="/news" element={<VillageNewsPage />} />
+                <Route path="/VolunteeringEvents" element={<VolunteeringEvents />} />
+                <Route path="/EmergencyContacts" element={<EmergencyContacts />} />
+
 
                 {/*
         

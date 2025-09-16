@@ -1,5 +1,11 @@
+
+
 import React, { useState } from 'react';
-import { Calendar, Users, Phone, Bell, Lock, Shield, UserCheck, ChevronRight } from 'lucide-react';
+import { Calendar, Users, Phone, Bell, Lock, Shield, UserCheck, ChevronRight, Eye, MessageSquareMore, MapPin } from 'lucide-react';
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Separator } from '../components/ui/separator';
+import { Button } from '../components/ui/button';
+import { Link } from 'react-router-dom';
 
 interface StatCardProps {
     icon: React.ReactNode;
@@ -13,6 +19,8 @@ interface QuickLinkProps {
     title: string;
     description: string;
     count: string;
+    href: string;
+    bgColor?: string;
     trending?: boolean;
     featured?: boolean;
     priority?: boolean;
@@ -30,10 +38,11 @@ interface EventProps {
     description: string;
     date: string;
     location: string;
+    volunteers: string;
     status: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ icon, value, label, color }) => (
+const StatCard = ({ icon, value, label, color }: StatCardProps) => (
     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
         <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg mb-4 ${color}`}>
             {icon}
@@ -43,91 +52,95 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, label, color }) => (
     </div>
 );
 
-const QuickLink: React.FC<QuickLinkProps> = ({ icon, title, description, count, trending, featured, priority }) => (
-    <div className="relative bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden">
+const QuickLink = ({ icon, bgColor, title, description, count, trending, featured, priority, href }: QuickLinkProps) => (
+    <div className={`relative bg-${bgColor} rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden`}>
+        <div className="absolute top-2 right-2 w-22 h-22 rounded-full bg-transparent opacity-10 border border-red-700" />
+        <div className="absolute bottom-2 left-2 w-20 h-20 rounded-full border border-red-700 opacity-10" />
 
-        <div className="absolute top-2 right-2 w-22 h-22 rounded-full bg-transparent opacity-10 border border-red-700 " />
-
-        <div className="absolute bottom-0 right-0 w-24 h-24 rounded-full bg-gray-800 opacity-20" />
-        <div className="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-gray-800 opacity-20" />
-
-        {/* Content */}
         <div className="flex items-start justify-between mb-4 relative z-10">
             <div
                 className={`p-3 rounded-lg ${trending
-                    ? "bg-green-100 text-green-600"
+                    ? 'bg-green-100 text-green-600'
                     : featured
-                        ? "bg-yellow-100 text-yellow-600"
+                        ? 'bg-yellow-100 text-yellow-600'
                         : priority
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-gray-100 text-gray-600"
+                            ? 'bg-blue-100 text-blue-600'
+                            : 'bg-gray-100 text-gray-600'
                     }`}
             >
                 {icon}
             </div>
-            {trending && (
-                <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                    Trending
-                </span>
-            )}
-            {featured && (
-                <span className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">
-                    Features
-                </span>
-            )}
-            {priority && (
-                <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                    Priority
-                </span>
-            )}
+            {trending && <span className="text-xs bg-primary-light text-green-600 px-2 py-1 rounded-full">Trending</span>}
+            {featured && <span className="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">Features</span>}
+            {priority && <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Priority</span>}
         </div>
 
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 relative z-10">
-            {title}
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 relative z-10">{title}</h3>
         <p className="text-gray-600 text-sm mb-4 relative z-10">{description}</p>
         <div className="flex items-center justify-between relative z-10">
             <span className="text-sm text-gray-500">{count}</span>
-            <ChevronRight className="w-5 h-5 text-gray-400" />
+            <Link to={href}>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+            </Link>
         </div>
     </div>
-)
-
+);
 
 const AnnouncementCard: React.FC<AnnouncementProps> = ({ title, description, date, views }) => (
-    <div className="bg-white p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors cursor-pointer">
+    <div className="bg-primary-light p-4 rounded-lg border-2 border-primary-light-hover transition-colors cursor-pointer">
         <div className="flex justify-between items-start mb-2">
             <h4 className="font-semibold text-gray-900">{title}</h4>
             <span className="text-xs text-gray-500">{date}</span>
         </div>
         <p className="text-gray-600 text-sm mb-3">{description}</p>
         <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">{views}</span>
-            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+            <span className="text-xs text-gray-500 flex gap-2 items-center"><Eye className="w-4 h-4" />{views}</span>
+            <button className="text-sm text-primary-dark hover:text-primary-dark-hover font-medium">
                 Read More →
             </button>
         </div>
     </div>
 );
 
-const EventCard: React.FC<EventProps> = ({ title, description, date, location, status }) => (
-    <div className="bg-white p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
-        <div className="flex justify-between items-start mb-2">
-            <h4 className="font-semibold text-gray-900">{title}</h4>
-            <span className={`text-xs px-2 py-1 rounded-full ${status === 'Active' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
-                }`}>
-                {status}
-            </span>
-        </div>
-        <p className="text-gray-600 text-sm mb-3">{description}</p>
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-            <span>{date}</span>
-            <span>{location}</span>
-        </div>
-        <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
-            Join Event
-        </button>
-    </div>
+const EventCard: React.FC<EventProps> = ({ title, description, date, location, volunteers }) => (
+    <Card className="border border-yellow-200 hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+            <div className="flex items-start justify-between">
+                <div className="flex-1">
+                    <CardTitle className="text-yellow-600 text-lg mb-2">
+                        {title}
+                    </CardTitle>
+                    <CardDescription className="text-gray-700 text-sm leading-relaxed">
+                        {description}
+                    </CardDescription>
+                </div>
+                <div className="ml-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
+                        {volunteers}
+                    </span>
+                </div>
+            </div>
+        </CardHeader>
+
+        <CardContent className="pt-0">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-gray-600">
+                    <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        <span className="text-sm">{date}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">{location}</span>
+                    </div>
+                </div>
+
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2">
+                    Join Event
+                </Button>
+            </div>
+        </CardContent>
+    </Card>
 );
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; locked?: boolean }> = ({ icon, title, locked }) => (
@@ -143,7 +156,7 @@ const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; locked?: boo
     </div>
 );
 
-export default function NyarucyamoVillage() {
+export default function VillagePage() {
     const [isSignedIn, setIsSignedIn] = useState(false);
 
     const stats = [
@@ -151,30 +164,6 @@ export default function NyarucyamoVillage() {
         { icon: <Bell className="w-6 h-6" />, value: "12", label: "Announcements", color: "bg-green-600" },
         { icon: <Calendar className="w-6 h-6" />, value: "8", label: "Events", color: "bg-yellow-600" },
         { icon: <Shield className="w-6 h-6" />, value: "Excellent", label: "Safety Level", color: "bg-purple-600" }
-    ];
-
-    const quickLinks = [
-        {
-            icon: <Bell className="w-6 h-6" />,
-            title: "News",
-            description: "Stay updated with the latest community announcements and important news",
-            count: "8 records",
-            trending: true
-        },
-        {
-            icon: <Calendar className="w-6 h-6" />,
-            title: "Events",
-            description: "Stay updated with the latest community announcements and important news",
-            count: "12 Active",
-            featured: true
-        },
-        {
-            icon: <Phone className="w-6 h-6" />,
-            title: "Contacts",
-            description: "Stay updated with the latest community announcements and important news",
-            count: "24/7 Available",
-            priority: true
-        }
     ];
 
     const announcements = [
@@ -185,10 +174,10 @@ export default function NyarucyamoVillage() {
             views: "243 Views"
         },
         {
-            title: "Umuganda Day: Community Cleanup",
-            description: "Join us this Saturday for a neighborhood cleanup initiative. We'll be cleaning streets, parks, and common areas.",
-            date: "2025-08-04",
-            views: "243 Views"
+            title: "Water Supply Maintenance",
+            description: "Scheduled water maintenance from 9 AM to 3 PM on Sunday. Please store water in advance.",
+            date: "2025-08-03",
+            views: "156 Views"
         }
     ];
 
@@ -196,21 +185,23 @@ export default function NyarucyamoVillage() {
         {
             title: "Tree Planting Drive",
             description: "Help us plant 100 trees in the neighborhood to improve air quality and create a greener environment.",
-            date: "2025-08-04",
+            date: "2025-01-04",
             location: "Youth Center",
+            volunteers: "15/30 Volunteers",
             status: "Active"
         },
         {
             title: "Youth Mentorship Program",
             description: "Volunteer to mentor young people in the community and help them develop new skills.",
-            date: "2025-08-04",
+            date: "2025-01-04",
             location: "Youth Center",
+            volunteers: "12/25 Volunteers",
             status: "Active"
         }
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-background-normal">
             {/* Header */}
             <header className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -241,7 +232,18 @@ export default function NyarucyamoVillage() {
 
             {/* Hero Section */}
             <section className="relative bg-gradient-to-br from-green-600 via-blue-600 to-purple-600 py-20">
-                <div className="absolute inset-0 bg-black/20"></div>
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backgroundImage: "url('/imgs/homeBackGround.png')",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                        backgroundAttachment: "fixed",
+                        backgroundPosition: "top",
+                    }}
+                ></div>
+                <div className='absolute inset-0 bg-[linear-gradient(270deg,rgba(46,125,50,0.7)_0%,rgba(25,118,210,0.7)_50%,rgba(46,125,50,0.7)_100%)]' />
+
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <div className="text-yellow-400 text-sm font-medium mb-4">🏘️ Smart Community Platform</div>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
@@ -260,8 +262,8 @@ export default function NyarucyamoVillage() {
                 </div>
             </section>
 
-            {/* Quick Links */}
-            <section className="py-16 bg-white">
+            {/* Quick Links Section */}
+            <section className="py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold text-gray-900 mb-4">Quick Links</h2>
@@ -269,69 +271,102 @@ export default function NyarucyamoVillage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {quickLinks.map((link, index) => (
+                        {[
+                            {
+                                icon: <Bell className="w-6 h-6" />,
+                                title: "News",
+                                description: "Stay updated with the latest community announcements and important news",
+                                count: "8 records",
+                                href: "/news",
+                                bgColor: "primary-light",
+                                trending: true
+                            },
+                            {
+                                icon: <Calendar className="w-6 h-6" />,
+                                title: "Events",
+                                description: "Stay updated with the latest community announcements and important news",
+                                count: "12 Active",
+                                href: "/VolunteeringEvents",
+                                bgColor: "secondary-light-hover",
+                                featured: true
+                            },
+                            {
+                                bgColor: "accent-light",
+                                icon: <Phone className="w-6 h-6" />,
+                                title: "Contacts",
+                                href: "/EmergencyContacts",
+                                description: "Stay updated with the latest community announcements and important news",
+                                count: "24/7 Available",
+                                priority: true
+                            }
+                        ].map((link, index) => (
                             <QuickLink key={index} {...link} />
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Main Content */}
+            {/* Main Content Section */}
             <section className="py-16 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Left Column - Announcements & Events */}
+                        {/* Main Content */}
                         <div className="lg:col-span-2 space-y-8">
-                            {/* Latest Announcements */}
-                            <div>
-                                <div className="flex items-center justify-between mb-6">
+                            {/* Announcements */}
+                            <Card className='border-none bg-primary-light'>
+                                <CardHeader>
                                     <div className="flex items-center space-x-3">
                                         <div className="bg-green-600 p-2 rounded-lg">
-                                            <Bell className="w-5 h-5 text-white" />
+                                            <MessageSquareMore className="w-5 h-5 text-white" />
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-bold text-gray-900">Latest Announcements</h3>
-                                            <p className="text-sm text-gray-600">Stay informed with community updates</p>
+                                            <CardTitle className="text-xl font-bold text-gray-900">Latest Announcements</CardTitle>
+                                            <CardDescription className="text-sm text-gray-600">Stay informed with community updates</CardDescription>
                                         </div>
                                     </div>
-                                    <button className="text-green-600 hover:text-green-700 font-medium">
-                                        View All →
-                                    </button>
-                                </div>
+                                    {/* <CardAction className="text-green-600 hover:text-green-700 font-medium">View All →</CardAction> */}
 
-                                <div className="space-y-4">
+                                    <Link to="/VolunteeringEvents" >
+                                        <CardAction className="text-green-600 hover:text-green-700 font-medium">
+                                            View All →
+                                        </CardAction>
+                                    </Link>
+                                </CardHeader>
+                                <Separator className="!w-[94%] bg-primary-light-active mx-auto !h-0.5" />
+                                <CardContent className="space-y-4">
                                     {announcements.map((announcement, index) => (
                                         <AnnouncementCard key={index} {...announcement} />
                                     ))}
-                                </div>
-                            </div>
+                                </CardContent>
+                            </Card>
 
-                            {/* Volunteering Events */}
-                            <div>
-                                <div className="flex items-center justify-between mb-6">
+                            {/* Volunteering Events - Corrected Section */}
+                            <Card className="border-none bg-white">
+                                <CardHeader>
                                     <div className="flex items-center space-x-3">
                                         <div className="bg-yellow-500 p-2 rounded-lg">
                                             <Calendar className="w-5 h-5 text-white" />
                                         </div>
                                         <div>
-                                            <h3 className="text-xl font-bold text-gray-900">Volunteering Events</h3>
-                                            <p className="text-sm text-gray-600">Make a difference in your community</p>
+                                            <CardTitle className="text-xl font-bold text-gray-900">Volunteering Events</CardTitle>
+                                            <CardDescription className="text-sm text-gray-600">Make a difference in your community</CardDescription>
                                         </div>
                                     </div>
-                                    <button className="text-yellow-600 hover:text-yellow-700 font-medium">
-                                        View All →
-                                    </button>
-                                </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <Link to="/VolunteeringEvents">
+                                        <CardAction className="text-yellow-600 hover:text-yellow-700 font-medium">View All →</CardAction>
+                                    </Link>
+                                </CardHeader>
+                                <Separator className="!w-[94%] bg-gray-200 mx-auto !h-0.5" />
+                                <CardContent className="space-y-4">
                                     {events.map((event, index) => (
                                         <EventCard key={index} {...event} />
                                     ))}
-                                </div>
-                            </div>
+                                </CardContent>
+                            </Card>
                         </div>
 
-                        {/* Right Column - Sign In & Features */}
+                        {/* Sidebar */}
                         <div className="space-y-6">
                             {/* Sign In Card */}
                             {!isSignedIn && (
@@ -352,7 +387,7 @@ export default function NyarucyamoVillage() {
                                 </div>
                             )}
 
-                            {/* Features List */}
+                            {/* Features Card */}
                             <div className="bg-white rounded-xl p-6 shadow-sm">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4">🔓 Unlock Features</h3>
                                 <div className="space-y-3">

@@ -1,24 +1,82 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-refresh/only-export-components */
 "use client";
 
-import { useState } from "react";
-import { Menu, X, ChevronDown, Globe } from "lucide-react";
-import { Link } from "react-router-dom";
-import MyButton from "./MyButton";
+import { Link, useLocation } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import { useLanguage } from "../features/i18n/useLanguage";
-import { translations } from "../features/i18n/translations"; // your translations object
+import { translations } from "../features/i18n/translations";
+import { LanguageSelector } from "./LanguageSelector";
+import VillageSelectingDialog from "../features/homePages/components/VillageSelectingDialog";
+import { MobileSheet } from "./MobileSheet";
+import { useEffect, useState } from "react";
+export function useActiveSection(ids: string[]) {
+    const [active, setActive] = useState<string>("");
 
-export function Navigation() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActive(entry.target.id);
+                    }
+                });
+            },
+            { rootMargin: "-30% 0px -60% 0px", threshold: 0.1 }
+        );
 
-    const { language, setLanguage } = useLanguage();
-    const langs = ["English", "Kinyarwanda", "Français"];
+        ids.forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
+        });
 
-    const t = translations[language]; // current translation set
+        return () => observer.disconnect();
+    }, [ids]);
+
+    return active;
+}
+function NavLinks({ links, activeClass, baseClass }: {
+    links: { id: string; label: string; to: string }[];
+    activeClass: string;
+    baseClass: string;
+}) {
+    const location = useLocation();
+    const current = location.hash || location.pathname;
 
     return (
-        <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <>
+            {links.map((link) => {
+                const isActive =
+                    (link.to === "/home" && current === "/home") ||
+                    (link.to.startsWith("#") && current === link.to);
+
+                return (
+                    <HashLink
+                        key={link.id}
+                        to={link.to}
+                        className={`${baseClass} ${isActive ? activeClass : "hover:text-green-600"
+                            }`}
+                    >
+                        {link.label}
+                    </HashLink>
+                );
+            })}
+        </>
+    );
+}
+
+export function Navigation() {
+    const { language } = useLanguage();
+    const t = translations[language];
+
+    const navLinks = [
+        { id: "home", label: t.home, to: "/" },
+        { id: "features", label: t.features, to: "#features" },
+        { id: "about", label: t.about, to: "#about" },
+        { id: "contact", label: t.contact, to: "#contact" },
+    ];
+
+    return (
+        <nav className="bg-white border-b border-gray-200 fixed top-0 z-50 w-full">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
@@ -32,151 +90,36 @@ export function Navigation() {
                         </Link>
                     </div>
 
-                    {/* Desktop Navigation */}
+                    {/* Desktop nav */}
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-8">
-                            <Link
-                                to="/"
-                                className="text-gray-900 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors"
-                            >
-                                {t.home}
-                            </Link>
-                            <Link
-                                to="#features"
-                                className="text-gray-900 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors"
-                            >
-                                {t.features}
-                            </Link>
-                            <Link
-                                to="#about"
-                                className="text-gray-900 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors"
-                            >
-                                {t.about}
-                            </Link>
-                            <Link
-                                to="#contact"
-                                className="text-gray-900 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors"
-                            >
-                                {t.contact}
-                            </Link>
+                            <NavLinks
+                                links={navLinks}
+                                baseClass="px-3 py-2 text-sm font-medium transition-colors text-gray-900"
+                                activeClass="text-green-700 font-semibold border-b-2 border-green-600"
+                            />
                         </div>
                     </div>
 
-                    {/* Language Selector & CTA */}
+                    {/* Desktop extras */}
                     <div className="hidden md:flex items-center space-x-4">
-                        <div className="relative">
-                            <button
-                                onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-                                className="flex items-center space-x-1 text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors"
-                            >
-                                <Globe className="w-4 h-4" />
-                                <span>{language}</span>
-                                <ChevronDown className="w-4 h-4" />
-                            </button>
-
-                            {isLanguageOpen && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                                    {langs.map((lang) => (
-                                        <button
-                                            key={lang}
-                                            onClick={() => {
-                                                setLanguage(lang as any);
-                                                setIsLanguageOpen(false);
-                                            }}
-                                            className={`block px-4 py-2 text-sm w-full text-left transition-colors ${language === lang
-                                                ? "bg-green-100 text-green-800 font-semibold"
-                                                : "text-gray-700 hover:bg-gray-100"
-                                                }`}
-                                        >
-                                            {lang}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        <Link to="/auth/login">
-                            <MyButton
-                                className="text-white font-medium px-6"
-                                style={{ backgroundColor: "#2E7D32" }}
-                            >
-                                {t.visitCommunity}
-                            </MyButton>
-                        </Link>
+                        <LanguageSelector />
+                        <VillageSelectingDialog />
                     </div>
 
-                    {/* Mobile menu button */}
+                    {/* Mobile nav */}
                     <div className="md:hidden">
-                        <MyButton
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="text-gray-700 hover:text-green-600 p-2"
-                        >
-                            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                        </MyButton>
+                        <MobileSheet title="Smart Village">
+                            <NavLinks
+                                links={navLinks}
+                                baseClass="block text-base font-medium text-gray-900 transition-colors"
+                                activeClass="bg-green-100 text-green-700 rounded-md px-3 py-2"
+                            />
+                            <LanguageSelector />
+                            <VillageSelectingDialog />
+                        </MobileSheet>
                     </div>
                 </div>
-
-                {/* Mobile Navigation */}
-                {isMenuOpen && (
-                    <div className="md:hidden">
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-                            <Link
-                                to="/"
-                                className="text-gray-900 hover:text-green-600 block px-3 py-2 text-base font-medium"
-                            >
-                                {t.home}
-                            </Link>
-                            <Link
-                                to="#features"
-                                className="text-gray-900 hover:text-green-600 block px-3 py-2 text-base font-medium"
-                            >
-                                {t.features}
-                            </Link>
-                            <Link
-                                to="#about"
-                                className="text-gray-900 hover:text-green-600 block px-3 py-2 text-base font-medium"
-                            >
-                                {t.about}
-                            </Link>
-                            <Link
-                                to="#contact"
-                                className="text-gray-900 hover:text-green-600 block px-3 py-2 text-base font-medium"
-                            >
-                                {t.contact}
-                            </Link>
-
-                            {/* Mobile language selector */}
-                            <div className="px-3 py-2">
-                                {langs.map((lang) => (
-                                    <button
-                                        key={lang}
-                                        onClick={() => {
-                                            setLanguage(lang as any);
-                                            setIsMenuOpen(false);
-                                        }}
-                                        className={`block w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${language === lang
-                                            ? "bg-green-100 text-green-800 font-semibold"
-                                            : "text-gray-700 hover:bg-gray-100"
-                                            }`}
-                                    >
-                                        {lang}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div className="px-3 py-2">
-                                <Link to="/auth/login">
-                                    <MyButton
-                                        className="w-full text-white font-medium"
-                                        style={{ backgroundColor: "var(--smart-village-primary)" }}
-                                    >
-                                        {t.visitCommunity}
-                                    </MyButton>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
         </nav>
     );
