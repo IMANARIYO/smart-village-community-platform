@@ -9,6 +9,7 @@ export const translations = {
     chooseNeighborhood: "Choose your neighborhood to explore your community",
     getConnected: "Get connected with your urban community in Rwanda",
     district: "District",
+    province: "province",
     sector: "Sector",
     cell: "Cell",
     village: "Village",
@@ -27,6 +28,7 @@ export const translations = {
       "Hitamo umudugudu wawe kugirango usuzume umuryango wawe",
     getConnected: "Hura n'umuryango wawe w'umuturanyi mu Rwanda",
     district: "Akarere",
+    province: "intara",
     sector: "Umurenge",
     cell: "Akagari",
     village: "Umudugudu",
@@ -47,6 +49,7 @@ export const translations = {
     district: "District",
     sector: "Secteur",
     cell: "Cellule",
+    province: "province",
     village: "Village",
     enterCommunity: "Entrer dans la Communauté",
     discoverUpdates:

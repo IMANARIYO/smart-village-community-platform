@@ -1,236 +1,400 @@
-        @import "tailwindcss";
+      @import "tailwindcss";
+      @import "tw-animate-css";
+
+      @custom-variant dark (&:is(.dark *));
 
 
-        @layer base {
-          :root {
-            /* Primary Colors */
-            --primary-light: #eaf2eb;
-            --primary-light-hover: #e0ece0;
-            --primary-light-active: #bed7bf;
-            --primary-normal: #2e7d32;
-            --primary-normal-hover: #29712d;
-            --primary-normal-active: #256428;
-            --primary-dark: #235e26;
-            --primary-dark-hover: #1c4b1e;
-            --primary-dark-active: #153816;
-            --primary-darker: #102c12;
+      :root {
+        /* ---------------- Light Colors ---------------- */
+        --primary-light: #eaf2eb;
+        --primary-light-hover: #e0ece0;
+        --primary-light-active: #bed7bf;
 
-            /* Secondary Colors */
-            --secondary-light: #fff9ea;
-            --secondary-light-hover: #fef6e0;
-            --secondary-light-active: #feebbe;
-            --secondary-normal: #fbc02d;
-            --secondary-normal-hover: #e2ad29;
-            --secondary-normal-active: #c99a24;
-            --secondary-dark: #bc9022;
-            --secondary-dark-hover: #97731b;
-            --secondary-dark-active: #715614;
-            --secondary-darker: #584310;
+        --secondary-light: #fff9ea;
+        --secondary-light-hover: #fef6e0;
+        --secondary-light-active: #feebbe;
 
-            /* Accent Colors */
-            --accent-light: #e8f1fb;
-            --accent-light-hover: #ddeaf8;
-            --accent-light-active: #b8d5f1;
-            --accent-normal: #1976d2;
-            --accent-normal-hover: #176abd;
-            --accent-normal-active: #145ea8;
-            --accent-dark: #13599e;
-            --accent-dark-hover: #0f477e;
-            --accent-dark-active: #0b355e;
-            --accent-darker: #09294a;
+        --accent-light: #e8f1fb;
+        --accent-light-hover: #ddeaf8;
+        --accent-light-active: #b8d5f1;
 
-            /* Background Colors */
-            --background-light: #fefefe;
-            --background-light-hover: #fefefe;
-            --background-light-active: #fcfcfc;
-            --background-normal: #f5f5f5;
-            --background-normal-hover: #dddddd;
-            --background-normal-active: #c4c4c4;
-            --background-dark: #b8b8b8;
-            --background-dark-hover: #939393;
-            --background-dark-active: #6e6e6e;
-            --background-darker: #565656;
+        --background-light: #fefefe;
+        --background-light-hover: #fefefe;
+        --background-light-active: #fcfcfc;
 
-            /* Neutral Colors */
-            --neutral-light: #ebebeb;
-            --neutral-light-hover: #e0e0e0;
-            --neutral-light-active: #c0c0c0;
-            --neutral-normal: #333333;
-            --neutral-normal-hover: #2e2e2e;
-            --neutral-normal-active: #292929;
-            --neutral-dark: #262626;
-            --neutral-dark-hover: #1f1f1f;
-            --neutral-dark-active: #171717;
-            --neutral-darker: #121212;
+        --neutral-light: #ebebeb;
+        --neutral-light-hover: #e0e0e0;
+        --neutral-light-active: #c0c0c0;
 
-            /* Success Colors */
-            --success-light: #e9f8ec;
-            --success-light-hover: #def5e3;
-            --success-light-active: #baeac5;
-            --success-normal: #21ba45;
-            --success-normal-hover: #1ea73e;
-            --success-normal-active: #1a9537;
-            --success-dark: #198c34;
-            --success-dark-hover: #147029;
-            --success-dark-active: #0f541f;
-            --success-darker: #0c4118;
+        --success-light: #e9f8ec;
+        --success-light-hover: #def5e3;
+        --success-light-active: #baeac5;
 
-            /* Info Colors */
-            --info-light: #e9f3fa;
-            --info-light-hover: #deedf8;
-            --info-light-active: #bad9f0;
-            --info-normal: #2185d0;
-            --info-normal-hover: #1e78bb;
-            --info-normal-active: #1a6aa6;
-            --info-dark: #19649c;
-            --info-dark-hover: #14507d;
-            --info-dark-active: #0f3c5e;
-            --info-darker: #0c2f49;
+        --info-light: #e9f3fa;
+        --info-light-hover: #deedf8;
+        --info-light-active: #bad9f0;
 
-            /* Warning Colors */
-            --warning-light: #fff8e6;
-            --warning-light-hover: #fef5da;
-            --warning-light-active: #feebb2;
-            --warning-normal: #fbbd08;
-            --warning-normal-hover: #e2aa07;
-            --warning-normal-active: #c99706;
-            --warning-dark: #bc8e06;
-            --warning-dark-hover: #977105;
-            --warning-dark-active: #715504;
-            --warning-darker: #584203;
+        --warning-light: #fff8e6;
+        --warning-light-hover: #fef5da;
+        --warning-light-active: #feebb2;
 
-            /* Error Colors */
-            --error-light: #fbeaea;
-            --error-light-hover: #fadfdf;
-            --error-light-active: #f4bcbc;
-            --error-normal: #db2828;
-            --error-normal-hover: #c52424;
-            --error-normal-active: #af2020;
-            --error-dark: #a41e1e;
-            --error-dark-hover: #831818;
-            --error-dark-active: #631212;
-            --error-darker: #4d0e0e;
+        --error-light: #fbeaea;
+        --error-light-hover: #fadfdf;
+        --error-light-active: #f4bcbc;
 
-            /* Border radius */
-            --radius: 0.625rem;
-          }
+        /* ---------------- Normal Colors ---------------- */
+        --primary-normal: #2e7d32;
+        --primary-normal-hover: #29712d;
+        --primary-normal-active: #256428;
 
-          @theme {
-            /* Primary Colors */
-            --color-primary-light: var(--primary-light);
-            --color-primary-light-hover: var(--primary-light-hover);
-            --color-primary-light-active: var(--primary-light-active);
-            --color-primary-normal: var(--primary-normal);
-            --color-primary-normal-hover: var(--primary-normal-hover);
-            --color-primary-normal-active: var(--primary-normal-active);
-            --color-primary-dark: var(--primary-dark);
-            --color-primary-dark-hover: var(--primary-dark-hover);
-            --color-primary-dark-active: var(--primary-dark-active);
-            --color-primary-darker: var(--primary-darker);
+        --secondary-normal: #fbc02d;
+        --secondary-normal-hover: #e2ad29;
+        --secondary-normal-active: #c99a24;
 
-            /* Secondary Colors */
-            --color-secondary-light: var(--secondary-light);
-            --color-secondary-light-hover: var(--secondary-light-hover);
-            --color-secondary-light-active: var(--secondary-light-active);
-            --color-secondary-normal: var(--secondary-normal);
-            --color-secondary-normal-hover: var(--secondary-normal-hover);
-            --color-secondary-normal-active: var(--secondary-normal-active);
-            --color-secondary-dark: var(--secondary-dark);
-            --color-secondary-dark-hover: var(--secondary-dark-hover);
-            --color-secondary-dark-active: var(--secondary-dark-active);
-            --color-secondary-darker: var(--secondary-darker);
+        --accent-normal: #1976d2;
+        --accent-normal-hover: #176abd;
+        --accent-normal-active: #145ea8;
 
-            /* Accent Colors */
-            --color-accent-light: var(--accent-light);
-            --color-accent-light-hover: var(--accent-light-hover);
-            --color-accent-light-active: var(--accent-light-active);
-            --color-accent-normal: var(--accent-normal);
-            --color-accent-normal-hover: var(--accent-normal-hover);
-            --color-accent-normal-active: var(--accent-normal-active);
-            --color-accent-dark: var(--accent-dark);
-            --color-accent-dark-hover: var(--accent-dark-hover);
-            --color-accent-dark-active: var(--accent-dark-active);
-            --color-accent-darker: var(--accent-darker);
+        --background-normal: #f5f5f5;
+        --background-normal-hover: #dddddd;
+        --background-normal-active: #c4c4c4;
 
-            /* Background Colors */
-            --color-background-light: var(--background-light);
-            --color-background-light-hover: var(--background-light-hover);
-            --color-background-light-active: var(--background-light-active);
-            --color-background-normal: var(--background-normal);
-            --color-background-normal-hover: var(--background-normal-hover);
-            --color-background-normal-active: var(--background-normal-active);
-            --color-background-dark: var(--background-dark);
-            --color-background-dark-hover: var(--background-dark-hover);
-            --color-background-dark-active: var(--background-dark-active);
-            --color-background-darker: var(--background-darker);
+        --neutral-normal: #333333;
+        --neutral-normal-hover: #2e2e2e;
+        --neutral-normal-active: #292929;
 
-            /* Neutral Colors */
-            --color-neutral-light: var(--neutral-light);
-            --color-neutral-light-hover: var(--neutral-light-hover);
-            --color-neutral-light-active: var(--neutral-light-active);
-            --color-neutral-normal: var(--neutral-normal);
-            --color-neutral-normal-hover: var(--neutral-normal-hover);
-            --color-neutral-normal-active: var(--neutral-normal-active);
-            --color-neutral-dark: var(--neutral-dark);
-            --color-neutral-dark-hover: var(--neutral-dark-hover);
-            --color-neutral-dark-active: var(--neutral-dark-active);
-            --color-neutral-darker: var(--neutral-darker);
+        --success-normal: #21ba45;
+        --success-normal-hover: #1ea73e;
+        --success-normal-active: #1a9537;
 
-            /* Success Colors */
-            --color-success-light: var(--success-light);
-            --color-success-light-hover: var(--success-light-hover);
-            --color-success-light-active: var(--success-light-active);
-            --color-success-normal: var(--success-normal);
-            --color-success-normal-hover: var(--success-normal-hover);
-            --color-success-normal-active: var(--success-normal-active);
-            --color-success-dark: var(--success-dark);
-            --color-success-dark-hover: var(--success-dark-hover);
-            --color-success-dark-active: var(--success-dark-active);
-            --color-success-darker: var(--success-darker);
+        --info-normal: #2185d0;
+        --info-normal-hover: #1e78bb;
+        --info-normal-active: #1a6aa6;
 
-            /* Info Colors */
-            --color-info-light: var(--info-light);
-            --color-info-light-hover: var(--info-light-hover);
-            --color-info-light-active: var(--info-light-active);
-            --color-info-normal: var(--info-normal);
-            --color-info-normal-hover: var(--info-normal-hover);
-            --color-info-normal-active: var(--info-normal-active);
-            --color-info-dark: var(--info-dark);
-            --color-info-dark-hover: var(--info-dark-hover);
-            --color-info-dark-active: var(--info-dark-active);
-            --color-info-darker: var(--info-darker);
+        --warning-normal: #fbbd08;
+        --warning-normal-hover: #e2aa07;
+        --warning-normal-active: #c99706;
 
-            /* Warning Colors */
-            --color-warning-light: var(--warning-light);
-            --color-warning-light-hover: var(--warning-light-hover);
-            --color-warning-light-active: var(--warning-light-active);
-            --color-warning-normal: var(--warning-normal);
-            --color-warning-normal-hover: var(--warning-normal-hover);
-            --color-warning-normal-active: var(--warning-normal-active);
-            --color-warning-dark: var(--warning-dark);
-            --color-warning-dark-hover: var(--warning-dark-hover);
-            --color-warning-dark-active: var(--warning-dark-active);
-            --color-warning-darker: var(--warning-darker);
+        --error-normal: #db2828;
+        --error-normal-hover: #c52424;
+        --error-normal-active: #af2020;
 
-            /* Error Colors */
-            --color-error-light: var(--error-light);
-            --color-error-light-hover: var(--error-light-hover);
-            --color-error-light-active: var(--error-light-active);
-            --color-error-normal: var(--error-normal);
-            --color-error-normal-hover: var(--error-normal-hover);
-            --color-error-normal-active: var(--error-normal-active);
-            --color-error-dark: var(--error-dark);
-            --color-error-dark-hover: var(--error-dark-hover);
-            --color-error-dark-active: var(--error-dark-active);
-            --color-error-darker: var(--error-darker);
+        /* ---------------- Dark Colors ---------------- */
+        --primary-dark: #235e26;
+        --primary-dark-hover: #1c4b1e;
+        --primary-dark-active: #153816;
+        --primary-darker: #102c12;
 
-            /* Border radius */
-            --radius: var(--radius);
-          }
-        }
+        --secondary-dark: #bc9022;
+        --secondary-dark-hover: #97731b;
+        --secondary-dark-active: #715614;
+        --secondary-darker: #584310;
 
-        @layer utilities {
-          .color-swatch {
-            @apply w-20 h-20 rounded-lg border border-neutral-light;
-          }
-        }
+        --accent-dark: #13599e;
+        --accent-dark-hover: #0f477e;
+        --accent-dark-active: #0b355e;
+        --accent-darker: #09294a;
+
+        --background-dark: #b8b8b8;
+        --background-dark-hover: #939393;
+        --background-dark-active: #6e6e6e;
+        --background-darker: #565656;
+
+        --neutral-dark: #262626;
+        --neutral-dark-hover: #1f1f1f;
+        --neutral-dark-active: #171717;
+        --neutral-darker: #121212;
+
+        --success-dark: #198c34;
+        --success-dark-hover: #147029;
+        --success-dark-active: #0f541f;
+        --success-darker: #0c4118;
+
+        --info-dark: #19649c;
+        --info-dark-hover: #14507d;
+        --info-dark-active: #0f3c5e;
+        --info-darker: #0c2f49;
+
+        --warning-dark: #bc8e06;
+        --warning-dark-hover: #977105;
+        --warning-dark-active: #715504;
+        --warning-darker: #584203;
+
+        --error-dark: #a41e1e;
+        --error-dark-hover: #831818;
+        --error-dark-active: #631212;
+        --error-darker: #4d0e0e;
+
+        --background: oklch(1 0 0);
+        --foreground: oklch(0.145 0 0);
+        --card: oklch(1 0 0);
+        --card-foreground: oklch(0.145 0 0);
+        --popover: oklch(1 0 0);
+        --popover-foreground: oklch(0.145 0 0);
+        --primary: oklch(0.205 0 0);
+        --primary-foreground: oklch(0.985 0 0);
+        --secondary: oklch(0.97 0 0);
+        --secondary-foreground: oklch(0.205 0 0);
+        --muted: oklch(0.97 0 0);
+        --muted-foreground: oklch(0.556 0 0);
+        --accent: oklch(0.97 0 0);
+        --accent-foreground: oklch(0.205 0 0);
+        --destructive: oklch(0.577 0.245 27.325);
+        --destructive-foreground: oklch(0.577 0.245 27.325);
+        /* --border: oklch(0.922 0 0); */
+        --input: oklch(0.922 0 0);
+        --ring: oklch(0.708 0 0);
+        --chart-1: oklch(0.646 0.222 41.116);
+        --chart-2: oklch(0.6 0.118 184.704);
+        --chart-3: oklch(0.398 0.07 227.392);
+        --chart-4: oklch(0.828 0.189 84.429);
+        --chart-5: oklch(0.769 0.188 70.08);
+        --radius: 0.625rem;
+        --sidebar: oklch(0.985 0 0);
+        --sidebar-foreground: oklch(0.145 0 0);
+        --sidebar-primary: oklch(0.205 0 0);
+        --sidebar-primary-foreground: oklch(0.985 0 0);
+        --sidebar-accent: oklch(0.97 0 0);
+        --sidebar-accent-foreground: oklch(0.205 0 0);
+        --sidebar-border: oklch(0.922 0 0);
+        --sidebar-ring: oklch(0.708 0 0);
+
+        /* Added Smart Village custom color system */
+        /* Primary Colors - Green */
+        --sv-primary-light: #eaf2eb;
+        --sv-primary-normal: #2e7d32;
+        --sv-primary-dark: #235e26;
+
+        /* Secondary Colors - Yellow/Orange */
+        --sv-secondary-light: #fff9ea;
+        --sv-secondary-normal: #fbc02d;
+        --sv-secondary-dark: #bc9022;
+
+        /* Background Colors */
+        --sv-background-light: #fefefe;
+        --sv-background-normal: #f5f5f5;
+
+        --sv-neutral-light: #ebebeb;
+        --sv-neutral-normal: #333333;
+
+
+        --radius: 0.625rem;
+      }
+
+      .dark {
+        --background: oklch(0.145 0 0);
+        --foreground: oklch(0.985 0 0);
+        --card: oklch(0.145 0 0);
+        --card-foreground: oklch(0.985 0 0);
+        --popover: oklch(0.145 0 0);
+        --popover-foreground: oklch(0.985 0 0);
+        --primary: oklch(0.985 0 0);
+        --primary-foreground: oklch(0.205 0 0);
+        --secondary: oklch(0.269 0 0);
+        --secondary-foreground: oklch(0.985 0 0);
+        --muted: oklch(0.269 0 0);
+        --muted-foreground: oklch(0.708 0 0);
+        --accent: oklch(0.269 0 0);
+        --accent-foreground: oklch(0.985 0 0);
+        --destructive: oklch(0.396 0.141 25.723);
+        --destructive-foreground: oklch(0.637 0.237 25.331);
+        --border: oklch(0.269 0 0);
+        --input: oklch(0.269 0 0);
+        --ring: oklch(0.439 0 0);
+        --chart-1: oklch(0.488 0.243 264.376);
+        --chart-2: oklch(0.696 0.17 162.48);
+        --chart-3: oklch(0.769 0.188 70.08);
+        --chart-4: oklch(0.627 0.265 303.9);
+        --chart-5: oklch(0.645 0.246 16.439);
+        --sidebar: oklch(0.205 0 0);
+        --sidebar-foreground: oklch(0.985 0 0);
+        --sidebar-primary: oklch(0.488 0.243 264.376);
+        --sidebar-primary-foreground: oklch(0.985 0 0);
+        --sidebar-accent: oklch(0.269 0 0);
+        --sidebar-accent-foreground: oklch(0.985 0 0);
+        --sidebar-border: oklch(0.269 0 0);
+        --sidebar-ring: oklch(0.439 0 0);
+      }
+
+      @theme {
+        /* ---------------- Light Colors ---------------- */
+        --color-primary-light: var(--primary-light);
+        --color-primary-light-hover: var(--primary-light-hover);
+        --color-primary-light-active: var(--primary-light-active);
+
+        --color-secondary-light: var(--secondary-light);
+        --color-secondary-light-hover: var(--secondary-light-hover);
+        --color-secondary-light-active: var(--secondary-light-active);
+
+        --color-accent-light: var(--accent-light);
+        --color-accent-light-hover: var(--accent-light-hover);
+        --color-accent-light-active: var(--accent-light-active);
+
+        --color-background-light: var(--background-light);
+        --color-background-light-hover: var(--background-light-hover);
+        --color-background-light-active: var(--background-light-active);
+
+        --color-neutral-light: var(--neutral-light);
+        --color-neutral-light-hover: var(--neutral-light-hover);
+        --color-neutral-light-active: var(--neutral-light-active);
+
+        --color-success-light: var(--success-light);
+        --color-success-light-hover: var(--success-light-hover);
+        --color-success-light-active: var(--success-light-active);
+
+        --color-info-light: var(--info-light);
+        --color-info-light-hover: var(--info-light-hover);
+        --color-info-light-active: var(--info-light-active);
+
+        --color-warning-light: var(--warning-light);
+        --color-warning-light-hover: var(--warning-light-hover);
+        --color-warning-light-active: var(--warning-light-active);
+
+        --color-error-light: var(--error-light);
+        --color-error-light-hover: var(--error-light-hover);
+        --color-error-light-active: var(--error-light-active);
+
+        /* ---------------- Normal Colors ---------------- */
+        --color-primary-normal: var(--primary-normal);
+        --color-primary-normal-hover: var(--primary-normal-hover);
+        --color-primary-normal-active: var(--primary-normal-active);
+
+        --color-secondary-normal: var(--secondary-normal);
+        --color-secondary-normal-hover: var(--secondary-normal-hover);
+        --color-secondary-normal-active: var(--secondary-normal-active);
+
+        --color-accent-normal: var(--accent-normal);
+        --color-accent-normal-hover: var(--accent-normal-hover);
+        --color-accent-normal-active: var(--accent-normal-active);
+
+        --color-background-normal: var(--background-normal);
+        --color-background-normal-hover: var(--background-normal-hover);
+        --color-background-normal-active: var(--background-normal-active);
+
+        --color-neutral-normal: var(--neutral-normal);
+        --color-neutral-normal-hover: var(--neutral-normal-hover);
+        --color-neutral-normal-active: var(--neutral-normal-active);
+
+        --color-success-normal: var(--success-normal);
+        --color-success-normal-hover: var(--success-normal-hover);
+        --color-success-normal-active: var(--success-normal-active);
+
+        --color-info-normal: var(--info-normal);
+        --color-info-normal-hover: var(--info-normal-hover);
+        --color-info-normal-active: var(--info-normal-active);
+
+        --color-warning-normal: var(--warning-normal);
+        --color-warning-normal-hover: var(--warning-normal-hover);
+        --color-warning-normal-active: var(--warning-normal-active);
+
+        --color-error-normal: var(--error-normal);
+        --color-error-normal-hover: var(--error-normal-hover);
+        --color-error-normal-active: var(--error-normal-active);
+
+        /* ---------------- Dark Colors ---------------- */
+        --color-primary-dark: var(--primary-dark);
+        --color-primary-dark-hover: var(--primary-dark-hover);
+        --color-primary-dark-active: var(--primary-dark-active);
+        --color-primary-darker: var(--primary-darker);
+
+        --color-secondary-dark: var(--secondary-dark);
+        --color-secondary-dark-hover: var(--secondary-dark-hover);
+        --color-secondary-dark-active: var(--secondary-dark-active);
+        --color-secondary-darker: var(--secondary-darker);
+
+        --color-accent-dark: var(--accent-dark);
+        --color-accent-dark-hover: var(--accent-dark-hover);
+        --color-accent-dark-active: var(--accent-dark-active);
+        --color-accent-darker: var(--accent-darker);
+
+        --color-background-dark: var(--background-dark);
+        --color-background-dark-hover: var(--background-dark-hover);
+        --color-background-dark-active: var(--background-dark-active);
+        --color-background-darker: var(--background-darker);
+
+        --color-neutral-dark: var(--neutral-dark);
+        --color-neutral-dark-hover: var(--neutral-dark-hover);
+        --color-neutral-dark-active: var(--neutral-dark-active);
+        --color-neutral-darker: var(--neutral-darker);
+
+        --color-success-dark: var(--success-dark);
+        --color-success-dark-hover: var(--success-dark-hover);
+        --color-success-dark-active: var(--success-dark-active);
+        --color-success-darker: var(--success-darker);
+
+        --color-info-dark: var(--info-dark);
+        --color-info-dark-hover: var(--info-dark-hover);
+        --color-info-dark-active: var(--info-dark-active);
+        --color-info-darker: var(--info-darker);
+
+        --color-warning-dark: var(--warning-dark);
+        --color-warning-dark-hover: var(--warning-dark-hover);
+        --color-warning-dark-active: var(--warning-dark-active);
+        --color-warning-darker: var(--warning-darker);
+
+        --color-error-dark: var(--error-dark);
+        --color-error-dark-hover: var(--error-dark-hover);
+        --color-error-dark-active: var(--error-dark-active);
+        --color-error-darker: var(--error-darker);
+
+
+
+        --font-sans: var(--font-geist-sans);
+        --font-mono: var(--font-geist-mono);
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-popover: var(--popover);
+        --color-popover-foreground: var(--popover-foreground);
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-secondary: var(--secondary);
+        --color-secondary-foreground: var(--secondary-foreground);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-accent: var(--accent);
+        --color-accent-foreground: var(--accent-foreground);
+        --color-destructive: var(--destructive);
+        --color-destructive-foreground: var(--destructive-foreground);
+        /* --color-border: var(--border); */
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+        --color-chart-1: var(--chart-1);
+        --color-chart-2: var(--chart-2);
+        --color-chart-3: var(--chart-3);
+        --color-chart-4: var(--chart-4);
+        --color-chart-5: var(--chart-5);
+        --radius-sm: calc(var(--radius) - 4px);
+        --radius-md: calc(var(--radius) - 2px);
+        --radius-lg: var(--radius);
+        --radius-xl: calc(var(--radius) + 4px);
+        --color-sidebar: var(--sidebar);
+        --color-sidebar-foreground: var(--sidebar-foreground);
+        --color-sidebar-primary: var(--sidebar-primary);
+        --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+        --color-sidebar-accent: var(--sidebar-accent);
+        --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+        --color-sidebar-border: var(--sidebar-border);
+        --color-sidebar-ring: var(--sidebar-ring);
+
+        /* Added Smart Village custom colors to theme */
+        --color-sv-primary-light: var(--sv-primary-light);
+        --color-sv-primary: var(--sv-primary-normal);
+        --color-sv-primary-dark: var(--sv-primary-dark);
+        --color-sv-secondary-light: var(--sv-secondary-light);
+        --color-sv-secondary: var(--sv-secondary-normal);
+        --color-sv-secondary-dark: var(--sv-secondary-dark);
+        --color-sv-background-light: var(--sv-background-light);
+        --color-sv-background: var(--sv-background-normal);
+        --color-sv-neutral-light: var(--sv-neutral-light);
+        --color-sv-neutral: var(--sv-neutral-normal);
+
+
+        /* --radius: var(--radius); */
+      }
+
+      [section] {
+        margin-top: 80px;
+
+      }
