@@ -1,11 +1,14 @@
 
 
-import React, { useState } from 'react';
-import { Calendar, Users, Phone, Bell, Lock, Shield, UserCheck, ChevronRight, Eye, MessageSquareMore, MapPin } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Calendar, Users, Phone, Bell, Lock, Shield, UserCheck, ChevronRight, Eye, MessageSquareMore } from 'lucide-react';
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
-import { Button } from '../components/ui/button';
-import { Link } from 'react-router-dom';
+
+import { Link, useParams } from 'react-router-dom';
+import { EventsCard } from '../features/events/components/EventsCard';
+import VillageService from '../features/news/newsServices';
+import type { GetVillageNewsApiResponse } from '../features/news/newsTypes';
 
 interface StatCardProps {
     icon: React.ReactNode;
@@ -33,14 +36,6 @@ interface AnnouncementProps {
     views: string;
 }
 
-interface EventProps {
-    title: string;
-    description: string;
-    date: string;
-    location: string;
-    volunteers: string;
-    status: string;
-}
 
 const StatCard = ({ icon, value, label, color }: StatCardProps) => (
     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 text-white">
@@ -102,46 +97,6 @@ const AnnouncementCard: React.FC<AnnouncementProps> = ({ title, description, dat
     </div>
 );
 
-const EventCard: React.FC<EventProps> = ({ title, description, date, location, volunteers }) => (
-    <Card className="border border-yellow-200 hover:shadow-md transition-shadow">
-        <CardHeader className="pb-3">
-            <div className="flex items-start justify-between">
-                <div className="flex-1">
-                    <CardTitle className="text-yellow-600 text-lg mb-2">
-                        {title}
-                    </CardTitle>
-                    <CardDescription className="text-gray-700 text-sm leading-relaxed">
-                        {description}
-                    </CardDescription>
-                </div>
-                <div className="ml-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
-                        {volunteers}
-                    </span>
-                </div>
-            </div>
-        </CardHeader>
-
-        <CardContent className="pt-0">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-gray-600">
-                    <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span className="text-sm">{date}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        <span className="text-sm">{location}</span>
-                    </div>
-                </div>
-
-                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2">
-                    Join Event
-                </Button>
-            </div>
-        </CardContent>
-    </Card>
-);
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; locked?: boolean }> = ({ icon, title, locked }) => (
     <div className={`flex items-center justify-between p-4 rounded-lg border ${locked ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-100 hover:border-gray-200 cursor-pointer'
@@ -159,10 +114,29 @@ const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; locked?: boo
 export default function VillagePage() {
     const [isSignedIn, setIsSignedIn] = useState(false);
 
+    const { villageId } = useParams<{ villageId: string }>();
+    const [villageData, setVillageData] = useState<GetVillageNewsApiResponse | null>(null);
+
+    useEffect(() => {
+        const fetchVillageData = async () => {
+            if (!villageId)
+                return
+            try {
+                const res = await VillageService.getVillageNews(villageId);
+                console.log("the reponse dta of the vilage", res.data);
+                if (res.success) setVillageData(res.data);
+
+            } catch (error) {
+                console.error("Failed to fetch village news:", error);
+            }
+        };
+        fetchVillageData();
+    }, [villageId]);
+
     const stats = [
-        { icon: <Users className="w-6 h-6" />, value: "1123", label: "Residents", color: "bg-blue-600" },
+        { icon: <Users className="w-6 h-6" />, value: `${villageData?.total_residents}`, label: "Residents", color: "bg-blue-600" },
         { icon: <Bell className="w-6 h-6" />, value: "12", label: "Announcements", color: "bg-green-600" },
-        { icon: <Calendar className="w-6 h-6" />, value: "8", label: "Events", color: "bg-yellow-600" },
+        { icon: <Calendar className="w-6 h-6" />, value: `${villageData?.total_events}`, label: "Events", color: "bg-yellow-600" },
         { icon: <Shield className="w-6 h-6" />, value: "Excellent", label: "Safety Level", color: "bg-purple-600" }
     ];
 
@@ -181,33 +155,15 @@ export default function VillagePage() {
         }
     ];
 
-    const events = [
-        {
-            title: "Tree Planting Drive",
-            description: "Help us plant 100 trees in the neighborhood to improve air quality and create a greener environment.",
-            date: "2025-01-04",
-            location: "Youth Center",
-            volunteers: "15/30 Volunteers",
-            status: "Active"
-        },
-        {
-            title: "Youth Mentorship Program",
-            description: "Volunteer to mentor young people in the community and help them develop new skills.",
-            date: "2025-01-04",
-            location: "Youth Center",
-            volunteers: "12/25 Volunteers",
-            status: "Active"
-        }
-    ];
 
     return (
         <div className="min-h-screen bg-background-normal">
-            {/* Header */}
+
             <header className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <div className="flex items-center">
-                            <h1 className="text-xl font-bold text-gray-900">Nyarucyamo II</h1>
+                            <h1 className="text-xl font-bold text-gray-900">{villageData?.village.village}</h1>
                         </div>
                         <nav className="hidden md:flex space-x-8">
                             <a href="#" className="text-gray-700 hover:text-gray-900">Home</a>
@@ -248,7 +204,7 @@ export default function VillagePage() {
                     <div className="text-yellow-400 text-sm font-medium mb-4">🏘️ Smart Community Platform</div>
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
                         Welcome to<br />
-                        <span className="text-yellow-400">Nyarucyamo II Village</span>
+                        <span className="text-yellow-400">{villageData?.village.village}</span>
                     </h1>
                     <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
                         Discover community news, join volunteering events, and stay connected with your neighbors in our smart village platform.
@@ -277,7 +233,7 @@ export default function VillagePage() {
                                 title: "News",
                                 description: "Stay updated with the latest community announcements and important news",
                                 count: "8 records",
-                                href: "/news",
+                                href: `/news/${villageId}`,
                                 bgColor: "primary-light",
                                 trending: true
                             },
@@ -285,7 +241,7 @@ export default function VillagePage() {
                                 icon: <Calendar className="w-6 h-6" />,
                                 title: "Events",
                                 description: "Stay updated with the latest community announcements and important news",
-                                count: "12 Active",
+                                count: `${villageData?.events.length} active`,
                                 href: "/VolunteeringEvents",
                                 bgColor: "secondary-light-hover",
                                 featured: true
@@ -340,33 +296,10 @@ export default function VillagePage() {
                                 </CardContent>
                             </Card>
 
-                            {/* Volunteering Events - Corrected Section */}
-                            <Card className="border-none bg-white">
-                                <CardHeader>
-                                    <div className="flex items-center space-x-3">
-                                        <div className="bg-yellow-500 p-2 rounded-lg">
-                                            <Calendar className="w-5 h-5 text-white" />
-                                        </div>
-                                        <div>
-                                            <CardTitle className="text-xl font-bold text-gray-900">Volunteering Events</CardTitle>
-                                            <CardDescription className="text-sm text-gray-600">Make a difference in your community</CardDescription>
-                                        </div>
-                                    </div>
-
-                                    <Link to="/VolunteeringEvents">
-                                        <CardAction className="text-yellow-600 hover:text-yellow-700 font-medium">View All →</CardAction>
-                                    </Link>
-                                </CardHeader>
-                                <Separator className="!w-[94%] bg-gray-200 mx-auto !h-0.5" />
-                                <CardContent className="space-y-4">
-                                    {events.map((event, index) => (
-                                        <EventCard key={index} {...event} />
-                                    ))}
-                                </CardContent>
-                            </Card>
+                            <EventsCard />
                         </div>
 
-                        {/* Sidebar */}
+
                         <div className="space-y-6">
                             {/* Sign In Card */}
                             {!isSignedIn && (

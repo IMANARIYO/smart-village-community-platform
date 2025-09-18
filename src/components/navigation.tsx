@@ -9,6 +9,8 @@ import { LanguageSelector } from "./LanguageSelector";
 import VillageSelectingDialog from "../features/homePages/components/VillageSelectingDialog";
 import { MobileSheet } from "./MobileSheet";
 import { useEffect, useState } from "react";
+import { UserProfilePopover } from "../features/auth/components/UserProfileDialog";
+
 export function useActiveSection(ids: string[]) {
     const [active, setActive] = useState<string>("");
 
@@ -69,7 +71,7 @@ export function Navigation() {
     const t = translations[language];
 
     const navLinks = [
-        { id: "home", label: t.home, to: "/" },
+        { id: "home", label: t.home, to: "#" },
         { id: "features", label: t.features, to: "#features" },
         { id: "about", label: t.about, to: "#about" },
         { id: "contact", label: t.contact, to: "#contact" },
@@ -79,18 +81,18 @@ export function Navigation() {
         <nav className="bg-white border-b border-gray-200 fixed top-0 z-50 w-full">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    {/* Logo */}
+
                     <div className="flex-shrink-0">
                         <Link
-                            to="/"
-                            className="text-2xl font-bold"
-                            style={{ color: "var(--smart-village-primary)" }}
+                            to="/home"
+                            className="text-2xl font-bold text-primary"
+
                         >
                             Smart Village
                         </Link>
                     </div>
 
-                    {/* Desktop nav */}
+
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-8">
                             <NavLinks
@@ -101,13 +103,16 @@ export function Navigation() {
                         </div>
                     </div>
 
-                    {/* Desktop extras */}
                     <div className="hidden md:flex items-center space-x-4">
                         <LanguageSelector />
                         <VillageSelectingDialog />
+
+                        <UserProfilePopover />
+
+
                     </div>
 
-                    {/* Mobile nav */}
+
                     <div className="md:hidden">
                         <MobileSheet title="Smart Village">
                             <NavLinks
@@ -117,6 +122,9 @@ export function Navigation() {
                             />
                             <LanguageSelector />
                             <VillageSelectingDialog />
+
+                            <UserProfilePopover />
+
                         </MobileSheet>
                     </div>
                 </div>

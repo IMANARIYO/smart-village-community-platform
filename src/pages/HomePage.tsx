@@ -1,12 +1,13 @@
 import { Navigation } from "../components/navigation";
 
 import AboutPage from "../features/homePages/components/AboutPage";
-import Contact from "../features/homePages/components/Contact";
+import Contact from "../features/contacts/pages/ContactPage";
 import CTASection from "../features/homePages/components/CTASectionPage";
 import LandingFooter from "../features/homePages/components/LandingFooter";
 import PlatformFeatures from "../features/homePages/components/PlatformFeatures";
 import { homeTranslations } from "../features/homePages/i18n/homeTranslations";
 import { useLanguage } from "../features/i18n/useLanguage";
+import MeetOurTeam from "../features/our-team/components/meet-our-team";
 
 
 export default function HomePage() {
@@ -50,6 +51,7 @@ export default function HomePage() {
             <PlatformFeatures />
             <CTASection />
             <Contact />
+            <MeetOurTeam />
             <LandingFooter />
         </section>
     );

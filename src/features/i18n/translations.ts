@@ -15,6 +15,33 @@ export const translations = {
     enterCommunity: "Enter Community",
     discoverUpdates:
       "Discover local announcements, volunteering events, and community updates. Sign in later for full access to emergency contacts and incident reporting",
+
+    contactHeader: "Get in touch with our team",
+    contactDescription:
+      "Have questions about Smart Village? Want to bring the platform to your community? Our team is here to help you transform your community with technology.",
+    sendMessage: "Send us a message",
+    respondWithin: "We'll respond within 24 hours",
+    personalInfo: "Personal Information",
+    fullName: "Full Name",
+    email: "Email Address",
+    phone: "Phone Number",
+    organization: "Organization/Community",
+    useLocation: "Use my location",
+    locationDetected: "Location detected automatically",
+    inquiry: "Your Inquiry",
+    inquiryType: "What can we help you with?",
+    general: "💬 General Information",
+    implementation: "🚀 Platform Implementation",
+    partnership: "🤝 Partnership Opportunity",
+    technical: "🔧 Technical Support",
+    demo: "👀 Request Demo",
+    message: "Your Message",
+    submit: "Send Message",
+    sending: "Sending Message...",
+    requiredNote:
+      "* Required fields. We respect your privacy and will never share your information.",
+    success: "Message sent successfully! We'll get back to you soon.",
+    fail: "Failed to send message. Please try again.",
   },
   Kinyarwanda: {
     home: "Ahabanza",
@@ -33,6 +60,33 @@ export const translations = {
     enterCommunity: "Injira mu Muryango",
     discoverUpdates:
       "Sobanukirwa n'amakuru y'aho utuye, ibikorwa by'abakorerabushake, n'ibindi byavuguruwe. Injira nyuma kugirango ubone nimero z'ubutabazi n'uburyo bwo gutanga raporo ku byabaye",
+
+    contactHeader: "Tuvugishe itsinda ryacu",
+    contactDescription:
+      "Ufite ibibazo kuri Smart Village? Ushaka kuyizana mu mudugudu wawe? Itsinda ryacu rihari kugufasha guhindura umuryango wawe binyuze mu ikoranabuhanga.",
+    sendMessage: "Ohereza ubutumwa",
+    respondWithin: "Tuzagusubiza mu masaha 24",
+    personalInfo: "Amakuru yihariye",
+    fullName: "Amazina yose",
+    email: "Imeyili",
+    phone: "Numero ya telefoni",
+    organization: "Umuryango/Umudugudu",
+    useLocation: "Koresha aho ndi",
+    locationDetected: "Aho uri habonetse mu buryo bwikora",
+    inquiry: "Ubutumwa bwawe",
+    inquiryType: "Dushobora kukugirira akahe kantu?",
+    general: "💬 Amakuru rusange",
+    implementation: "🚀 Isakazamakuru rya Platform",
+    partnership: "🤝 Amahirwe yo gufatanya",
+    technical: "🔧 Ubufasha bwa tekinike",
+    demo: "👀 Gusaba Demo",
+    message: "Ubutumwa bwawe",
+    submit: "Ohereza",
+    sending: "Kohereza ubutumwa...",
+    requiredNote:
+      "* Imyanya isabwa. Turubaha ubuzima bwawe bwite kandi ntituzigera dusangiza amakuru yawe.",
+    success: "Ubutumwa bwoherejwe neza! Tuzagusubiza vuba.",
+    fail: "Kohereza ubutumwa byanze. Ongera ugerageze.",
   },
   Français: {
     home: "Accueil",
@@ -51,6 +105,34 @@ export const translations = {
     enterCommunity: "Entrer dans la Communauté",
     discoverUpdates:
       "Découvrez les annonces locales, les événements de bénévolat et les mises à jour de la communauté. Connectez-vous plus tard pour un accès complet aux contacts d'urgence et au signalement d'incidents",
+
+    contactHeader: "Contactez notre équipe",
+    contactDescription:
+      "Vous avez des questions sur Smart Village ? Vous souhaitez l'apporter dans votre communauté ? Notre équipe est là pour vous aider à transformer votre communauté grâce à la technologie.",
+    sendMessage: "Envoyez-nous un message",
+    respondWithin: "Nous répondrons dans les 24 heures",
+    personalInfo: "Informations personnelles",
+    fullName: "Nom complet",
+    email: "Adresse e-mail",
+    phone: "Numéro de téléphone",
+    organization: "Organisation/Communauté",
+    useLocation: "Utiliser ma localisation",
+    locationDetected: "Localisation détectée automatiquement",
+    inquiry: "Votre demande",
+    inquiryType: "Comment pouvons-nous vous aider ?",
+    general: "💬 Informations générales",
+    implementation: "🚀 Mise en œuvre de la plateforme",
+    partnership: "🤝 Opportunité de partenariat",
+    technical: "🔧 Assistance technique",
+    demo: "👀 Demande de démo",
+    message: "Votre message",
+    submit: "Envoyer",
+    sending: "Envoi du message...",
+    requiredNote:
+      "* Champs obligatoires. Nous respectons votre vie privée et ne partagerons jamais vos informations.",
+    success:
+      "Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.",
+    fail: "Échec de l'envoi du message. Veuillez réessayer.",
   },
 };
 

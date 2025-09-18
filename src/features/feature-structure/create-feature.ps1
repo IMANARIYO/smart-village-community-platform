@@ -22,14 +22,14 @@ function New-FeatureStructure {
     New-Item -Path $FeaturePath -ItemType Directory -Force
 
     # Create subfolders and default files
-    $subfoldersWithDefaults = @{
-        "components" = "ExampleComponent.tsx"
-        "pages"      = "ExamplePage.tsx"
-        "utils"      = "exampleUtils.ts"
-        "hooks"      = "useExampleHook.ts"
-        "__tests__"  = "Example.test.tsx"
-    }
-
+$subfoldersWithDefaults = @{
+    "components" = "ExampleComponent.tsx"
+    "pages"      = "ExamplePage.tsx"
+    "utils"      = "exampleUtils.ts"
+    "hooks"      = "useExampleHook.ts"
+    "__tests__"  = "Example.test.tsx"
+    "i18n"       = "en.ts"
+}
     foreach ($sub in $subfoldersWithDefaults.Keys) {
         $path = Join-Path $FeaturePath $sub
         New-Item -Path $path -ItemType Directory -Force
@@ -50,6 +50,9 @@ function New-FeatureStructure {
         elseif ($sub -eq "__tests__") {
             Set-Content -Path $filePath -Value "test('$FeatureName $fileName placeholder', () => { expect(true).toBe(true); });"
         }
+          elseif ($sub -eq "i18n") {
+        Set-Content -Path $filePath -Value "export const en = { example: '$FeatureName translation' };"
+    }
     }
 
     # Create standard files
