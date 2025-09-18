@@ -29,6 +29,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
+      "/village": {
+        target: "https://smartville.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
       "/view": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
@@ -40,6 +45,16 @@ export default defineConfig({
         secure: true,
       },
       "/locate": {
+        target: "https://smartville.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
+      "/me": {
+        target: "https://smartville.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
+      "/place": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
         secure: true,

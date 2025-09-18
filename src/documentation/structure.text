@@ -23,7 +23,7 @@ smart-village/
 │  │  │  ├─ service.ts           
 │  │  │  ├─ store.ts             
 │  │  │  └─ types.ts             
-│  │  ├─ newsFeed/              
+│  │  ├─ news/              
 │  │  │  ├─ components/          
 │  │  │  ├─ pages/NewsFeed.tsx
 │  │  │  ├─ service.ts           
