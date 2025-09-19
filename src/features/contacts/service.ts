@@ -13,9 +13,11 @@ export interface ContactRequest {
 }
 
 export interface ContactResponse {
-  id: string;
+  id: number;
   name: string;
+  email?: string | null;
   phone: string;
+  replies: string[];
   organization: string;
   inquiry_type: InquiryType;
   message: string;
@@ -24,30 +26,32 @@ export interface ContactResponse {
   updated_at: string;
 }
 
+export interface PaginatedResponse<T> {
+  success: boolean;
+  message: string;
+  next: boolean | null;
+  previous: boolean | null;
+  next_link: string | null;
+  previous_link: string | null;
+  count: number;
+  page_count: number;
+  data: T[];
+}
+
 export interface ContactReplyRequest {
   message: string;
 }
 
-export interface ContactServiceType {
-  listContacts: () => Promise<ContactResponse[]>;
-  getContact: (id: string) => Promise<ContactResponse>;
-  createContact: (data: ContactRequest) => Promise<ContactResponse>;
-  updateContact: (
-    id: string,
-    data: Partial<ContactRequest>
-  ) => Promise<ContactResponse>;
-  patchContact: (
-    id: string,
-    data: Partial<ContactRequest>
-  ) => Promise<ContactResponse>;
-  deleteContact: (id: string) => Promise<void>;
-  addReply: (id: string, data: ContactReplyRequest) => Promise<void>;
+export interface ContactReplyRequest {
+  message: string;
 }
 
-const ContactService: ContactServiceType = {
-  listContacts: async () => {
-    const res = await api.get("/contact/");
-    return res.data;
+const ContactService = {
+  listContacts: async (page = 1, pageSize = 10, search = "") => {
+    const res = await api.get("/contact/", {
+      params: { page, page_size: pageSize, search },
+    });
+    return res.data as PaginatedResponse<ContactResponse>;
   },
 
   getContact: async (id: string) => {

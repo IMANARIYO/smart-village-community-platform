@@ -10,6 +10,7 @@ import { useLanguage } from '../../i18n/useLanguage';
 import { contacttranslations } from '../i18n/contactTransilation';
 import ContactService, { type ContactRequest, type InquiryType } from '../service';
 import { toast } from 'sonner';
+import ContactTable from './ContactTable';
 function Contact() {
     const [locationData, setLocationData] = useState(null)
     const [isLoadingLocation, setIsLoadingLocation] = useState(false)
@@ -131,6 +132,7 @@ function Contact() {
 
     return (
         <section id="contact" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+            <ContactTable />
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="text-center mb-16">

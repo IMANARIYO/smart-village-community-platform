@@ -19,10 +19,10 @@ const EventService = {
     return res.data;
   },
 
-  createEvent: async (
-    data: Partial<Event>
-  ): Promise<CreateOrUpdateEventApiResponse> => {
-    const res = await api.post("/event/", data);
+  createEvent: async (data: FormData) => {
+    const res = await api.post("/event/", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return res.data;
   },
 

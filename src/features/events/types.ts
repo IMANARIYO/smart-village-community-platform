@@ -66,6 +66,17 @@ export interface Event {
   updated_at: string;
   organizer?: SmallPersonInfo;
 }
+export interface CreateEventRequest {
+  title: string;
+  description: string;
+  exact_place_of_village: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  image?: string | null;
+  category: EventCategory;
+  type: EventType;
+}
 // Raw API event (before transformation)
 export interface RawApiEvent extends Omit<Event, "organizer" | "village"> {
   village: string;

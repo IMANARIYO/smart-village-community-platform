@@ -48,6 +48,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
+
       "/contact": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,

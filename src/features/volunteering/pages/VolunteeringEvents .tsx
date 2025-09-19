@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search, Filter, ChevronDown, Users, Heart, GraduationCap, TreePine, Shield, DollarSign, Calendar, Vote } from 'lucide-react';
 import {
     DropdownMenu,
@@ -10,6 +10,7 @@ import {
 import type { VolunteeringCategory } from '../types';
 import { VolunteeringEventCard } from '../components/VolunteeringEventCard';
 import { CreateVolunteeringEventDialog } from '../components/CreateVolunteeringEventDialog';
+import { refreshToken } from '@/utils/api';
 
 
 const VolunteeringEvents = () => {
@@ -27,7 +28,26 @@ const VolunteeringEvents = () => {
         { value: 'Special / One-Off Events', label: 'Special / One-Off Events', icon: Calendar },
         { value: 'Civic & Governance', label: 'Civic & Governance', icon: Vote }
     ];
+    useEffect(() => {
+        const checkAndRefresh = async () => {
+            try {
+                console.log("Trying to refresh token...");
+                alert("Refreshing token now..."); // popup for visibility
+                const newAccess = await refreshToken();
+                if (newAccess) {
+                    console.log("Token refreshed successfully:", newAccess);
+                    alert("Token refreshed successfully!");
+                } else {
+                    console.warn("Token refresh returned null");
+                }
+            } catch (err) {
+                console.error("Refresh token failed:", err);
+                alert("Refresh token failed. Check console.");
+            }
+        };
 
+        checkAndRefresh();
+    }, []);
     const defaultOrganizer = {
         user_id: "u1",
         first_name: "John",

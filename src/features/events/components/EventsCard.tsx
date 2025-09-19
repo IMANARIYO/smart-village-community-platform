@@ -1,6 +1,5 @@
 "use client";
 
-import { Link } from "react-router-dom";
 import { Calendar, MapPin } from "lucide-react";
 import {
     Card,
@@ -8,9 +7,9 @@ import {
     CardTitle,
     CardDescription,
     CardContent,
-    CardAction,
+
 } from "@/components/ui/card";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+
 import { Button } from "@/components/ui/button";
 
 import type { Event } from "../types"; // adjust path to your Event interface
@@ -32,7 +31,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => (
                 {event.organizer && (
                     <div className="ml-4">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
-                            {event.organizer}
+                            {/* {event.organizer} */} organizer
                         </span>
                     </div>
                 )}

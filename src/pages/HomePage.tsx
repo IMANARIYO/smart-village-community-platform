@@ -8,6 +8,7 @@ import PlatformFeatures from "../features/homePages/components/PlatformFeatures"
 import { homeTranslations } from "../features/homePages/i18n/homeTranslations";
 import { useLanguage } from "../features/i18n/useLanguage";
 import MeetOurTeam from "../features/our-team/components/meet-our-team";
+import { CreateEventDialog } from "@/features/events/components/CreateEventDialog";
 // import LeadersPage from "@/features/dashboard/pages/villageLeaders/LeadersTable";
 
 
@@ -23,6 +24,7 @@ export default function HomePage() {
 
 
             <div className="relative w-full h-screen">
+
                 <div
                     className="absolute inset-0"
                     style={{
@@ -49,7 +51,7 @@ export default function HomePage() {
                 </div>
             </div>
 
-
+            <CreateEventDialog />
             <AboutPage />
             <PlatformFeatures />
             <CTASection />
