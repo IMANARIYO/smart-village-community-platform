@@ -6,7 +6,7 @@ export type ApiResponse<T> = {
    errors?: Record<string, any> | null;
 };
 
-export interface VillageLeader {
+export interface SmallPersonInfo {
   user_id: string;
   first_name: string;
   last_name: string;
@@ -20,5 +20,5 @@ export type Village = {
   sector?: string;
   district?: string;
   province?: string;
-  village_leader?: VillageLeader;
+  village_leader?: SmallPersonInfo;
 };

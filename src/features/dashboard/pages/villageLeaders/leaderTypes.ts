@@ -1,17 +1,28 @@
-import type { ApiResponse } from "../../../../types";
+import type { ApiResponse, Village } from "../../../../types";
 
 export interface Leader {
-  id: string;
   user_id: string;
-  first_name: string;
-  last_name: string;
   phone_number: string;
-  village_id: string;
-  role: "leader";
-  assigned_at: string;
+  email: string | null;
+  role: string;
+  is_active: boolean;
+  person: {
+    first_name: string;
+    last_name: string;
+    national_id: number;
+  };
+  village: Village;
+}
+export interface LeadersMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
-export type GetLeadersApiResponse = ApiResponse<Leader[]>;
+export interface GetLeadersApiResponse extends ApiResponse<Leader[]> {
+  meta: LeadersMeta;
+}
 export type GetLeaderByIdApiResponse = ApiResponse<Leader>;
 export type UpdateLeaderApiResponse = ApiResponse<Leader>;
 export type PromoteLeaderApiResponse = ApiResponse<Leader>;

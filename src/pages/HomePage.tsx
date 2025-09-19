@@ -8,6 +8,7 @@ import PlatformFeatures from "../features/homePages/components/PlatformFeatures"
 import { homeTranslations } from "../features/homePages/i18n/homeTranslations";
 import { useLanguage } from "../features/i18n/useLanguage";
 import MeetOurTeam from "../features/our-team/components/meet-our-team";
+// import LeadersPage from "@/features/dashboard/pages/villageLeaders/LeadersTable";
 
 
 export default function HomePage() {
@@ -16,6 +17,8 @@ export default function HomePage() {
 
     return (
         <section className="h-screen w-screen mt-12">
+            {/* <LeadersPage /> */}
+
             <Navigation />
 
 

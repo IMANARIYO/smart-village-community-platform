@@ -4,24 +4,26 @@ import { useParams } from 'react-router-dom';
 
 import EventService from '../../events/eventService';
 import { LanguageSelector } from '../../../components/LanguageSelector';
+import type { Event } from '@/features/events/types';
+import type { SmallPersonInfo } from '@/types';
 
-interface NewsItem {
-    id: string;
-    title: string;
-    description: string;
-    category: string;
-    type: 'featured' | 'emergency' | 'general' | 'events' | 'announcement';
-    date: string;
-    views: number;
-    author: string;
-}
+
 
 const VillageNewsPage = () => {
 
 
     const [selectedCategory, setSelectedCategory] = useState("All Categories");
     const [searchTerm, setSearchTerm] = useState("");
-    const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+    const [newsItems, setNewsItems] = useState<Event[]>([]);
+    const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
+    const toggleExpand = (id: string) => {
+        setExpandedItems(prev => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
+
+
     const [loading, setLoading] = useState(false);
     const { villageId } = useParams<{ villageId: string }>();
     useEffect(() => {
@@ -33,17 +35,13 @@ const VillageNewsPage = () => {
                     await EventService.getVillageEvents(villageId);
                 console.log("vilahge  news  pages  event    etching", res.data)
                 if (res.success) {
-                    const mappedEvents: NewsItem[] = res.data.events.map((ev) => ({
-                        id: ev.event_id,
-                        title: ev.title,
-                        description: ev.description,
-                        category: "Events",
-                        type: "events",
-                        date: ev.date,
-                        views: 0, // no views in API → default
-                        author: res.data.village.village_leader?.first_name ?? ""
-                    }));
-                    setNewsItems(mappedEvents);
+
+                    setNewsItems(
+                        res.data.events.map((event) => ({
+                            ...event,
+                            organizer: event.organizer?.person ?? {} as SmallPersonInfo,
+                        }))
+                    );
                 }
             } catch (error) {
                 console.error("Failed to fetch village events:", error);
@@ -118,9 +116,9 @@ const VillageNewsPage = () => {
     const filteredNews = newsItems.filter(item => {
         const matchesCategory = selectedCategory === 'All Categories' ||
             item.category === selectedCategory ||
-            (selectedCategory === 'Emergency' && item.type === 'emergency') ||
-            (selectedCategory === 'Events' && item.type === 'events') ||
-            (selectedCategory === 'Announcements' && item.type === 'announcement');
+            (selectedCategory === 'Emergency' && item.type === 'Emergency') ||
+            (selectedCategory === 'Events' && item.type === "Event") ||
+            (selectedCategory === 'Announcements' && item.type === 'Announcement');
         const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.description.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
@@ -210,10 +208,10 @@ const VillageNewsPage = () => {
                     <div className="space-y-6">
                         {filteredNews.map((item) => (
                             <article
-                                key={item.id}
+                                key={item.event_id}
                                 className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
                             >
-                                {/* Article Header */}
+
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="flex items-center space-x-3">
                                         <span className={`inline-flex items-center space-x-1 px-2 py-1 text-xs font-medium rounded border ${getTypeColor(item.type)}`}>
@@ -236,21 +234,29 @@ const VillageNewsPage = () => {
                                 <h2 className="text-xl font-bold text-gray-900 mb-3 hover:text-green-600 cursor-pointer">
                                     {item.title}
                                 </h2>
-                                <p className="text-gray-600 mb-4 leading-relaxed">
+                                <p
+                                    className={`text-gray-600 mb-4 leading-relaxed ${expandedItems[item.event_id] ? "" : "line-clamp-4"
+                                        }`}
+                                >
                                     {item.description}
+
                                 </p>
+
 
                                 {/* Article Footer */}
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                                     <div className="flex items-center space-x-4 text-sm text-gray-500">
                                         <span className="flex items-center space-x-1">
                                             <Users className="w-4 h-4" />
-                                            <span>{item.views} Views</span>
+                                            {/* <span>{item.views} Views</span> */}
                                         </span>
-                                        <span>By {item.author}</span>
+                                        <span>By {item.organizer?.first_name}-{item.organizer?.last_name}</span>
                                     </div>
-                                    <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                        Read More →
+                                    <button
+                                        onClick={() => toggleExpand(item.event_id)}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                    >
+                                        {expandedItems[item.event_id] ? "Show Less ↑" : "Read More →"}
                                     </button>
                                 </div>
                             </article>

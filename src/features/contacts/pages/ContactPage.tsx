@@ -8,6 +8,8 @@ import "react-phone-number-input/style.css";
 
 import { useLanguage } from '../../i18n/useLanguage';
 import { contacttranslations } from '../i18n/contactTransilation';
+import ContactService, { type ContactRequest, type InquiryType } from '../service';
+import { toast } from 'sonner';
 function Contact() {
     const [locationData, setLocationData] = useState(null)
     const [isLoadingLocation, setIsLoadingLocation] = useState(false)
@@ -33,7 +35,7 @@ function Contact() {
             phone: '',
             organization: '',
             message: '',
-            inquiryType: 'general'
+            inquiry_type: 'general' as InquiryType
         }
     })
 
@@ -114,16 +116,16 @@ function Contact() {
         )
     }
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data: ContactRequest) => {
         try {
             console.log('Form Data:', data)
-            await new Promise(resolve => setTimeout(resolve, 1000))
+            await ContactService.createContact(data)
 
-            alert(t.success)
+            toast.success(t.success)
             reset()
         } catch (error) {
             console.error('Error submitting form:', error)
-            alert(t.fail)
+            toast.error(t.fail)
         }
     }
 
@@ -332,15 +334,15 @@ function Contact() {
 
                             {/* Inquiry Type Field */}
                             <div className="mb-6">
-                                <label htmlFor="inquiryType" className="block text-sm font-semibold text-gray-700 mb-2">
+                                <label htmlFor="inquiry_type" className="block text-sm font-semibold text-gray-700 mb-2">
                                     {t.inquiryType} <span className="text-red-500">*</span>
                                 </label>
                                 <select
-                                    id="inquiryType"
-                                    {...register('inquiryType', {
+                                    id="inquiry_type"
+                                    {...register('inquiry_type', {
                                         required: 'Please select an inquiry type'
                                     })}
-                                    className={`w-full px-4 py-3 border-2 rounded-lg shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-normal/20 focus:border-primary-normal ${errors.inquiryType ? 'border-red-400 bg-red-50' : 'border-gray-200 hover:border-gray-300'
+                                    className={`w-full px-4 py-3 border-2 rounded-lg shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-normal/20 focus:border-primary-normal ${errors.inquiry_type ? 'border-red-400 bg-red-50' : 'border-gray-200 hover:border-gray-300'
                                         }`}
                                 >
                                     <option value="general">{t.general}</option>
@@ -349,8 +351,8 @@ function Contact() {
                                     <option value="technical">{t.technical}</option>
                                     <option value="demo">{t.demo}</option>
                                 </select>
-                                {errors.inquiryType && (
-                                    <p className="text-sm text-red-600 font-medium mt-1">{errors.inquiryType.message}</p>
+                                {errors.inquiry_type && (
+                                    <p className="text-sm text-red-600 font-medium mt-1">{errors.inquiry_type.message}</p>
                                 )}
                             </div>
 

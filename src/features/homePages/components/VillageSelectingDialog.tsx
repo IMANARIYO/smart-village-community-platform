@@ -13,20 +13,21 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../../../components/ui/dialog";
-import { Button } from "../../../components/ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "../../../components/ui/select";
-import { translations } from "../../i18n/translations copy";
-import MyButton from "../../../components/MyButton";
+} from "@/components/ui/select";
+import { translations } from "../../i18n/translations";
+import MyButton from "@/components/MyButton";
 import { fetchLocations, type HierarchicalData } from "../service";
 import type { Village } from "../../../types";
 import { toast } from "sonner";
+
 
 
 

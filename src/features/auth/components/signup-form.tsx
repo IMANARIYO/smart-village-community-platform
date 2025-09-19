@@ -9,10 +9,10 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 
 import { ProgressIndicator } from "./progress-indicator";
-import { Label } from "../../../components/ui/label";
-import { Input } from "../../../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
-import { Button } from "../../../components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useLocationSelector } from "../../homePages/hooks/useLocationSelector";
 import type { RegisterPayload } from "../authTypes";
 import UserService from "../authService";
@@ -49,8 +49,7 @@ export function SignupForm() {
     watch,
     trigger,
     formState: { errors },
-    setValue,
-    getValues
+
   } = useForm<FormData>({
     defaultValues: {
       firstName: "",
@@ -302,179 +301,141 @@ export function SignupForm() {
               </div>
 
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <Controller
-                    name="province"
-                    control={control}
-                    rules={{ required: "Province is required" }}
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          location.setProvince(value);
-                          location.resetLowerLevels("province");
-                          setValue("district", "");
-                          setValue("sector", "");
-                          setValue("cell", "");
-                          setValue("village", "");
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Province" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {location.provinces.map((p) => (
-                            <SelectItem key={p} value={p}>
-                              {p}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.province && (
-                    <p className="text-red-500 text-xs">{errors.province.message}</p>
+                <Controller
+                  name="province"
+                  control={control}
+                  rules={{ required: "Province is required" }}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        location.setProvince(value); // reset handled internally
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Province" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {location.provinces.map((p) => (
+                          <SelectItem key={p} value={p}>
+                            {p}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
-                </div>
+                />
 
-                <div className="space-y-2">
-                  <Controller
-                    name="district"
-                    control={control}
-                    rules={{ required: "District is required" }}
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          location.setDistrict(value);
-                          location.resetLowerLevels("district");
-                          setValue("sector", "");
-                          setValue("cell", "");
-                          setValue("village", "");
-                        }}
-                        disabled={!getValues("province")}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select District" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {location.districts.map((d) => (
-                            <SelectItem key={d} value={d}>
-                              {d}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.district && (
-                    <p className="text-red-500 text-xs">{errors.district.message}</p>
+                <Controller
+                  name="district"
+                  control={control}
+                  rules={{ required: "District is required" }}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        location.setDistrict(value); // reset handled internally
+                      }}
+                      disabled={!watch("province")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select District" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {location.districts.map((d) => (
+                          <SelectItem key={d} value={d}>
+                            {d}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
-                </div>
+                />
 
-                <div className="space-y-2">
-                  <Controller
-                    name="sector"
-                    control={control}
-                    rules={{ required: "Sector is required" }}
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          location.setSector(value);
-                          location.resetLowerLevels("sector");
-                          setValue("cell", "");
-                          setValue("village", "");
-                        }}
-                        disabled={!getValues("district")}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Sector" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {location.sectors.map((s) => (
-                            <SelectItem key={s} value={s}>
-                              {s}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.sector && (
-                    <p className="text-red-500 text-xs">{errors.sector.message}</p>
+                <Controller
+                  name="sector"
+                  control={control}
+                  rules={{ required: "Sector is required" }}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        location.setSector(value);
+                      }}
+                      disabled={!watch("district")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Sector" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {location.sectors.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
-                </div>
+                />
 
-                <div className="space-y-2">
-                  <Controller
-                    name="cell"
-                    control={control}
-                    rules={{ required: "Cell is required" }}
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          location.setCell(value);
-                          location.resetLowerLevels("cell");
-                          setValue("village", "");
-                        }}
-                        disabled={!getValues("sector")}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Cell" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {location.cells.map((c) => (
-                            <SelectItem key={c} value={c}>
-                              {c}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.cell && (
-                    <p className="text-red-500 text-xs">{errors.cell.message}</p>
+                <Controller
+                  name="cell"
+                  control={control}
+                  rules={{ required: "Cell is required" }}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        location.setCell(value);
+                      }}
+                      disabled={!watch("sector")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Cell" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {location.cells.map((c) => (
+                          <SelectItem key={c} value={c}>
+                            {c}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
-                </div>
+                />
 
-                <div className="space-y-2">
-                  <Controller
-                    name="village"
-                    control={control}
-                    rules={{ required: "Village is required" }}
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={(selectedVillageName) => {
-                          field.onChange(selectedVillageName);
-                          const selectedVillage = location.villages.find((v) => v.village === selectedVillageName) || null;
-                          location.setVillage(selectedVillage);
-                        }}
-                        disabled={!getValues("cell")}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Village" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {location.villages.map((v) => (
-                            <SelectItem key={v.village_id} value={v.village}>
-                              {v.village}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.village && (
-                    <p className="text-red-500 text-xs">{errors.village.message}</p>
+                <Controller
+                  name="village"
+                  control={control}
+                  rules={{ required: "Village is required" }}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(villageName) => {
+                        field.onChange(villageName);
+                        const selectedVillage = location.villages.find((v) => v.village === villageName) || null;
+                        location.setVillage(selectedVillage);
+                      }}
+                      disabled={!watch("cell")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Village" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {location.villages.map((v) => (
+                          <SelectItem key={v.village_id} value={v.village}>
+                            {v.village}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
-                </div>
+                />
+
               </div>
             </div>
           )}

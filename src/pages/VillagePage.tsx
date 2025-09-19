@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { Calendar, Users, Phone, Bell, Lock, Shield, UserCheck, ChevronRight, Eye, MessageSquareMore } from 'lucide-react';
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Separator } from '../components/ui/separator';
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
 import { Link, useParams } from 'react-router-dom';
-import { EventsCard } from '../features/events/components/EventsCard';
+
 import VillageService from '../features/news/newsServices';
 import type { GetVillageNewsApiResponse } from '../features/news/newsTypes';
+import { VolunteeringEventsListCard } from '@/features/volunteering/components/VolunteeringEventsListCard';
 
 interface StatCardProps {
     icon: React.ReactNode;
@@ -296,7 +297,7 @@ export default function VillagePage() {
                                 </CardContent>
                             </Card>
 
-                            <EventsCard />
+                            <VolunteeringEventsListCard events={villageData?.volunteering_events || []} />
                         </div>
 
 

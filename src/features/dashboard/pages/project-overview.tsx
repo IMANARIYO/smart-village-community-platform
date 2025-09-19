@@ -1,9 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 
 import { Users, MessageSquare, Phone, Lightbulb, HandHeart, AlertTriangle, Globe, Wifi } from "lucide-react"
-import { Badge } from "../../../components/ui/badge"
-import { Button } from "../../../components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
 export default function ProjectOverview() {
     const problems = [

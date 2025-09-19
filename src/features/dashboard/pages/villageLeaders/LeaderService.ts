@@ -8,13 +8,33 @@ import type {
   PromoteLeaderApiResponse,
 } from "./leaderTypes";
 
+export interface GetLeadersParams {
+  province?: string;
+  district?: string;
+  sector?: string;
+  cell?: string;
+  village_id?: string;
+  search?: string;
+  limit?: number;
+  page?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  deletedOnly?: boolean;
+  includeDeleted?: boolean;
+}
+
 const LeaderService = {
   // List all village leaders
-  getLeaders: async (): Promise<GetLeadersApiResponse> => {
-    const res = await api.get("/leaders/");
+  getLeaders: async (params: GetLeadersParams = {}): Promise<GetLeadersApiResponse> => {
+    const query = new URLSearchParams();
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) query.append(key, String(value));
+    });
+
+    const res = await api.get(`/leaders/?${query.toString()}`);
     return res.data;
   },
-
   // Retrieve a specific leader
   getLeaderById: async (userId: string): Promise<GetLeaderByIdApiResponse> => {
     const res = await api.get(`/leaders/${userId}/`);

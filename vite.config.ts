@@ -1,8 +1,17 @@
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import path from "path";
+
 import tailwindcss from "@tailwindcss/vite";
+
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+
+// Get the current file's full path (equivalent to __filename in CommonJS)
+const __filename = fileURLToPath(import.meta.url);
+
+// Get the directory name (equivalent to __dirname in CommonJS)
+const __dirname = dirname(__filename);
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -10,6 +19,11 @@ export default defineConfig({
     proxy: {
       // Proxy all Smart Village API endpoints
       "/event": {
+        target: "https://smartville.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
+      "/volunteer": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
         secure: true,
@@ -34,6 +48,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
+      "/contact": {
+        target: "https://smartville.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
       "/view": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
@@ -54,6 +73,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
+      "/leaders": {
+        target: "https://smartville.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
       "/place": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
@@ -64,7 +88,14 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      "@": path.resolve(__dirname, "./src"),
+      "@/components": path.resolve(__dirname, "/src/components"),
+      "@/components/ui": path.resolve(__dirname, "/src/components"),
+      "@/lib": path.resolve(__dirname, "./src/lib"),
+      "@/hooks": path.resolve(__dirname, "./src/hooks"),
+      "@/utils": path.resolve(__dirname, "./src/lib/utils"),
     },
   },
+
+  base: "/",
 });

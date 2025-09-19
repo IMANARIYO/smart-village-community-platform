@@ -1,40 +1,25 @@
 import type { ApiResponse } from "../../types";
 import api from "../../utils/api";
-import type { RoleEnum } from "../auth/authTypes";
-
-export interface Village {
-  village_id: string;
-  province: string;
-  district: string;
-  sector: string;
-  cell: string;
-  village: string;
-}
-
-export interface Organizer {
-  user_id: string;
-  phone_number?: string | null;
-  role: RoleEnum;
-}
-
-export interface VolunteeringEvent {
-  id: string;
-  title: string;
-  description: string;
-  date: string; // ISO string
-  capacity: number;
-  village: Village;
-  organizer: Organizer;
-  approved_volunteers_count: number;
-  is_full: boolean;
-}
-
-export type GetVolunteerEventsApiResponse = ApiResponse<VolunteeringEvent[]>;
-export type GetVolunteerEventByIdApiResponse = ApiResponse<VolunteeringEvent>;
-export type CreateOrUpdateVolunteerEventApiResponse =
-  ApiResponse<VolunteeringEvent>;
+import type {
+  CreateOrUpdateVolunteerEventApiResponse,
+  CreateVolunteeringEventRequest,
+  GetVolunteerEventByIdApiResponse,
+  GetVolunteerEventsApiResponse,
+  VolunteeringEvent,
+} from "./types";
 
 const VolunteerService = {
+  // ------------------------
+  // Activities
+  // ------------------------
+
+  createVolunteeringEvent: async (
+    payload: CreateVolunteeringEventRequest
+  ): Promise<CreateOrUpdateVolunteerEventApiResponse> => {
+    const res = await api.post("/volunteer/", payload);
+    return res.data;
+  },
+
   getActivities: async (): Promise<GetVolunteerEventsApiResponse> => {
     const res = await api.get("/volunteer/activity/");
     return res.data;
@@ -51,16 +36,6 @@ const VolunteerService = {
     id: string
   ): Promise<GetVolunteerEventByIdApiResponse> => {
     const res = await api.get(`/volunteer/activity/${id}/`);
-    return res.data;
-  },
-
-  createActivity: async (
-    payload: Omit<
-      VolunteeringEvent,
-      "id" | "organizer" | "approved_volunteers_count" | "is_full"
-    >
-  ): Promise<CreateOrUpdateVolunteerEventApiResponse> => {
-    const res = await api.post("/volunteer/activity/", payload);
     return res.data;
   },
 
@@ -92,6 +67,74 @@ const VolunteerService = {
 
   deleteActivity: async (id: string): Promise<ApiResponse<null>> => {
     const res = await api.delete(`/volunteer/activity/${id}/`);
+    return res.data;
+  },
+
+  approveActivity: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.post(`/volunteer/activity/${id}/approve/`);
+    return res.data;
+  },
+
+  joinActivity: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.post(`/volunteer/activity/${id}/join/`);
+    return res.data;
+  },
+
+  rejectActivity: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.post(`/volunteer/activity/${id}/reject/`);
+    return res.data;
+  },
+
+  submitActivityForApproval: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.post(
+      `/volunteer/activity/${id}/submit_for_approval/`
+    );
+    return res.data;
+  },
+
+  getParticipationById: async (id: string) => {
+    const res = await api.get(`/volunteer/participations/${id}/`);
+    return res.data;
+  },
+
+  createParticipation: async (payload: { id: string; note: string }) => {
+    const res = await api.post("/volunteer/participations/", payload);
+    return res.data;
+  },
+
+  updateParticipation: async (
+    id: string,
+    payload: { id: string; note: string }
+  ) => {
+    const res = await api.put(`/volunteer/participations/${id}/`, payload);
+    return res.data;
+  },
+
+  patchParticipation: async (
+    id: string,
+    payload: { id: string; note: string }
+  ) => {
+    const res = await api.patch(`/volunteer/participations/${id}/`, payload);
+    return res.data;
+  },
+
+  deleteParticipation: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.delete(`/volunteer/participations/${id}/`);
+    return res.data;
+  },
+
+  approveParticipation: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.post(`/volunteer/participations/${id}/approve/`);
+    return res.data;
+  },
+
+  rejectParticipation: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.post(`/volunteer/participations/${id}/reject/`);
+    return res.data;
+  },
+
+  withdrawParticipation: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.post(`/volunteer/participations/${id}/withdraw/`);
     return res.data;
   },
 };

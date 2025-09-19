@@ -8,6 +8,7 @@ export const translations = {
     welcome: "Welcome to Smart Village",
     chooseNeighborhood: "Choose your neighborhood to explore your community",
     getConnected: "Get connected with your urban community in Rwanda",
+    province: "province",
     district: "District",
     sector: "Sector",
     cell: "Cell",
@@ -53,6 +54,7 @@ export const translations = {
     chooseNeighborhood:
       "Hitamo umudugudu wawe kugirango usuzume umuryango wawe",
     getConnected: "Hura n'umuryango wawe w'umuturanyi mu Rwanda",
+    province: "intara",
     district: "Akarere",
     sector: "Umurenge",
     cell: "Akagari",
@@ -98,6 +100,7 @@ export const translations = {
     chooseNeighborhood:
       "Choisissez votre quartier pour explorer votre communauté",
     getConnected: "Connectez-vous avec votre communauté urbaine au Rwanda",
+    province: "province",
     district: "District",
     sector: "Secteur",
     cell: "Cellule",

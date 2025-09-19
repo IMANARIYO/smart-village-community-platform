@@ -7,6 +7,8 @@ import VillageNewsPage from '../features/news/pages/VillageNewsPage';
 import VolunteeringEvents from '../features/volunteering/pages/VolunteeringEvents ';
 import EmergencyContacts from '../features/emergencies/pages/Emergency';
 import Dashboard from '../features/dashboard/pages/dashboard';
+import LeadersPage from '@/features/dashboard/pages/villageLeaders/LeadersTable';
+import ForgotPasswordPage from '@/features/auth/components/ForgotPasswordPage';
 
 
 // import LoginPage from './pages/LoginPage';
@@ -35,12 +37,15 @@ export default function AppRouter() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/auth/login" element={<LoginPage />} />
                 <Route path="/auth/signup" element={<SignupPage />} />
+                <Route path="auth/forgot-password" element={<ForgotPasswordPage />} />
+
                 <Route path="/visitVillage/:villageId" element={<VillagePage />} />
                 <Route path="/news/:villageId" element={<VillageNewsPage />} />
                 {/* <Route path="/news" element={<VillageNewsPage />} /> */}
                 <Route path="/VolunteeringEvents/:villageId" element={<VolunteeringEvents />} />
                 <Route path="/EmergencyContacts/:villageId" element={<EmergencyContacts />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/test" element={<VolunteeringEvents />} />
 
 
                 {/*
