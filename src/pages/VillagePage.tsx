@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 
 import React, { useEffect, useState } from 'react';
@@ -10,6 +11,8 @@ import { Link, useParams } from 'react-router-dom';
 import VillageService from '../features/news/newsServices';
 import type { GetVillageNewsApiResponse } from '../features/news/newsTypes';
 import { VolunteeringEventsListCard } from '@/features/volunteering/components/VolunteeringEventsListCard';
+import { Button } from '@/components/ui/button';
+import { useVisitedVillage } from '@/features/homePages/context/VillageContext';
 
 interface StatCardProps {
     icon: React.ReactNode;
@@ -91,9 +94,9 @@ const AnnouncementCard: React.FC<AnnouncementProps> = ({ title, description, dat
         <p className="text-gray-600 text-sm mb-3">{description}</p>
         <div className="flex items-center justify-between">
             <span className="text-xs text-gray-500 flex gap-2 items-center"><Eye className="w-4 h-4" />{views}</span>
-            <button className="text-sm text-primary-dark hover:text-primary-dark-hover font-medium">
+            <Button className="text-sm text-primary-dark hover:text-primary-dark-hover font-medium">
                 Read More →
-            </button>
+            </Button>
         </div>
     </div>
 );
@@ -114,7 +117,7 @@ const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; locked?: boo
 
 export default function VillagePage() {
     const [isSignedIn, setIsSignedIn] = useState(false);
-
+    const { setVisitedVillage } = useVisitedVillage();
     const { villageId } = useParams<{ villageId: string }>();
     const [villageData, setVillageData] = useState<GetVillageNewsApiResponse | null>(null);
 
@@ -126,7 +129,15 @@ export default function VillagePage() {
                 const res = await VillageService.getVillageNews(villageId);
                 console.log("the reponse dta of the vilage", res.data);
                 if (res.success) setVillageData(res.data);
-
+                setVisitedVillage({
+                    village_id: res.data.village.village_id,
+                    village: res.data.village.village,
+                    cell: res.data.village.cell,
+                    sector: res.data.village.sector,
+                    district: res.data.village.district,
+                    province: res.data.village.province,
+                    village_leader: res.data.village.village_leader,
+                });
             } catch (error) {
                 console.error("Failed to fetch village news:", error);
             }

@@ -1,4 +1,4 @@
-import type { ApiResponse } from "../../types";
+import type { ApiResponse, Village } from "../../types";
 export type RoleEnum = "resident" | "admin" | "leader";
 export interface LoginPayload {
   phone_number: string;
@@ -58,4 +58,17 @@ export interface ResendOtpPayload {
 
 export interface RefreshTokenPayload {
   refresh: string;
+}
+
+export interface UserProfile {
+  user_id: string;
+  phone_number: string;
+  role: RoleEnum;
+  is_verified: boolean;
+  first_name: string;
+  last_name: string;
+  gender: string;
+  national_id: string;
+  person_type: string;
+  village?: Village;
 }

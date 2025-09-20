@@ -1,10 +1,7 @@
-
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapPin } from "lucide-react";
-
 import { useLanguage } from "../../i18n/useLanguage";
 import {
     Dialog,
@@ -22,169 +19,61 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+
 import { translations } from "../../i18n/translations";
-import MyButton from "@/components/MyButton";
-import { fetchLocations, type HierarchicalData } from "../service";
-import type { Village } from "../../../types";
-import { toast } from "sonner";
+import { homeTranslations } from "../i18n/homeTranslations";
 
 
-
-
-
+import { useLocationSelector } from "../hooks/useLocationSelector";
+import { useVisitedVillage } from "../context/VillageContext";
 
 const VillageSelectingDialog = () => {
     const { language } = useLanguage();
     const t = translations[language];
+    const ht = homeTranslations[language];
     const navigate = useNavigate();
 
-    const [province, setProvince] = useState("");
-    const [district, setDistrict] = useState("");
-    const [sector, setSector] = useState("");
-    const [cell, setCell] = useState("");
-    const [village, setVillage] = useState<Village | null>(null);
+    // use hook
+    const {
+        province, setProvince,
+        district, setDistrict,
+        sector, setSector,
+        cell, setCell,
+        village, setVillage,
+        provinces, districts, sectors, cells, villages,
+        resetLowerLevels
+    } = useLocationSelector();
 
-    const [provinces, setProvinces] = useState<string[]>([]);
-    const [districts, setDistricts] = useState<string[]>([]);
-    const [sectors, setSectors] = useState<string[]>([]);
-    const [cells, setCells] = useState<string[]>([]);
-    const [villages, setVillages] = useState<Village[]>([]);
-
-    const resetLowerLevels = useCallback((level: string) => {
-        switch (level) {
-            case "province":
-                setDistrict("");
-                setSector("");
-                setCell("");
-                setVillage(null);
-                setDistricts([]);
-                setSectors([]);
-                setCells([]);
-                setVillages([]);
-                break;
-            case "district":
-                setSector("");
-                setCell("");
-                setVillage(null);
-                setSectors([]);
-                setCells([]);
-                setVillages([]);
-                break;
-            case "sector":
-                setCell("");
-                setVillage(null);
-                setCells([]);
-                setVillages([]);
-                break;
-            case "cell":
-                setVillage(null);
-                setVillages([]);
-                break;
-        }
-    }, []);
-
-
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let data: HierarchicalData;
-
-                if (!province) {
-                    data = await fetchLocations();
-                    console.log("the response ", data)
-                    if (!data.success) {
-                        console.error(data.message || "Failed to load provinces");
-                        toast.error(data.message || "Failed to load provinces");
-                        return;
-                    }
-                    setProvinces(data.data.provinces || []);
-                    return;
-                }
-
-                if (province && !district) {
-                    resetLowerLevels("province");
-                    data = await fetchLocations({ province });
-                    if (!data.success) {
-                        toast.error(data.message || "Failed to load districts");
-                        return;
-                    }
-                    setDistricts(data.data.districts || []);
-                    return;
-                }
-
-                if (province && district && !sector) {
-                    resetLowerLevels("district");
-                    data = await fetchLocations({ province, district });
-                    if (!data.success) {
-                        toast.error(data.message || "Failed to load sectors");
-                        return;
-                    }
-                    setSectors(data.data.sectors || []);
-                    return;
-                }
-
-                if (province && district && sector && !cell) {
-                    resetLowerLevels("sector");
-                    data = await fetchLocations({ province, district, sector });
-                    if (!data.success) {
-                        toast.error(data.message || "Failed to load cells");
-                        return;
-                    }
-                    setCells(data.data.cells || []);
-                    return;
-                }
-
-                if (province && district && sector && cell) {
-                    resetLowerLevels("cell");
-                    data = await fetchLocations({ province, district, sector, cell });
-                    if (!data.success) {
-                        toast.error(data.message || "Failed to load villages");
-                        return;
-                    }
-                    setVillages(data.data.villages || []);
-                }
-            } catch (error) {
-                console.error(error);
-                toast.error("Error fetching locations");
-            }
-        };
-
-        fetchData();
-    }, [province, district, sector, cell, resetLowerLevels]);
-
-
-
+    const { setVisitedVillage } = useVisitedVillage();
 
     const handleEnterCommunity = () => {
         if (!province || !district || !sector || !cell || !village) {
             alert("Please select all fields before continuing.");
             return;
         }
-
+        setVisitedVillage(village);
         navigate(
             `/visitVillage/${village.village_id}?province=${province}&district=${district}&sector=${sector}&cell=${cell}&village=${village.village_id}`
         );
     };
 
-
-
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <MyButton className="text-white font-medium bg-primary-dark">
-                    {t.visitCommunity}
-                </MyButton>
+                <button className="bg-yellow-400 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-500 transition">
+                    {ht.joinButton}
+                </button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-md p-6 h-[95vh] overflow-y-auto">
+                {/* Icon */}
                 <div className="flex justify-center mb-4">
                     <div className="rounded-full bg-gradient-to-r from-green-600 to-blue-600 p-3">
                         <MapPin className="h-6 w-6 text-white" />
                     </div>
                 </div>
 
+                {/* Title */}
                 <DialogHeader className="text-center space-y-1 flex flex-col justify-center items-center">
                     <DialogTitle className="text-xl font-bold text-green-700">
                         {t.welcome}
@@ -194,77 +83,46 @@ const VillageSelectingDialog = () => {
                     </DialogDescription>
                 </DialogHeader>
 
+                {/* Info */}
                 <div className="bg-blue-50 text-gray-800 text-sm text-center p-3 rounded-md mt-4">
                     {t.getConnected}
                 </div>
 
+                {/* Selects */}
                 <div className="space-y-3 mt-6">
-                    <Select value={province} onValueChange={(value) => {
-                        setProvince(value);
-                        resetLowerLevels("province");
-                    }}>
+                    <Select value={province} onValueChange={(value) => { setProvince(value); resetLowerLevels("province"); }}>
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder={t.province} />
                         </SelectTrigger>
                         <SelectContent>
-                            {provinces.map((p) => (
-                                <SelectItem key={p} value={p}>
-                                    {p}
-                                </SelectItem>
-                            ))}
+                            {provinces.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
                         </SelectContent>
                     </Select>
 
-                    <Select value={district} onValueChange={(value) => {
-                        setDistrict(value);
-                        resetLowerLevels("district");
-                    }}>
+                    <Select value={district} onValueChange={(value) => { setDistrict(value); resetLowerLevels("district"); }}>
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder={t.district} />
                         </SelectTrigger>
                         <SelectContent>
-                            {districts.map((d) => (
-                                <SelectItem key={d} value={d}>
-                                    {d}
-                                </SelectItem>
-                            ))}
+                            {districts.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
                         </SelectContent>
                     </Select>
-                    <Select
-                        value={sector}
-                        onValueChange={(value) => {
-                            setSector(value);
-                            resetLowerLevels("sector");
-                        }}
-                    >
+
+                    <Select value={sector} onValueChange={(value) => { setSector(value); resetLowerLevels("sector"); }}>
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder={t.sector} />
                         </SelectTrigger>
                         <SelectContent>
-                            {sectors.map((s) => (
-                                <SelectItem key={s} value={s}>
-                                    {s}
-                                </SelectItem>
-                            ))}
+                            {sectors.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
                         </SelectContent>
                     </Select>
 
-                    <Select
-                        value={cell}
-                        onValueChange={(value) => {
-                            setCell(value);
-                            resetLowerLevels("cell");
-                        }}
-                    >
+                    <Select value={cell} onValueChange={(value) => { setCell(value); resetLowerLevels("cell"); }}>
                         <SelectTrigger className="w-full">
                             <SelectValue placeholder={t.cell} />
                         </SelectTrigger>
                         <SelectContent>
-                            {cells.map((c) => (
-                                <SelectItem key={c} value={c}>
-                                    {c}
-                                </SelectItem>
-                            ))}
+                            {cells.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                         </SelectContent>
                     </Select>
 
@@ -279,11 +137,7 @@ const VillageSelectingDialog = () => {
                             <SelectValue placeholder={t.village} />
                         </SelectTrigger>
                         <SelectContent>
-                            {villages.map((v) => (
-                                <SelectItem key={v.village_id} value={v.village}>
-                                    {v.village}
-                                </SelectItem>
-                            ))}
+                            {villages.map((v) => <SelectItem key={v.village_id} value={v.village}>{v.village}</SelectItem>)}
                         </SelectContent>
                     </Select>
                 </div>

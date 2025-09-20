@@ -70,8 +70,8 @@ export default function ContactTable() {
             field: "created_at",
             headerName: "Created At",
             flex: 1,
-            valueGetter: (params) => {
-                const raw = params.value as string;
+            valueGetter: (_params, row) => {
+                const raw = row.value as string;
 
                 if (!raw) return "-";
 

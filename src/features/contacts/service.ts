@@ -6,6 +6,7 @@ export type ContactStatus = "new" | "in_progress" | "resolved";
 export interface ContactRequest {
   name: string;
   phone: string;
+  email: string;
   organization: string;
   inquiry_type: InquiryType;
   message: string;
