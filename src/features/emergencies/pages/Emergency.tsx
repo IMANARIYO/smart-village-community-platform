@@ -130,7 +130,7 @@ const EmergencyContacts = () => {
         return matchesSearch;
     });
 
-    const getIconComponent = (IconComponent) => {
+    const getIconComponent = (IconComponent: React.ElementType) => {
         return <IconComponent className="h-5 w-5" />;
     };
 

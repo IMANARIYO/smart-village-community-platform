@@ -6,7 +6,7 @@ import type { GridColDef, GridPaginationModel, GridSortModel } from "@mui/x-data
 import { Button } from "@/components/ui/button";
 import type { ContactResponse, PaginatedResponse } from "../service";
 import ContactService from "../service";
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/components/TableComponents/data-table";
 
 
 export default function ContactTable() {

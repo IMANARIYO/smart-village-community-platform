@@ -1,6 +1,6 @@
 import type { Village } from "../../types";
 import type { Event } from "../events/types";
-import type { VolunteeringEvent } from "../volunteering/volunteeringServices";
+import { VolunteeringEvent } from "../volunteering/types";
 
 export interface GetVillageNewsApiResponse {
   total_residents: number;

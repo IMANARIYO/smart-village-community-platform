@@ -22,6 +22,8 @@ import VolunteeringBoard from '@/features/dashboard/pages/volunteering-board';
 import IncidentReporting from '@/features/dashboard/pages/incident-reporting';
 import ComingSoon from '@/components/common/ComingSoon';
 import { LandingLayout } from '@/layouts/LandingLayout';
+import ParticipationsPage from '@/features/participations/pages/ParticipationsPage';
+
 
 
 
@@ -36,6 +38,7 @@ export default function AppRouter() {
                 <Route element={<LandingLayout />}>
                     <Route path="/" element={<HomePage />} />
 
+
                     <Route path="/visitVillage/:villageId" element={<VillagePage />} />
                     <Route path="/visitVillage/:villageId" element={<VillagePage />} />
                     <Route path="/news/:villageId" element={<VillageNewsPage />} />
@@ -43,7 +46,8 @@ export default function AppRouter() {
                     <Route path="/VolunteeringEvents/:villageId" element={<VolunteeringEvents />} />
                     <Route path="/EmergencyContacts/:villageId" element={<EmergencyContacts />} />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/test" element={<VolunteeringEvents />} />
+                    {/* <Route path="/test" element={<VolunteeringEvents />} /> */}
+                    <Route path="/test" element={<ParticipationsPage />} />
 
                 </Route>
 
@@ -51,6 +55,7 @@ export default function AppRouter() {
                     <Route path="login" element={<LoginPage />} />
                     <Route path="signUp" element={<SignupPage />} />
                     <Route path="forgot-password" element={<ForgotPasswordPage />} />
+                    <Route index element={<Navigate to="login" replace />} />
                     <Route index element={<Navigate to="login" replace />} />
                 </Route>
 

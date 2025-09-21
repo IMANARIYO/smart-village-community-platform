@@ -1,142 +1,83 @@
-import type { ApiResponse } from "../../types";
+import type { ApiResponse, BaseVolunteringEvent } from "../../types";
 import api from "../../utils/api";
 import type {
   CreateOrUpdateVolunteerEventApiResponse,
   CreateVolunteeringEventRequest,
   GetVolunteerEventByIdApiResponse,
   GetVolunteerEventsApiResponse,
-  VolunteeringEvent,
+  GetVolunteeringOptions,
+  VolunteeringListResponse,
 } from "./types";
 
 const VolunteerService = {
   // ------------------------
-  // Activities
+  // Volunteering Events
   // ------------------------
 
   createVolunteeringEvent: async (
     payload: CreateVolunteeringEventRequest
   ): Promise<CreateOrUpdateVolunteerEventApiResponse> => {
-    const res = await api.post("/volunteer/", payload);
+    const res = await api.post("/volunter/", payload);
     return res.data;
   },
 
-  getActivities: async (): Promise<GetVolunteerEventsApiResponse> => {
-    const res = await api.get("/volunteer/activity/");
+  getVolunteeringEvents: async (
+    params?: GetVolunteeringOptions
+  ): Promise<VolunteeringListResponse> => {
+    const res = await api.get<VolunteeringListResponse>("/volunter/", {
+      params,
+    });
     return res.data;
   },
 
+  getVolunteerEventById: async (
+    id: string
+  ): Promise<GetVolunteerEventByIdApiResponse> => {
+    const res = await api.get(`/volunter/${id}/`);
+    return res.data;
+  },
+
+  updateVolunteerEvent: async (
+    id: string,
+    payload: Partial<
+      Omit<
+        BaseVolunteringEvent,
+        "id" | "organizer" | "approved_volunteers_count" | "is_full" | "village"
+      > & {
+        village?: string;
+      }
+    >
+  ): Promise<CreateOrUpdateVolunteerEventApiResponse> => {
+    const res = await api.put(`/volunter/${id}/`, payload);
+    return res.data;
+  },
+
+  patchVolunteerEvent: async (
+    id: string,
+    payload: Partial<
+      Omit<
+        BaseVolunteringEvent,
+        "id" | "organizer" | "approved_volunteers_count" | "is_full"
+      >
+    >
+  ): Promise<CreateOrUpdateVolunteerEventApiResponse> => {
+    const res = await api.patch(`/volunter/${id}/`, payload);
+    return res.data;
+  },
+
+  deleteVolunteerEvent: async (id: string): Promise<ApiResponse<null>> => {
+    const res = await api.delete(`/volunter/${id}/`);
+    return res.data;
+  },
+
+  // ------------------------
+  // Village-specific Events
+  // ------------------------
   getVillageActivities: async (
     villageId: string
   ): Promise<GetVolunteerEventsApiResponse> => {
-    const res = await api.get(`/volunteer/${villageId}/activity`);
-    return res.data;
-  },
-
-  getActivityById: async (
-    id: string
-  ): Promise<GetVolunteerEventByIdApiResponse> => {
-    const res = await api.get(`/volunteer/activity/${id}/`);
-    return res.data;
-  },
-
-  updateActivity: async (
-    id: string,
-    payload: Partial<
-      Omit<
-        VolunteeringEvent,
-        "id" | "organizer" | "approved_volunteers_count" | "is_full"
-      >
-    >
-  ): Promise<CreateOrUpdateVolunteerEventApiResponse> => {
-    const res = await api.put(`/volunteer/activity/${id}/`, payload);
-    return res.data;
-  },
-
-  patchActivity: async (
-    id: string,
-    payload: Partial<
-      Omit<
-        VolunteeringEvent,
-        "id" | "organizer" | "approved_volunteers_count" | "is_full"
-      >
-    >
-  ): Promise<CreateOrUpdateVolunteerEventApiResponse> => {
-    const res = await api.patch(`/volunteer/activity/${id}/`, payload);
-    return res.data;
-  },
-
-  deleteActivity: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.delete(`/volunteer/activity/${id}/`);
-    return res.data;
-  },
-
-  approveActivity: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.post(`/volunteer/activity/${id}/approve/`);
-    return res.data;
-  },
-
-  joinActivity: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.post(`/volunteer/activity/${id}/join/`);
-    return res.data;
-  },
-
-  rejectActivity: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.post(`/volunteer/activity/${id}/reject/`);
-    return res.data;
-  },
-
-  submitActivityForApproval: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.post(
-      `/volunteer/activity/${id}/submit_for_approval/`
-    );
-    return res.data;
-  },
-
-  getParticipationById: async (id: string) => {
-    const res = await api.get(`/volunteer/participations/${id}/`);
-    return res.data;
-  },
-
-  createParticipation: async (payload: { id: string; note: string }) => {
-    const res = await api.post("/volunteer/participations/", payload);
-    return res.data;
-  },
-
-  updateParticipation: async (
-    id: string,
-    payload: { id: string; note: string }
-  ) => {
-    const res = await api.put(`/volunteer/participations/${id}/`, payload);
-    return res.data;
-  },
-
-  patchParticipation: async (
-    id: string,
-    payload: { id: string; note: string }
-  ) => {
-    const res = await api.patch(`/volunteer/participations/${id}/`, payload);
-    return res.data;
-  },
-
-  deleteParticipation: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.delete(`/volunteer/participations/${id}/`);
-    return res.data;
-  },
-
-  approveParticipation: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.post(`/volunteer/participations/${id}/approve/`);
-    return res.data;
-  },
-
-  rejectParticipation: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.post(`/volunteer/participations/${id}/reject/`);
-    return res.data;
-  },
-
-  withdrawParticipation: async (id: string): Promise<ApiResponse<null>> => {
-    const res = await api.post(`/volunteer/participations/${id}/withdraw/`);
+    const res = await api.get(`/volunter/${villageId}/activity/`);
     return res.data;
   },
 };
-
 export default VolunteerService;

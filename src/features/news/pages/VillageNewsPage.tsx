@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 
 import EventService from '../../events/eventService';
 import { LanguageSelector } from '../../../components/LanguageSelector';
-import type { Event } from '@/features/events/types';
+import { EventType, type Event } from '@/features/events/types';
 import type { SmallPersonInfo } from '@/types';
+import { Loading } from '@/components/common/Loading';
 
 
 
@@ -22,6 +23,7 @@ const VillageNewsPage = () => {
             [id]: !prev[id],
         }));
     };
+
 
 
     const [loading, setLoading] = useState(false);
@@ -112,18 +114,22 @@ const VillageNewsPage = () => {
                 return 'General';
         }
     };
-
-    const filteredNews = newsItems.filter(item => {
-        const matchesCategory = selectedCategory === 'All Categories' ||
+    const filteredNews = newsItems.filter((item) => {
+        const matchesCategory =
+            selectedCategory === "All Categories" ||
             item.category === selectedCategory ||
-            (selectedCategory === 'Emergency' && item.type === 'Emergency') ||
-            (selectedCategory === 'Events' && item.type === "Event") ||
-            (selectedCategory === 'Announcements' && item.type === 'Announcement');
-        const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (selectedCategory === EventType.EMERGENCY && item.type === EventType.EMERGENCY) ||
+
+            (selectedCategory === EventType.ANNOUNCEMENT && item.type === EventType.ANNOUNCEMENT);
+
+        const matchesSearch =
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.description.toLowerCase().includes(searchTerm.toLowerCase());
+
         return matchesCategory && matchesSearch;
     });
-
+    if (loading)
+        return <Loading />
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}

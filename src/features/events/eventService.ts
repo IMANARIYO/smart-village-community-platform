@@ -7,10 +7,20 @@ import type {
   GetEventsApiResponse,
   GetVillageEventsApiResponse,
 } from "./types";
-
+interface GetEventsOptions {
+  page?: number;
+  page_size?: number;
+  status?: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+  village?: number;
+  date?: string; // YYYY-MM-DD
+}
 const EventService = {
-  getEvents: async (): Promise<GetEventsApiResponse> => {
-    const res = await api.get("/event/");
+  getEvents: async (
+    options?: GetEventsOptions
+  ): Promise<GetEventsApiResponse> => {
+    const res = await api.get<GetEventsApiResponse>("/event/", {
+      params: options,
+    });
     return res.data;
   },
 

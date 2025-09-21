@@ -12,7 +12,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import type { Event } from "../types"; // adjust path to your Event interface
+import type { Event } from "../types";
 
 interface EventCardProps {
     event: Event;

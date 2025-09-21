@@ -1,15 +1,30 @@
 // types.ts placeholder for volunteering feature
-import type { ApiResponse, SmallPersonInfo, Village } from "../../types";
+import type {
+  ApiResponse,
+  SmallPersonInfo,
+  Village,
+  PaginationMetaWithLinks,
+  BaseVolunteringEvent,
+} from "../../types";
 
-export type VolunteeringCategory =
-  | "Community & Social"
-  | "Health & Wellness"
-  | "Education & Skills"
-  | "Environmental & Sustainability"
-  | "Safety & Emergency"
-  | "Economic & Livelihood"
-  | "Special / One-Off Events"
-  | "Civic & Governance";
+export enum VolunteeringCategory {
+  CommunitySocial = "Community & Social",
+  HealthWellness = "Health & Wellness",
+  EducationSkills = "Education & Skills",
+  EnvironmentalSustainability = "Environmental & Sustainability",
+  SafetyEmergency = "Safety & Emergency",
+  EconomicLivelihood = "Economic & Livelihood",
+  SpecialOneOff = "Special / One-Off Events",
+  CivicGovernance = "Civic & Governance",
+}
+
+export enum VolunteeringStatus {
+  Draft = "DRAFT",
+  Pending = "PENDING",
+  Approved = "APPROVED",
+  Rejected = "REJECTED",
+  Cancelled = "CANCELLED",
+}
 
 export interface VolunteeringEvent {
   id: string;
@@ -24,6 +39,44 @@ export interface VolunteeringEvent {
   is_full: boolean;
 }
 
+export interface OrganizerPerson {
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  national_id: number;
+  gender: "male" | "female";
+  person_type: string;
+}
+
+export interface OrganizerPerson {
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  national_id: number;
+  gender: "male" | "female";
+  person_type: string;
+}
+
+export interface Organizer {
+  user_id: string;
+  phone_number: string;
+  role: string;
+  is_verified: boolean;
+  is_active: boolean;
+  created_at: string;
+  person: OrganizerPerson;
+}
+
+// Volunteering event list item extends BaseEvent
+export interface VolunteeringEventListItem extends BaseVolunteringEvent {
+  start_time: string;
+  end_time: string;
+  village: Village; // override optional from BaseEvent
+  organizer: Organizer; // override with smaller organizer info
+  status: VolunteeringStatus;
+  approved_at: string | null;
+}
+
 export interface CreateVolunteeringEventRequest {
   title: string;
   description: string;
@@ -32,12 +85,36 @@ export interface CreateVolunteeringEventRequest {
   end_time: string;
   capacity: number;
   village: string;
-  location: string;
+
   skills_required: string[];
   category: VolunteeringCategory;
+  location?: string;
 }
 
-export type GetVolunteerEventsApiResponse = ApiResponse<VolunteeringEvent[]>;
-export type GetVolunteerEventByIdApiResponse = ApiResponse<VolunteeringEvent>;
+// List response with pagination
+export interface VolunteeringListResponse {
+  success: boolean;
+  message: string;
+  data: VolunteeringEventListItem[];
+  meta: PaginationMetaWithLinks;
+}
+
+export interface GetVolunteeringOptions {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: VolunteeringCategory;
+  status?: VolunteeringStatus;
+  organizer_phone?: string;
+  village_id?: string;
+  volunteer_id?: string;
+}
+// API response types
+export type GetVolunteerEventsApiResponse = ApiResponse<
+  VolunteeringEventListItem[]
+>;
+export type GetEventDetailApiResponse = ApiResponse<VolunteeringEventListItem>;
+export type GetVolunteerEventByIdApiResponse =
+  ApiResponse<VolunteeringEventListItem>;
 export type CreateOrUpdateVolunteerEventApiResponse =
-  ApiResponse<VolunteeringEvent>;
+  ApiResponse<BaseVolunteringEvent>;

@@ -23,7 +23,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
-      "/volunteer": {
+      "/volunter": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
         secure: true,
@@ -80,6 +80,11 @@ export default defineConfig({
         secure: true,
       },
       "/place": {
+        target: "https://smartville.onrender.com",
+        changeOrigin: true,
+        secure: true,
+      },
+      "/participations/": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
         secure: true,

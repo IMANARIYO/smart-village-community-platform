@@ -19,7 +19,7 @@ export function MobileSheet({
 }: MobileSheetProps) {
     return (
         <Sheet>
-            {/* Trigger Button */}
+
             <SheetTrigger asChild>
                 <Button
                     variant="ghost"
@@ -35,8 +35,8 @@ export function MobileSheet({
                 className="w-64 sm:w-80 h-[90vh] p-4 rounded-md mt-16 flex flex-col justify-between"
             >
                 {/* Header */}
-                <SheetHeader>
-                    <SheetTitle className="text-lg font-bold text-primary-dark">{title}</SheetTitle>
+                <SheetHeader className="bg-accent rounded-md">
+                    <SheetTitle className="text-lg font-bold text-primary-dark bg-secondary">{title}</SheetTitle>
                     {description && <SheetDescription className="text-sm text-gray-500">{description}</SheetDescription>}
                 </SheetHeader>
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 
-import { DataTable } from "@/components/data-table";
+import { DataTable } from "@/components/TableComponents/data-table";
 import { leaderColumns } from "./leadersColumns";
 import type { Leader } from "./leaderTypes";
 import type { GridPaginationModel, GridSortModel } from "@mui/x-data-grid";

@@ -9,6 +9,8 @@ import { VillageProvider } from './features/homePages/context/VillageContext';
 
 
 
+
+
 function App() {
   return (
 
@@ -18,6 +20,7 @@ function App() {
         <div className="w-screen h-screen overflow-x-hidden">
 
           <AppRoutes />
+
         </div>
       </VillageProvider>
     </LanguageProvider>

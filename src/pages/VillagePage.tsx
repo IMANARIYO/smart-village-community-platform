@@ -308,7 +308,7 @@ export default function VillagePage() {
                                 </CardContent>
                             </Card>
 
-                            <VolunteeringEventsListCard events={villageData?.volunteering_events || []} />
+                            <VolunteeringEventsListCard villageId={villageData?.village.village_id} />
                         </div>
 
 
