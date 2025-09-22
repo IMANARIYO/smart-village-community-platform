@@ -1,48 +1,47 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import type { RoleEnum } from "../authTypes";
+import type { UserProfile } from "../authTypes";
 import { tokenStorage } from "../../../utils/tokenStorage";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "../../../components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { LoginForm } from "./login-form";
-import { LogInIcon, MoreVertical } from "lucide-react";
-
-interface UserProfile {
-    user_id: string;
-    phone_number: string;
-    role: RoleEnum;
-    is_verified: boolean;
-    first_name: string;
-    last_name: string;
-    gender: string;
-    national_id: string;
-    person_type: string;
-}
+import { ChevronDown, LogIn, User, Phone, IdCard, ShieldCheck, MapPin } from "lucide-react";
+import { useLanguage } from "@/features/i18n/useLanguage";
+import { NavBartranslations } from "@/components/NavBarTranslation";
+import api from "@/utils/api";
+import { UserProfileStorage } from "../utils/UserProfileStorage";
 
 export function UserProfilePopover() {
     const [user, setUser] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [open, setOpen] = useState(false);
+    const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+    const { language } = useLanguage();
+    const t = NavBartranslations[language];
 
     useEffect(() => {
         const fetchUser = async () => {
             const token = tokenStorage.getAccessToken();
             if (!token) return setLoading(false);
 
+            const cachedProfile = UserProfileStorage.getUserProfile();
+            if (cachedProfile) {
+                setUser(cachedProfile);
+                setLoading(false);
+                return;
+            }
+
             try {
-                const res = await axios.get("https://smartville.onrender.com/me/", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const res = await api.get("/me/");
                 if (res.data.status === "success") {
                     setUser(res.data.data);
+                    UserProfileStorage.setUserProfile(res.data.data);
                 }
             } catch (err) {
                 console.error("Failed to fetch user profile:", err);
+                const expiredProfile = UserProfileStorage.getUserProfile();
+                if (expiredProfile) setUser(expiredProfile);
             } finally {
                 setLoading(false);
             }
@@ -50,71 +49,147 @@ export function UserProfilePopover() {
         fetchUser();
     }, []);
 
+    useEffect(() => {
+        const goOnline = () => setIsOnline(true);
+        const goOffline = () => setIsOnline(false);
+        window.addEventListener("online", goOnline);
+        window.addEventListener("offline", goOffline);
+        return () => {
+            window.removeEventListener("online", goOnline);
+            window.removeEventListener("offline", goOffline);
+        };
+    }, []);
+
     const handleSignOut = () => {
         tokenStorage.clearAuth();
+        UserProfileStorage.clearUserProfile();
         setUser(null);
-        setOpen(false); // close popover
+        setOpen(false);
     };
 
-    // Helper to generate initials
-    const getInitials = () => {
-        if (!user) return "SI"; // default for Sign In
-        return `${user.first_name[0] || ""}${user.last_name[0] || ""}`.toUpperCase();
+    const refreshProfile = async () => {
+        const token = tokenStorage.getAccessToken();
+        if (!token) return;
+        setLoading(true);
+        UserProfileStorage.clearUserProfile();
+        try {
+            const res = await api.get("/me/");
+            if (res.data.status === "success") {
+                setUser(res.data.data);
+                UserProfileStorage.setUserProfile(res.data.data);
+            }
+        } catch (err) {
+            console.error("Failed to refresh user profile:", err);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const getInitials = () =>
+        user ? `${user.first_name[0] || ""}${user.last_name[0] || ""}`.toUpperCase() : "SI";
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <button
-                    className="flex items-center gap-2 focus:outline-none"
-                >
-                    {user ? (
-                        <div
-                            className="
-    w-10 h-10             
-  bg-primary-light         
-    rounded-full           
-    flex items-center justify-center
-    
-    px-2
-  "
-                        >
+            <PopoverTrigger>
+                {user ? (
+                    <div className="flex items-center space-x-4 p-2 text-sm font-medium text-gray-700 bg-primary-light hover:bg-primary-light-hover rounded-lg cursor-pointer transition-all duration-200 w-full">
+                        <div className="  h-5 w-5 bg-green-600 text-white rounded-full flex items-center justify-center font-medium">
                             {getInitials()}
-                            <MoreVertical className="w-4 h-4" />
                         </div>
-
-                    ) : (
-                        <LogInIcon />
-                    )}
-                </button>
+                        {/* <div className="flex flex-col text-left"> */}
+                        {/* <span className="text-sm font-semibold w-full">{`${user.first_name} ${user.last_name}`}</span> */}
+                        <span className="text-xs text-gray-500">{user.role}</span>
+                        {/* </div> */}
+                        <div className="flex items-center ml-auto space-x-1">
+                            <div className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`}></div>
+                            <ChevronDown className="w-4 h-4 transition-transform" />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-white bg-primary-dark hover:bg-primary-light-active rounded-lg cursor-pointer transition-all duration-200">
+                        <LogIn className="w-4 h-4" />
+                        <span>{t.signIn}</span>
+                    </div>
+                )}
             </PopoverTrigger>
 
-            <PopoverContent className="w-64 p-4">
+            <PopoverContent className="w-full sm:w-80 md:w-96 lg:w-[30vw] max-h-[90vh] overflow-y-auto p-4">
                 {loading ? (
-                    <p>Loading...</p>
+                    <p>{t.loading}</p>
                 ) : user ? (
-                    <div className="space-y-2">
-                        <p>
-                            <strong>Name:</strong> {user.first_name} {user.last_name}
-                        </p>
-                        <p>
-                            <strong>Phone:</strong> {user.phone_number}
-                        </p>
-                        <p>
-                            <strong>Role:</strong> {user.role}
-                        </p>
-                        <p>
-                            <strong>Verified:</strong> {user.is_verified ? "Yes" : "No"}
-                        </p>
-                        <p>
-                            <strong>National ID:</strong> {user.national_id}
-                        </p>
-                        <div className="mt-2 flex justify-end">
+                    <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+                        {/* Header */}
+                        <div className="px-4 py-3 border-b border-gray-200 flex items-center space-x-3">
+                            <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-medium text-lg">
+                                {getInitials()}
+                            </div>
+                            <div className="flex-1">
+                                <p className="font-semibold text-gray-900">{`${user.first_name} ${user.last_name}`}</p>
+                                <p className="text-sm text-gray-500">{user.role}</p>
+                                <div className="flex items-center mt-1">
+                                    <div className={`w-2 h-2 rounded-full mr-2 ${isOnline ? "bg-green-500" : "bg-gray-400"}`}></div>
+                                    <span className={`text-xs ${isOnline ? "text-green-600" : "text-gray-500"}`}>
+                                        {isOnline ? t.online : t.offline}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Quick actions */}
+                        <div className="py-2 flex flex-col border-b border-gray-200">
+                            <a href="#profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
+                                <User className="w-4 h-4 mr-3 text-gray-500" /> {t.viewProfile}
+                            </a>
+                            <a href="#settings" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
+                                <div className="w-4 h-4 mr-3 text-gray-500">⚙️</div> {t.settings}
+                            </a>
+                            <a href="#help" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
+                                <div className="w-4 h-4 mr-3 text-gray-500">❓</div> {t.helpSupport}
+                            </a>
+                        </div>
+
+                        {/* Detailed Info */}
+                        <div className="px-4 py-3 space-y-2 text-sm text-gray-700 border-b border-gray-200">
+                            <div className="flex items-center space-x-2">
+                                <User className="w-4 h-4 text-gray-500" />
+                                <span>{user.first_name} {user.last_name}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Phone className="w-4 h-4 text-gray-500" />
+                                <span>{user.phone_number}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <ShieldCheck className="w-4 h-4 text-gray-500" />
+                                <span>{user.is_verified ? t.verified : t.notVerified}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <IdCard className="w-4 h-4 text-gray-500" />
+                                <span>{user.national_id}</span>
+                            </div>
+                            {user.village && (
+                                <div className="flex items-center space-x-2">
+                                    <MapPin className="w-4 h-4 text-gray-500" />
+                                    <span>
+                                        {user.village.village}, {user.village.cell}, {user.village.sector}, {user.village.district}, {user.village.province}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Footer actions */}
+                        <div className="flex justify-between items-center px-4 py-3">
+                            <button
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm font-medium"
+                                onClick={refreshProfile}
+                                disabled={loading}
+                            >
+                                {t.refresh}
+                            </button>
                             <button
                                 className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm font-medium"
                                 onClick={handleSignOut}
                             >
-                                Sign Out
+                                {t.signOut}
                             </button>
                         </div>
                     </div>

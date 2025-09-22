@@ -11,7 +11,7 @@ export const homeTranslations = {
     heroTitle: "URUBUGA RW’UMURYANGO WA SMART VILLAGE",
     heroSubtitle:
       "Guhuza Abaturage, Guteza Imbere Imiryango, Gushyigikira Villages.",
-    joinButton: "Jya mu Muryango",
+    joinButton: "sura umudugudu",
     learnButton: "Menya Birenze",
   },
   Français: {

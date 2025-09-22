@@ -8,10 +8,10 @@ import { useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
-import { Label } from "../../../components/ui/label";
-import { Input } from "../../../components/ui/input";
-import { Checkbox } from "../../../components/ui/checkbox";
-import { Button } from "../../../components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 import UserService from "../authService";
 import type { LoginPayload } from "../authTypes";

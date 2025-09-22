@@ -23,7 +23,7 @@ export const tokenStorage = {
 
   clearAuth: () => {
     sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("refreshToken");
+    // sessionStorage.removeItem("refreshToken");
     sessionStorage.removeItem("userId");
     sessionStorage.removeItem("userRole");
   },

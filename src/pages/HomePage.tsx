@@ -1,58 +1,48 @@
-import { Navigation } from "../components/navigation";
+import { PageLoader } from "@/components/common/PageLoader";
+import React, { Suspense } from "react";
+import { motion, Variants, Easing } from "framer-motion";
 
-import AboutPage from "../features/homePages/components/AboutPage";
-import Contact from "../features/contacts/pages/ContactPage";
-import CTASection from "../features/homePages/components/CTASectionPage";
-import LandingFooter from "../features/homePages/components/LandingFooter";
-import PlatformFeatures from "../features/homePages/components/PlatformFeatures";
-import { homeTranslations } from "../features/homePages/i18n/homeTranslations";
-import { useLanguage } from "../features/i18n/useLanguage";
-import MeetOurTeam from "../features/our-team/components/meet-our-team";
-
+// Lazy imports
+const HeroSection = React.lazy(() => import("@/features/homePages/components/HeroSection"));
+const AboutPage = React.lazy(() => import("../features/homePages/components/AboutPage"));
+const PlatformFeatures = React.lazy(() => import("../features/homePages/components/PlatformFeatures"));
+const CTASection = React.lazy(() => import("../features/homePages/components/CTASectionPage"));
+const Contact = React.lazy(() => import("../features/contacts/pages/ContactPage"));
+const MeetOurTeam = React.lazy(() => import("../features/our-team/components/meet-our-team"));
+const ease: Easing = [0.42, 0, 0.58, 1];
+const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+};
 
 export default function HomePage() {
-    const { language } = useLanguage();
-    const t = homeTranslations[language];
-
     return (
-        <section className="h-screen w-screen mt-12">
-            <Navigation />
+        <main id="home" role="main" className="space-y-20">
+            <Suspense fallback={<PageLoader />}>
+                <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+                    <HeroSection />
+                </motion.div>
 
+                <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+                    <AboutPage />
+                </motion.div>
 
-            <div className="relative w-full h-screen">
-                <div
-                    className="absolute inset-0"
-                    style={{
-                        backgroundImage: "url('/imgs/homeBackGround.png')",
-                        backgroundSize: "contain",
-                        backgroundPosition: "top",
-                    }}
-                ></div>
+                <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+                    <PlatformFeatures />
+                </motion.div>
 
-                <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-blue-600 opacity-80" />
+                <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+                    <CTASection />
+                </motion.div>
 
-                <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-                    <h1 className="text-4xl md:text-6xl font-bold">{t.heroTitle}</h1>
-                    <p className="mt-4 text-lg md:text-2xl">{t.heroSubtitle}</p>
+                <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+                    <Contact />
+                </motion.div>
 
-                    <div className="mt-6 flex gap-4 flex-wrap justify-center">
-                        <button className="bg-yellow-400 text-black px-6 py-2 rounded font-semibold hover:bg-yellow-500 transition">
-                            {t.joinButton}
-                        </button>
-                        <button className="border border-white px-6 py-2 rounded font-semibold hover:bg-white hover:text-black transition">
-                            {t.learnButton}
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-            <AboutPage />
-            <PlatformFeatures />
-            <CTASection />
-            <Contact />
-            <MeetOurTeam />
-            <LandingFooter />
-        </section>
+                <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+                    <MeetOurTeam />
+                </motion.div>
+            </Suspense>
+        </main>
     );
 }

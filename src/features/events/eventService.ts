@@ -5,12 +5,17 @@ import type {
   Event,
   GetEventByIdApiResponse,
   GetEventsApiResponse,
+  GetEventsOptions,
   GetVillageEventsApiResponse,
 } from "./types";
 
 const EventService = {
-  getEvents: async (): Promise<GetEventsApiResponse> => {
-    const res = await api.get("/event/");
+  getEvents: async (
+    options?: GetEventsOptions
+  ): Promise<GetEventsApiResponse> => {
+    const res = await api.get<GetEventsApiResponse>("/event/", {
+      params: options,
+    });
     return res.data;
   },
 
@@ -19,10 +24,10 @@ const EventService = {
     return res.data;
   },
 
-  createEvent: async (
-    data: Partial<Event>
-  ): Promise<CreateOrUpdateEventApiResponse> => {
-    const res = await api.post("/event/", data);
+  createEvent: async (data: FormData) => {
+    const res = await api.post("/event/", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return res.data;
   },
 

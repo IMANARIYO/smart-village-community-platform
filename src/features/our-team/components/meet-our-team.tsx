@@ -1,6 +1,6 @@
 import TeamCard from "./team-card"
 
-import { Button } from "../../../components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Mail,
 

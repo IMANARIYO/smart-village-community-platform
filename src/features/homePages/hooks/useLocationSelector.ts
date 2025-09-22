@@ -1,8 +1,6 @@
-// src/hooks/useLocationSelector.ts
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-
 import { toast } from "sonner";
 import type { Village } from "../../../types";
 import { fetchLocations, type HierarchicalData } from "../service";
@@ -40,49 +38,84 @@ export function useLocationSelector() {
     }
   }, []);
 
+  // Whenever a level changes, automatically reset lower levels
   useEffect(() => {
-    const fetchData = async () => {
+    resetLowerLevels("province");
+    const fetchProvinces = async () => {
       try {
-        let data: HierarchicalData;
-        if (!province) {
-          data = await fetchLocations();
-          if (!data.success) { toast.error(data.message || "Failed to load provinces"); return; }
-          setProvinces(data.data.provinces || []);
-          return;
-        }
-        if (province && !district) {
-          resetLowerLevels("province");
-          data = await fetchLocations({ province });
-          if (!data.success) { toast.error(data.message || "Failed to load districts"); return; }
-          setDistricts(data.data.districts || []);
-          return;
-        }
-        if (province && district && !sector) {
-          resetLowerLevels("district");
-          data = await fetchLocations({ province, district });
-          if (!data.success) { toast.error(data.message || "Failed to load sectors"); return; }
-          setSectors(data.data.sectors || []);
-          return;
-        }
-        if (province && district && sector && !cell) {
-          resetLowerLevels("sector");
-          data = await fetchLocations({ province, district, sector });
-          if (!data.success) { toast.error(data.message || "Failed to load cells"); return; }
-          setCells(data.data.cells || []);
-          return;
-        }
-        if (province && district && sector && cell) {
-          resetLowerLevels("cell");
-          data = await fetchLocations({ province, district, sector, cell });
-          if (!data.success) { toast.error(data.message || "Failed to load villages"); return; }
-          setVillages(data.data.villages || []);
-        }
-      } catch (error) {
-        console.error("error   fetchinng locations",error)
-        toast.error("Error fetching locations");
+        const data: HierarchicalData = await fetchLocations();
+        if (!data.success) { toast.error(data.message || "Failed to load provinces"); return; }
+        setProvinces(data.data.provinces || []);
+      } catch (err) {
+        console.error("Error fetching provinces", err);
+        toast.error("Error fetching provinces");
       }
     };
-    fetchData();
+    fetchProvinces();
+  }, [resetLowerLevels]);
+
+  useEffect(() => {
+    if (!province) return;
+    resetLowerLevels("province");
+    const fetchDistricts = async () => {
+      try {
+        const data: HierarchicalData = await fetchLocations({ province });
+        if (!data.success) { toast.error(data.message || "Failed to load districts"); return; }
+        setDistricts(data.data.districts || []);
+      } catch (err) {
+        console.error("Error fetching districts", err);
+        toast.error("Error fetching districts");
+      }
+    };
+    fetchDistricts();
+  }, [province, resetLowerLevels]);
+
+  useEffect(() => {
+    if (!province || !district) return;
+    resetLowerLevels("district");
+    const fetchSectors = async () => {
+      try {
+        const data: HierarchicalData = await fetchLocations({ province, district });
+        if (!data.success) { toast.error(data.message || "Failed to load sectors"); return; }
+        setSectors(data.data.sectors || []);
+      } catch (err) {
+        console.error("Error fetching sectors", err);
+        toast.error("Error fetching sectors");
+      }
+    };
+    fetchSectors();
+  }, [province, district, resetLowerLevels]);
+
+  useEffect(() => {
+    if (!province || !district || !sector) return;
+    resetLowerLevels("sector");
+    const fetchCells = async () => {
+      try {
+        const data: HierarchicalData = await fetchLocations({ province, district, sector });
+        if (!data.success) { toast.error(data.message || "Failed to load cells"); return; }
+        setCells(data.data.cells || []);
+      } catch (err) {
+        console.error("Error fetching cells", err);
+        toast.error("Error fetching cells");
+      }
+    };
+    fetchCells();
+  }, [province, district, sector, resetLowerLevels]);
+
+  useEffect(() => {
+    if (!province || !district || !sector || !cell) return;
+    resetLowerLevels("cell");
+    const fetchVillages = async () => {
+      try {
+        const data: HierarchicalData = await fetchLocations({ province, district, sector, cell });
+        if (!data.success) { toast.error(data.message || "Failed to load villages"); return; }
+        setVillages(data.data.villages || []);
+      } catch (err) {
+        console.error("Error fetching villages", err);
+        toast.error("Error fetching villages");
+      }
+    };
+    fetchVillages();
   }, [province, district, sector, cell, resetLowerLevels]);
 
   return {

@@ -5,7 +5,7 @@ import { Users, Calendar, Menu, ChevronLeft, ChevronRight, Home, Bell } from "lu
 import { sidebarLinks } from "../utils/sideBarLinks"
 import ResidentsManagement from "./residents-management"
 import CommunityNews from "./community-news"
-import EventCalendar from "./event-calendar"
+import EventCalendar from "../../events/components/event-calendar"
 import EssentialContacts from "./essential-contacts"
 import SuggestionBox from "./suggestion-box"
 import VolunteeringBoard from "./volunteering-board"

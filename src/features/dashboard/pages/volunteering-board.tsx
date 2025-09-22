@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Handshake, Plus, Users, Clock, MapPin, Star } from "lucide-react"
+import { VolunteeringEventsTable } from "@/features/volunteering/components/VolunteeringEventTable"
 
 const VolunteeringBoard = () => {
   const [activeTab, setActiveTab] = useState("opportunities")
@@ -84,6 +85,7 @@ const VolunteeringBoard = () => {
 
   return (
     <div className="space-y-6">
+      <VolunteeringEventsTable />
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -141,21 +143,19 @@ const VolunteeringBoard = () => {
         <nav className="flex space-x-8">
           <button
             onClick={() => setActiveTab("opportunities")}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === "opportunities"
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "opportunities"
                 ? "border-blue-500 text-blue-600"
                 : "border-transparent text-gray-500 hover:text-gray-700"
-            }`}
+              }`}
           >
             Volunteer Opportunities
           </button>
           <button
             onClick={() => setActiveTab("volunteers")}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === "volunteers"
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === "volunteers"
                 ? "border-blue-500 text-blue-600"
                 : "border-transparent text-gray-500 hover:text-gray-700"
-            }`}
+              }`}
           >
             Available Volunteers
           </button>

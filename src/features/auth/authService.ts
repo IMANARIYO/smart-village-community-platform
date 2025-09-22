@@ -11,6 +11,7 @@ import type {
   ResetRequestPayload,
   VerifyEmailPayload,
 } from "./authTypes";
+import { UserProfileStorage } from "./utils/UserProfileStorage";
 
 const UserService = {
   login: async (data: LoginPayload): Promise<LoginApiResponse> => {
@@ -68,6 +69,8 @@ const UserService = {
   },
   logout: () => {
     tokenStorage.clearAuth();
+    UserProfileStorage.clearUserProfile(); // Clear cached user profile
+    localStorage.removeItem("visitedVillage"); // Clear visited village
   },
 };
 

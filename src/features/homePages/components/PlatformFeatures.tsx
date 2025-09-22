@@ -10,7 +10,7 @@ import {
     Users,
     Wifi,
 } from "lucide-react";
-import { Link as ScrollLink } from "react-scroll"; // ✅ react-scroll
+import { Link as ScrollLink } from "react-scroll";
 import { useLanguage } from "../../i18n/useLanguage";
 import { featuresTranslations } from "./i18n/PlatFormFeaturesTranslations";
 
@@ -46,9 +46,15 @@ const PlatformFeatures = () => {
                 : "Learn More →";
 
     return (
-        <section id="features" className="py-16 bg-gray-50">
+        <section
+            id="features"
+            aria-labelledby="features-heading"
+            className="py-16 bg-gray-50"
+            role="region"
+        >
             <div className="px-4 sm:px-6 lg:px-8">
                 <h2
+                    id="features-heading"
                     className="text-4xl font-bold text-center mb-12"
                     style={{ color: "var(--smart-village-primary)" }}
                 >
@@ -59,23 +65,30 @@ const PlatformFeatures = () => {
                     {translatedFeatures.map((feature, index) => {
                         const Icon = icons[index];
                         return (
-                            <div
+                            <article
                                 key={index}
                                 className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                                aria-labelledby={`feature-${index}-title`}
                             >
                                 <div className="flex flex-col items-center text-center">
-                                    <div className="flex items-center justify-center w-12 h-12 rounded-lg mb-4 bg-primary-dark">
-                                        <Icon className="w-6 h-6 text-white" />
+                                    <div
+                                        className="flex items-center justify-center w-12 h-12 rounded-lg mb-4 bg-primary-dark"
+                                        aria-hidden="true"
+                                    >
+                                        <Icon className="w-6 h-6 text-white" aria-hidden="true" />
                                     </div>
-                                    <h3 className="text-xl font-semibold mb-3 text-primary-dark">
+                                    <h3
+                                        id={`feature-${index}-title`}
+                                        className="text-xl font-semibold mb-3 text-primary-dark"
+                                    >
                                         {feature.title}
                                     </h3>
                                 </div>
+
                                 <p className="text-gray-600 mb-4 leading-relaxed">
                                     {feature.description}
                                 </p>
 
-                                {/* ✅ Smooth scroll to #about section */}
                                 <ScrollLink
                                     to="about"
                                     smooth={true}
@@ -86,7 +99,7 @@ const PlatformFeatures = () => {
                                 >
                                     {learnMoreText}
                                 </ScrollLink>
-                            </div>
+                            </article>
                         );
                     })}
                 </div>
