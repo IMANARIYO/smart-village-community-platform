@@ -1,5 +1,58 @@
 import type { RoleEnum } from "../features/auth/authTypes";
 
+const STORAGE_KEY = "sv_auth_data";
+const SECRET = "SmartVillage2024";
+
+const encrypt = (text: string): string => {
+  const encoded = btoa(text);
+  let result = "";
+  for (let i = 0; i < encoded.length; i++) {
+    result += String.fromCharCode(
+      encoded.charCodeAt(i) ^ SECRET.charCodeAt(i % SECRET.length)
+    );
+  }
+  return btoa(result);
+};
+
+const decrypt = (encrypted: string): string => {
+  try {
+    const decoded = atob(encrypted);
+    let result = "";
+    for (let i = 0; i < decoded.length; i++) {
+      result += String.fromCharCode(
+        decoded.charCodeAt(i) ^ SECRET.charCodeAt(i % SECRET.length)
+      );
+    }
+    return atob(result);
+  } catch {
+    return "";
+  }
+};
+
+interface AuthData {
+  accessToken?: string;
+  refreshToken?: string;
+  userId?: string;
+  userRole?: RoleEnum;
+}
+
+const getStoredData = (): AuthData => {
+  const encrypted = sessionStorage.getItem(STORAGE_KEY);
+  if (!encrypted) return {};
+
+  try {
+    const decrypted = decrypt(encrypted);
+    return JSON.parse(decrypted);
+  } catch {
+    return {};
+  }
+};
+
+const setStoredData = (data: AuthData): void => {
+  const encrypted = encrypt(JSON.stringify(data));
+  sessionStorage.setItem(STORAGE_KEY, encrypted);
+};
+
 export const tokenStorage = {
   setAuth: (
     access: string,
@@ -7,24 +60,20 @@ export const tokenStorage = {
     userId: string,
     role: RoleEnum
   ) => {
-    sessionStorage.setItem("accessToken", access);
-    sessionStorage.setItem("refreshToken", refresh);
-    sessionStorage.setItem("userId", userId);
-    sessionStorage.setItem("userRole", role);
+    setStoredData({
+      accessToken: access,
+      refreshToken: refresh,
+      userId,
+      userRole: role,
+    });
   },
 
-  getAccessToken: () => sessionStorage.getItem("accessToken"),
-  getRefreshToken: () => sessionStorage.getItem("refreshToken"),
-  getUserId: () => sessionStorage.getItem("userId"),
-  getUserRole: (): RoleEnum | null => {
-    const role = sessionStorage.getItem("userRole");
-    return role ? (role as RoleEnum) : null;
-  },
+  getAccessToken: (): string | null => getStoredData().accessToken || null,
+  getRefreshToken: (): string | null => getStoredData().refreshToken || null,
+  getUserId: (): string | null => getStoredData().userId || null,
+  getUserRole: (): RoleEnum | null => getStoredData().userRole || null,
 
   clearAuth: () => {
-    sessionStorage.removeItem("accessToken");
-    // sessionStorage.removeItem("refreshToken");
-    sessionStorage.removeItem("userId");
-    sessionStorage.removeItem("userRole");
+    sessionStorage.removeItem(STORAGE_KEY);
   },
 };
