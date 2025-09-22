@@ -2,7 +2,9 @@ import { useState } from "react";
 import { GridMoreVertIcon } from "@mui/x-data-grid";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import { toast } from "sonner";
+import { Eye } from "lucide-react";
 import LeaderService from "../LeaderService";
+import { LeaderDetailsDialog } from "./LeaderDetailsDialog";
 import type { LeaderListItem } from "../leaderTypes";
 
 const ITEM_HEIGHT = 48;
@@ -72,6 +74,15 @@ export function ActionsCell({ leader }: ActionsCellProps) {
                     style: { maxHeight: ITEM_HEIGHT * 4.5, width: "20ch" },
                 }}
             >
+                <LeaderDetailsDialog
+                    leader={leader}
+                    trigger={
+                        <MenuItem>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                        </MenuItem>
+                    }
+                />
                 <MenuItem onClick={() => handleAction("Edit")}>Edit</MenuItem>
                 <MenuItem onClick={() => handleAction("Toggle")}>
                     {leader.is_active ? "Deactivate" : "Activate"}

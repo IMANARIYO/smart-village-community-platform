@@ -355,40 +355,85 @@ export function DataTable<T extends { id: GridRowId }>({
         </div>
       </CardContent>
 
-      {/* ✅ Footer - Made sticky */}
+      {/* ✅ Footer - Made responsive */}
       {!hidePagination && totalRows > 0 && (
-        <CardFooter
-          className=" sm:p-6 border-t flex flex-wrap items-center justify-between ga sticky bottom-0 z-10 bg-card"
-        >
-          <div className="flex items-center ga  min-w-[150px]">
-            <label htmlFor="pageSize" className="text-sm whitespace-nowrap">
-              Rows per page:
-            </label>
-            <select
-              id="pageSize"
-              value={paginationModel.pageSize}
-              onChange={(e) =>
-                onPaginationChange({
-                  ...paginationModel,
-                  pageSize: Number(e.target.value),
-                  page: 0,
-                })
-              }
-              className="border rounded px-2 py-1 text-sm"
-            >
-              {pageSizeOptions.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
+        <CardFooter className="p-3 sm:p-6 border-t sticky bottom-0 z-10 bg-card">
+          {/* Mobile Layout */}
+          <div className="flex flex-col gap-3 w-full sm:hidden">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <label htmlFor="pageSize" className="text-xs">
+                  Rows:
+                </label>
+                <select
+                  id="pageSize"
+                  value={paginationModel.pageSize}
+                  onChange={(e) =>
+                    onPaginationChange({
+                      ...paginationModel,
+                      pageSize: Number(e.target.value),
+                      page: 0,
+                    })
+                  }
+                  className="border rounded px-2 py-1 text-xs"
+                >
+                  {pageSizeOptions.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {currentStart}–{currentEnd} of {totalRows}
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <Pagination
+                count={totalPages}
+                page={paginationModel.page + 1}
+                onChange={(_, newPage) =>
+                  onPaginationChange({ ...paginationModel, page: newPage - 1 })
+                }
+                size="small"
+                color="primary"
+                shape="rounded"
+                siblingCount={0}
+                boundaryCount={1}
+              />
+            </div>
           </div>
 
-          <div className="text-sm text-muted-foreground min-w-[180px] text-center sm:text-right">
-            Showing {currentStart}–{currentEnd} of {totalRows}
-          </div>
+          {/* Desktop Layout */}
+          <div className="hidden sm:flex items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <label htmlFor="pageSize" className="text-sm whitespace-nowrap">
+                Rows per page:
+              </label>
+              <select
+                id="pageSize"
+                value={paginationModel.pageSize}
+                onChange={(e) =>
+                  onPaginationChange({
+                    ...paginationModel,
+                    pageSize: Number(e.target.value),
+                    page: 0,
+                  })
+                }
+                className="border rounded px-2 py-1 text-sm"
+              >
+                {pageSizeOptions.map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div className="w-full sm:w-auto">
+            <div className="text-sm text-muted-foreground">
+              Showing {currentStart}–{currentEnd} of {totalRows}
+            </div>
+
             <Pagination
               count={totalPages}
               page={paginationModel.page + 1}

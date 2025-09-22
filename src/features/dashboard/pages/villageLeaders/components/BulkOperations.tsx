@@ -33,16 +33,33 @@ export function BulkOperations({ selectedLeaders, onClearSelection, onUpdate }: 
 
       switch (operation) {
         case "activate":
-          await LeaderService.bulkUpdateLeaders(userIds, { is_active: true });
-          toast.success(`${selectedLeaders.length} leaders activated`);
+          const activateResponse = await LeaderService.bulkUpdateLeaders(userIds, { is_active: true });
+          if (activateResponse.success) {
+            toast.success(`${selectedLeaders.length} leaders activated`);
+          } else {
+            toast.error(activateResponse.message);
+            throw new Error(activateResponse.message);
+          }
           break;
         case "deactivate":
-          await LeaderService.bulkUpdateLeaders(userIds, { is_active: false });
-          toast.success(`${selectedLeaders.length} leaders deactivated`);
+          const deactivateResponse = await LeaderService.bulkUpdateLeaders(userIds, { is_active: false });
+          if (deactivateResponse.success) {
+            toast.success(`${selectedLeaders.length} leaders deactivated`);
+          } else {
+            toast.error(deactivateResponse.message);
+            throw new Error(deactivateResponse.message);
+          }
           break;
         case "remove":
           if (confirm(`Are you sure you want to remove ${selectedLeaders.length} leaders from their villages?`)) {
-            await Promise.all(userIds.map(id => LeaderService.removeLeaderFromVillage(id)));
+            const removePromises = userIds.map(async (id) => {
+              const response = await LeaderService.removeLeaderFromVillage(id);
+              if (!response.success) {
+                throw new Error(response.message);
+              }
+              return response;
+            });
+            await Promise.all(removePromises);
             toast.success(`${selectedLeaders.length} leaders removed`);
           }
           break;
@@ -55,8 +72,8 @@ export function BulkOperations({ selectedLeaders, onClearSelection, onUpdate }: 
       onClearSelection();
       setOperation("");
     } catch (error) {
-      console.error("Bulk operation failed:", error);
-      toast.error("Bulk operation failed");
+      const errorMessage = error instanceof Error ? error.message : "Bulk operation failed";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

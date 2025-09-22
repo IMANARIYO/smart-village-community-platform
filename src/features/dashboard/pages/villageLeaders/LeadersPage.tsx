@@ -3,12 +3,15 @@ import { DataTable } from "../../../../components/TableComponents/data-table";
 import LeaderService from "./LeaderService";
 import type { GetLeadersParams, LeaderListItem } from "./leaderTypes";
 import type { GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
-import { leaderColumns } from "./leadersColumns";
+import { leaderColumns } from "./components/leadersColumns";
 import { LeaderFilters } from "./components/LeaderFilters";
 import { Button } from "../../../../components/ui/button";
 import { Plus, Download, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { PromoteLeaderDialog } from "./components/PromoteLeaderDialog";
+
+import { EditLeaderDialog } from "./components/EditLeaderDialog";
+import { DeleteLeaderDialog } from "./components/DeleteLeaderDialog";
 
 function LeadersPage() {
   const [leaders, setLeaders] = useState<LeaderListItem[]>([]);
@@ -21,6 +24,9 @@ function LeadersPage() {
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<GetLeadersParams>({});
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [selectedLeader] = useState<LeaderListItem | null>(null);
   const fetchLeaders = useCallback(async () => {
     setLoading(true);
     try {
@@ -42,6 +48,11 @@ function LeadersPage() {
       setLoading(false);
     }
   }, [paginationModel, sortModel, search, filters]);
+
+
+
+
+
 
   const handleExport = async () => {
     try {
@@ -116,6 +127,7 @@ function LeadersPage() {
         onSearchChange={setSearch}
         searchPlaceholder="Search leaders..."
         hideSearch={true}
+        onRowClick={() => {}}
         additionHeaderContent={
           <div className="flex gap-2">
             <Button onClick={handleExport} variant="outline" size="sm">
@@ -138,16 +150,42 @@ function LeadersPage() {
               className="hidden"
             />
 
-            <PromoteLeaderDialog trigger={<>
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Leader
-              </Button>
+            <PromoteLeaderDialog
+              trigger={
+                <Button size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Leader
+                </Button>
+              }
 
-            </>} />
+            />
           </div>
         }
       />
+
+      {selectedLeader && (
+        <>
+          <EditLeaderDialog
+            leader={selectedLeader}
+            isOpen={showEdit}
+            onClose={() => setShowEdit(false)}
+            onSuccess={() => {
+              setShowEdit(false);
+              fetchLeaders();
+            }}
+          />
+
+          <DeleteLeaderDialog
+            leader={selectedLeader}
+            isOpen={showDelete}
+            onClose={() => setShowDelete(false)}
+            onSuccess={() => {
+              setShowDelete(false);
+              fetchLeaders();
+            }}
+          />
+        </>
+      )}
     </div>
   );
 }

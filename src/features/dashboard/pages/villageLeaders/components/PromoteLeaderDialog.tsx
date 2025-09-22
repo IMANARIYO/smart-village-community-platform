@@ -43,12 +43,16 @@ export function PromoteLeaderDialog({ trigger, initialVillageId }: PromoteLeader
         setLoading(true);
         LeaderService.getVillageResidents(village.village_id)
             .then((res) => {
-                setResidents(Array.isArray(res.residents) ? res.residents : []);
-                setCurrentLeader(res.village?.leader?.user_id || null);
+                if (res.success) {
+                    setResidents(Array.isArray(res.residents) ? res.residents : []);
+                    setCurrentLeader(res.village?.leader?.user_id || null);
+                } else {
+                    toast.error(res.message);
+                }
             })
             .catch((err) => {
-                console.error(err);
-                toast.error("Failed to fetch residents.");
+                const errorMessage = err instanceof Error ? err.message : "Failed to fetch residents.";
+                toast.error(errorMessage);
             })
             .finally(() => setLoading(false));
     }, [village]);
@@ -57,12 +61,17 @@ export function PromoteLeaderDialog({ trigger, initialVillageId }: PromoteLeader
         if (!village || !selectedResidentId) return;
         try {
             setLoading(true);
-            await LeaderService.promoteLeader(selectedResidentId, village.village_id);
-            toast.success("Resident promoted to leader successfully!");
-
+            const response = await LeaderService.promoteLeader(selectedResidentId, village.village_id);
+            
+            if (response.success) {
+                toast.success("Resident promoted to leader successfully!");
+            } else {
+                toast.error(response.message);
+                throw new Error(response.message);
+            }
         } catch (err) {
-            console.error(err);
-            toast.error("Failed to promote resident.");
+            const errorMessage = err instanceof Error ? err.message : "Failed to promote resident.";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

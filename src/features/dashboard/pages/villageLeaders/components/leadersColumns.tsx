@@ -1,7 +1,7 @@
 import { type GridColDef } from "@mui/x-data-grid";
-import type { LeaderListItem } from "./leaderTypes";
+import type { LeaderListItem } from "../leaderTypes";
 import { Chip } from "@mui/material";
-import { ActionsCell } from "./components/ActionsCell";
+import { ActionsCell } from "./ActionsCell";
 
 export const leaderColumns: GridColDef<LeaderListItem & { id: string }>[] = [
     {
