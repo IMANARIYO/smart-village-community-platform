@@ -47,8 +47,8 @@ export default function AppRouter() {
                     <Route path="/VolunteeringEvents/:villageId" element={<VolunteeringEvents />} />
                     <Route path="/EmergencyContacts/:villageId" element={<EmergencyContacts />} />
                     <Route path="/dashboard" element={<Dashboard />} />
-                    {/* <Route path="/test" element={<VolunteeringEvents />} /> */}
-                    <Route path="/test" element={<LeadersPage />} />
+                    <Route path="/test" element={<VolunteeringEvents />} />
+                    {/* <Route path="/test" element={<LeadersPage />} /> */}
 
                 </Route>
 

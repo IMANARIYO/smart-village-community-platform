@@ -53,11 +53,24 @@ export const JoinEventDialog: React.FC<JoinEventDialogProps> = ({ event }) => {
             }
 
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "Failed to join the event";
+            let message = "Failed to join the event";
+
+            if (err instanceof Error) {
+                // Axios error?
+                const axiosError = err as { response?: { data?: { message?: string } } };
+
+                if (axiosError.response?.data?.message) {
+                    message = axiosError.response.data.message;
+                } else {
+                    message = err.message; // fallback
+                }
+            }
+
+
             toast.error(message);
-        } finally {
-            setLoading(false);
+            setLoading(false)
         }
+
     };
 
     return (
