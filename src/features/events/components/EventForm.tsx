@@ -17,9 +17,10 @@ type EventFormValues = CreateEventRequest & {
 
 interface EventFormProps {
     onSuccess?: () => void;
+    initialDate?: string | null;
 }
 
-export function EventForm({ onSuccess }: EventFormProps) {
+export function EventForm({ onSuccess, initialDate }: EventFormProps) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ export function EventForm({ onSuccess }: EventFormProps) {
             title: "",
             description: "",
             exact_place_of_village: "",
-            date: "",
+            date: initialDate || "",
             start_time: "",
             end_time: "",
             category: EventCategory.VILLAGE_MEETING,
