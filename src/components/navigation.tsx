@@ -18,7 +18,7 @@ export function useActiveSection(ids: string[]) {
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
-                // Find the entry with the highest intersection ratio
+
                 const visibleEntries = entries.filter(entry => entry.isIntersecting);
                 if (visibleEntries.length > 0) {
                     const mostVisible = visibleEntries.reduce((prev, current) =>
@@ -167,7 +167,15 @@ export function Navigation() {
                     { id: 'news', label: t.news, to: '#news', group: 'community' as const },
                     { id: 'events', label: t.events, to: '#events', group: 'community' as const },
                     { id: 'volunteering', label: t.volunteering, to: '#volunteering', group: 'community' as const },
-                    { id: 'contacts', label: t.contacts, to: '#contacts', group: 'services' as const },
+                    { id: 'contacts', label: `{${t.contacts}___`, to: '#contacts', group: 'services' as const },
+
+                    // Conditionally add visitors & safety if logged in
+                    ...(localStorage.getItem("user")
+                        ? [
+                            { id: "visitors", label: t.visitors, to: "#visitors", group: "services" as const },
+                            { id: "safety", label: t.safety, to: "#safety", group: "services" as const },
+                        ]
+                        : []),
                 ];
             case 'logged-in':
                 return [
