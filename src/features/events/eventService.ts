@@ -5,15 +5,10 @@ import type {
   Event,
   GetEventByIdApiResponse,
   GetEventsApiResponse,
+  GetEventsOptions,
   GetVillageEventsApiResponse,
 } from "./types";
-interface GetEventsOptions {
-  page?: number;
-  page_size?: number;
-  status?: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
-  village?: number;
-  date?: string; // YYYY-MM-DD
-}
+
 const EventService = {
   getEvents: async (
     options?: GetEventsOptions

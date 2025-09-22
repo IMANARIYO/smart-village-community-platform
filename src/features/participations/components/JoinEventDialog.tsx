@@ -35,16 +35,26 @@ export const JoinEventDialog: React.FC<JoinEventDialogProps> = ({ event }) => {
     const handleJoin = async (data: ParticipationFormData) => {
         setLoading(true);
         try {
-            await participationService.create({
+            console.log("erro  joininthe event________@@@@@@@@@@@@@@");
+            const response = await participationService.create({
                 event: event.volunteer_id,
                 notes: data.notes || undefined,
             });
-            toast.success(`You successfully joined "${event.title}"`);
-            setOpen(false);
-            form.reset();
-        } catch (err) {
-            console.error(err);
-            toast.error("Failed to join the event");
+
+
+            if (response.success) {
+                toast.success(response.message || `You successfully joined "${event.title}"`);
+                setOpen(false);
+                form.reset();
+            }
+            else {
+                toast.error(response.data.message || "Failed to join the event")
+
+            }
+
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "Failed to join the event";
+            toast.error(message);
         } finally {
             setLoading(false);
         }

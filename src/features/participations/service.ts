@@ -27,17 +27,16 @@ export const participationService = {
     return response.data;
   },
 
-  // Create a participation request
-  async create(
-    payload: CreateParticipationRequest
-  ): Promise<ApiResponse<Participation>> {
-    const response = await api.post<ApiResponse<Participation>>(
-      API_BASE,
-      payload
-    );
-    return response.data;
-  },
+  async create(payload: CreateParticipationRequest) {
+    try {
+      const response = await api.post(`${API_BASE}/`, payload);
 
+      return response.data;
+    } catch (error) {
+      console.error("❌ Participation failed:", error);
+      throw error; // rethrow so the caller can handle it
+    }
+  },
   // Get participation by ID
   async getById(participation_id: string): Promise<ApiResponse<Participation>> {
     const response = await api.get<ApiResponse<Participation>>(

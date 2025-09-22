@@ -42,6 +42,18 @@ export enum EventType {
   INVITATION = "Invitation",
 }
 
+export interface GetEventsOptions {
+  page?: number; // Page number for pagination
+  limit?: number; // Number of items per page
+  page_size?: number; // Alternative pagination param
+  status?: EventStatusEnum; // PENDING | APPROVED | REJECTED | CANCELLED
+  village_id?: string; // Village UUID
+  category?: EventCategory; // Filter by category
+  date?: string; // YYYY-MM-DD
+  title?: string; // Search by title
+  village?: string; // Village filter
+}
+
 export interface Event {
   event_id: string;
   village: string | Village;
@@ -130,7 +142,23 @@ export interface EventFilters {
   limit?: number;
 }
 
-export type GetEventsApiResponse = ApiResponse<PaginatedEvents>;
+export interface EventsApiMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+  next: string | null;
+  previous: string | null;
+}
+
+export interface GetEventsApiResponse {
+  success: boolean;
+  message: string;
+  data: EventListItem[];
+  meta: EventsApiMeta;
+}
 
 export type GetEventByIdApiResponse = ApiResponse<Event>;
 export type CreateOrUpdateEventApiResponse = ApiResponse<Event>;

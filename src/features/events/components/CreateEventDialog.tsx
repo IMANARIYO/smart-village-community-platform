@@ -12,13 +12,22 @@ import {
 
 import { EventForm } from "./EventForm";
 
-export function CreateEventDialog() {
+interface CreateEventDialogProps {
+    onSuccess?: () => void;
+}
+
+export function CreateEventDialog({ onSuccess }: CreateEventDialogProps = {}) {
     const [open, setOpen] = useState(false);
+
+    const handleSuccess = () => {
+        setOpen(false);
+        onSuccess?.();
+    };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <button className="bg-green-600 text-white px-4 py-2 rounded">
+                <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
                     Create Event
                 </button>
             </DialogTrigger>
@@ -28,11 +37,11 @@ export function CreateEventDialog() {
                     <DialogTitle>Create Event</DialogTitle>
                 </DialogHeader>
 
-                <EventForm onSuccess={() => setOpen(false)} />
+                <EventForm onSuccess={handleSuccess} />
 
                 <div className="flex justify-end mt-2">
                     <DialogClose asChild>
-                        <button type="button" className="px-3 py-1 rounded border">
+                        <button type="button" className="px-3 py-1 rounded border hover:bg-gray-50 transition-colors">
                             Cancel
                         </button>
                     </DialogClose>

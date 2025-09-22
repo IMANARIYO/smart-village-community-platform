@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
-import { useLocationSelector } from "@/features/homePages/hooks/useLocationSelector";
+
 import { EventCategory, EventType, type CreateEventRequest } from "../types";
 import EventService from "../eventService";
 import type { Village } from "@/types";
@@ -20,15 +21,9 @@ interface EventFormProps {
 
 export function EventForm({ onSuccess }: EventFormProps) {
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const {
-        province, setProvince,
-        district, setDistrict,
-        sector, setSector,
-        cell, setCell,
-        village, setVillage,
-        provinces, districts, sectors, cells, villages,
-    } = useLocationSelector();
+
 
     const { register, handleSubmit, control, reset } = useForm<EventFormValues>({
         defaultValues: {
@@ -46,10 +41,7 @@ export function EventForm({ onSuccess }: EventFormProps) {
     });
 
     const onSubmit: SubmitHandler<EventFormValues> = async (data) => {
-        if (!village) {
-            toast.error("Please select a village");
-            return;
-        }
+
 
         try {
             setLoading(true);
@@ -66,6 +58,7 @@ export function EventForm({ onSuccess }: EventFormProps) {
 
             const res = await EventService.createEvent(formData);
             if (res.success) {
+                navigate(`?villageTrigger=${Date.now()}`, { replace: true });
                 toast.success("Event created successfully!");
                 reset();
                 onSuccess?.();
@@ -120,33 +113,7 @@ export function EventForm({ onSuccess }: EventFormProps) {
                 />
             </div>
 
-            {/* Location Selector */}
-            <div className="grid grid-cols-2 gap-2">
-                <select value={province} onChange={(e) => setProvince(e.target.value)} className="border rounded px-2 py-1">
-                    <option value="">Select province</option>
-                    {provinces.map(p => <option key={p} value={p}>{p}</option>)}
-                </select>
-                <select value={district} onChange={(e) => setDistrict(e.target.value)} className="border rounded px-2 py-1">
-                    <option value="">Select district</option>
-                    {districts.map(d => <option key={d} value={d}>{d}</option>)}
-                </select>
-                <select value={sector} onChange={(e) => setSector(e.target.value)} className="border rounded px-2 py-1">
-                    <option value="">Select sector</option>
-                    {sectors.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-                <select value={cell} onChange={(e) => setCell(e.target.value)} className="border rounded px-2 py-1">
-                    <option value="">Select cell</option>
-                    {cells.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-                <select
-                    value={village?.village_id || ""}
-                    onChange={(e) => setVillage(villages.find(v => v.village_id === e.target.value) || null)}
-                    className="border rounded px-2 py-1 col-span-2"
-                >
-                    <option value="">Select village</option>
-                    {villages.map(v => <option key={v.village_id} value={v.village_id}>{v.village}</option>)}
-                </select>
-            </div>
+
 
             {/* Category */}
             <Controller

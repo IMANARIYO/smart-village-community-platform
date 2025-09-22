@@ -7,7 +7,7 @@ import VillageNewsPage from '../features/news/pages/VillageNewsPage';
 import VolunteeringEvents from '../features/volunteering/pages/VolunteeringEvents ';
 import EmergencyContacts from '../features/emergencies/pages/Emergency';
 import Dashboard from '../features/dashboard/pages/dashboard';
-// import LeadersPage from '@/features/dashboard/pages/villageLeaders/LeadersTable';
+import LeadersPage from '@/features/dashboard/pages/villageLeaders/LeadersTable';
 import ForgotPasswordPage from '@/features/auth/components/ForgotPasswordPage';
 import { AuthLayout, DashboardLayout } from '@/layouts';
 import ProjectOverview from '@/features/dashboard/pages/project-overview';
@@ -15,14 +15,15 @@ import ProjectFAQ from '@/features/dashboard/pages/project-faq';
 import ProjectDocumentation from '@/features/dashboard/pages/project-documentation';
 import ResidentsManagement from '@/features/dashboard/pages/residents-management';
 import CommunityNews from '@/features/dashboard/pages/community-news';
-import EventCalendar from '@/features/dashboard/pages/event-calendar';
+import EventCalendar from '@/features/events/components/event-calendar';
 import EssentialContacts from '@/features/dashboard/pages/essential-contacts';
 import SuggestionBox from '@/features/dashboard/pages/suggestion-box';
 import VolunteeringBoard from '@/features/dashboard/pages/volunteering-board';
 import IncidentReporting from '@/features/dashboard/pages/incident-reporting';
 import ComingSoon from '@/components/common/ComingSoon';
 import { LandingLayout } from '@/layouts/LandingLayout';
-import ParticipationsPage from '@/features/participations/pages/ParticipationsPage';
+import { EventTable } from '@/features/events/components/EventsTable';
+// import ParticipationsPage from '@/features/participations/pages/ParticipationsPage';
 
 
 
@@ -47,7 +48,7 @@ export default function AppRouter() {
                     <Route path="/EmergencyContacts/:villageId" element={<EmergencyContacts />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     {/* <Route path="/test" element={<VolunteeringEvents />} /> */}
-                    <Route path="/test" element={<ParticipationsPage />} />
+                    <Route path="/test" element={<LeadersPage />} />
 
                 </Route>
 
@@ -61,11 +62,13 @@ export default function AppRouter() {
 
                 <Route path="/dashboard" element={<DashboardLayout />}>
                     <Route path="overview" element={<ProjectOverview />} />
+                    <Route path="leaders" element={<LeadersPage />} />
+                    <Route path="events" element={<EventTable />} />
                     <Route path="faq" element={<ProjectFAQ />} />
                     <Route path="docs" element={<ProjectDocumentation />} />
                     <Route path="residents" element={<ResidentsManagement />} />
                     <Route path="news" element={<CommunityNews />} />
-                    <Route path="events" element={<EventCalendar />} />
+                    <Route path="eventsCalendar" element={<EventCalendar />} />
                     <Route path="contacts" element={<EssentialContacts />} />
                     <Route path="suggestions" element={<SuggestionBox />} />
                     <Route path="volunteering" element={<VolunteeringBoard />} />
@@ -73,6 +76,7 @@ export default function AppRouter() {
                     <Route path="languages" element={<ComingSoon />} />
                     <Route path="emergency" element={<ComingSoon />} />
                     <Route path="offline" element={<ComingSoon />} />
+                    <Route path="test" element={<LeadersPage />} />
                     <Route index element={<Navigate to="overview" replace />} />
                 </Route>
 

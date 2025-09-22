@@ -121,8 +121,26 @@ export const sidebarEntries: SidebarEntry[] = [
   { type: "item", name: "FAQ", href: "/dashboard/faq", icon: HelpCircle },
   {
     type: "item",
+    name: "event and the anounvce mane  page",
+    href: "/dashboard/events",
+    icon: HelpCircle,
+  },
+  {
+    type: "item",
     name: "Documentation",
     href: "/dashboard/docs",
+    icon: FileText,
+  },
+  {
+    type: "item",
+    name: "test",
+    href: "/dashboard/test",
+    icon: FileText,
+  },
+  {
+    type: "item",
+    name: "leaders village leaders",
+    href: "/dashboard/leaders",
     icon: FileText,
   },
 
@@ -138,7 +156,11 @@ export const sidebarEntries: SidebarEntry[] = [
         icon: Users,
       },
       { name: "Community News Feed", href: "/dashboard/news", icon: Newspaper },
-      { name: "Event Calendar", href: "/dashboard/events", icon: Calendar },
+      {
+        name: "Event Calendar",
+        href: "/dashboard/eventsCalendar",
+        icon: Calendar,
+      },
       { name: "Essential Contacts", href: "/dashboard/contacts", icon: Phone },
     ],
   },

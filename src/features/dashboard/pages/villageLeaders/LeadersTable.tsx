@@ -1,87 +1,127 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-
+import { toast } from "sonner";
 import { DataTable } from "@/components/TableComponents/data-table";
+import { LeaderFilters } from "./components/LeaderFilters";
 import { leaderColumns } from "./leadersColumns";
-import type { Leader } from "./leaderTypes";
+import type { Leader, GetLeadersApiResponse } from "./leaderTypes";
 import type { GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
 import type { GetLeadersParams } from "./LeaderService";
 import LeaderService from "./LeaderService";
 
+interface LeadersTableProps {
+  onRowClick?: (leader: Leader) => void;
+  filters?: Record<string, unknown>;
+  onFiltersChange?: (filters: Record<string, unknown>) => void;
+  showFilters?: boolean;
+}
 
-export default function LeadersPage() {
+export function LeadersTable({ 
+  onRowClick, 
+  filters = {}, 
+  onFiltersChange,
+  showFilters = true 
+}: LeadersTableProps) {
     const [leaders, setLeaders] = useState<Leader[]>([]);
     const [loading, setLoading] = useState(false);
-
-    // total rows for pagination
     const [totalRows, setTotalRows] = useState(0);
-
-    // pagination state
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-        page: 0, // MUI is 0-based
+        page: 0,
         pageSize: 10,
     });
-
-    // sorting
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
-
-    // search string
     const [search, setSearch] = useState("");
+    const [localFilters, setLocalFilters] = useState<Record<string, unknown>>(filters);
 
     const fetchLeaders = useCallback(async () => {
         try {
             setLoading(true);
 
             const params: GetLeadersParams = {
-                page: paginationModel.page + 1, // API is 1-based
+                page: paginationModel.page + 1,
                 limit: paginationModel.pageSize,
                 search,
                 sortBy: sortModel[0]?.field,
                 sortOrder: sortModel[0]?.sort ?? "asc",
+                ...localFilters,
             };
 
-            const res = await LeaderService.getLeaders(params);
-
-            setLeaders(
-                res.data.map((leader) => ({
+            const response: GetLeadersApiResponse = await LeaderService.getLeaders(params);
+            
+            if (response.success) {
+                const leadersWithId = response.data.map((leader) => ({
                     ...leader,
-                    id: leader.user_id, // ✅ DataGrid requires "id"
-                }))
-            );
-
-            setTotalRows(res.meta.total);
+                    id: leader.user_id,
+                }));
+                setLeaders(leadersWithId);
+                setTotalRows(response.meta.total);
+            } else {
+                toast.error(response.message || "Failed to fetch leaders");
+                setLeaders([]);
+                setTotalRows(0);
+            }
         } catch (error) {
             console.error("Failed to fetch leaders:", error);
+            toast.error("Failed to fetch leaders");
         } finally {
             setLoading(false);
         }
-    }, [paginationModel, sortModel, search]);
+    }, [paginationModel, sortModel, search, localFilters]);
+
+    const handleFiltersChange = (newFilters: Record<string, unknown>) => {
+        setLocalFilters(newFilters);
+        onFiltersChange?.(newFilters);
+        setPaginationModel(prev => ({ ...prev, page: 0 }));
+    };
+
+    const handleRowClick = (leader: Leader & { id: string }) => {
+        onRowClick?.(leader);
+    };
 
     useEffect(() => {
         fetchLeaders();
+        
+        // Provide global refresh function for column actions
+        (window as any).refreshLeaders = fetchLeaders;
+        
+        return () => {
+            delete (window as any).refreshLeaders;
+        };
     }, [fetchLeaders]);
 
-    return (<>
+    useEffect(() => {
+        setLocalFilters(filters);
+    }, [filters]);
 
-        <DataTable<Leader & { id: string }>
-            title="Village Leaders"
-            description="Manage all registered village leaders"
-            columns={leaderColumns}
-            data={leaders.map((leader) => ({ ...leader, id: leader.user_id }))}
-            loading={loading}
-            pageSizeOptions={[1, 2, 3, 4, 5, 6, 7, 8, 10, 25, 50, 100]}
-            totalRows={totalRows}
-            paginationModel={paginationModel}
-            onPaginationChange={setPaginationModel}
-            sortModel={sortModel}
-            onSortModelChange={setSortModel}
-            search={search}
-            onSearchChange={setSearch}
-            emptyMessage="No leaders found"
-        />
-
-    </>
-
+    return (
+        <div className="space-y-4">
+            {showFilters && (
+                <LeaderFilters
+                    filters={localFilters}
+                    onFiltersChange={handleFiltersChange}
+                />
+            )}
+            
+            <DataTable<Leader & { id: string }>
+                title="Village Leaders"
+                description="Manage all registered village leaders"
+                columns={leaderColumns}
+                data={leaders}
+                loading={loading}
+                pageSizeOptions={[5, 10, 25, 50, 100]}
+                totalRows={totalRows}
+                paginationModel={paginationModel}
+                onPaginationChange={setPaginationModel}
+                sortModel={sortModel}
+                onSortModelChange={setSortModel}
+                search={search}
+                onSearchChange={setSearch}
+                onRowClick={handleRowClick}
+                emptyMessage="No leaders found"
+            />
+        </div>
     );
 }
+
+export default LeadersTable;
