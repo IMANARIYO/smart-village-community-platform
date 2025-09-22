@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../features/auth/login/page';
 import SignupPage from '../features/auth/signup/page';
-import VillagePage from '../pages/VillagePage';
+import VillagePage from '../features/dashboard/pages/villageLeaders/VillagePage';
 import VillageNewsPage from '../features/news/pages/VillageNewsPage';
 import VolunteeringEvents from '../features/volunteering/pages/VolunteeringEvents ';
 import EmergencyContacts from '../features/emergencies/pages/Emergency';
@@ -10,7 +10,7 @@ import Dashboard from '../features/dashboard/pages/dashboard';
 import ResidentsDashboard from "../features/residents/pages/ResidentsDashboard";
 import ResidentsNews from "../features/residents/pages/ResidentsNews";
 import IncidentReportingPage from "../features/incidents/pages/IncidentReportingPage";
-import LeadersPage from "@/features/dashboard/pages/villageLeaders/LeadersTable";
+
 
 import ForgotPasswordPage from "@/features/auth/components/ForgotPasswordPage";
 import { AuthLayout, DashboardLayout } from "@/layouts";
@@ -27,7 +27,8 @@ import IncidentReporting from "@/features/dashboard/pages/incident-reporting";
 import ComingSoon from "@/components/common/ComingSoon";
 import { LandingLayout } from "@/layouts/LandingLayout";
 import { EventTable } from "@/features/events/components/EventsTable";
-// import ParticipationsPage from '@/features/participations/pages/ParticipationsPage';
+import LeadersPage from '@/features/dashboard/pages/villageLeaders/LeadersPage';
+
 
 export default function AppRouter() {
   return (
@@ -51,7 +52,7 @@ export default function AppRouter() {
             element={<EmergencyContacts />}
           />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/test" element={<VolunteeringEvents />} />
+          {/* <Route path="/test" element={<VolunteeringEvents />} /> */}
           <Route path="/resident/news" element={<ResidentsNews />} />
           <Route path="/resident" element={<ResidentsDashboard />} />
           <Route path="/safety/incidents" element={<IncidentReportingPage />} />
@@ -69,7 +70,7 @@ export default function AppRouter() {
 
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="overview" element={<ProjectOverview />} />
-          <Route path="leaders" element={<LeadersPage />} />
+
           <Route path="events" element={<EventTable />} />
           <Route path="faq" element={<ProjectFAQ />} />
           <Route path="docs" element={<ProjectDocumentation />} />

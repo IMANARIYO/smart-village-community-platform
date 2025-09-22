@@ -1,76 +1,51 @@
-"use client";
-
 import { useState, useEffect, useCallback } from "react";
-import { toast } from "sonner";
-import { DataTable } from "@/components/TableComponents/data-table";
-import { LeaderFilters } from "./components/LeaderFilters";
-import { LeaderStats } from "./components/LeaderStats";
-import { LeaderDetailModal } from "./components/LeaderDetailModal";
-import { leaderColumns } from "./leadersColumns";
-import { useLeaders } from "./hooks/useLeaders";
+import { DataTable } from "../../../../components/TableComponents/data-table";
 import LeaderService from "./LeaderService";
-import type { Leader, GetLeadersParams } from "./leaderTypes";
+import type { GetLeadersParams, LeaderListItem } from "./leaderTypes";
 import type { GridPaginationModel, GridSortModel } from "@mui/x-data-grid";
-import { Button } from "@/components/ui/button";
+import { leaderColumns } from "./leadersColumns";
+import { LeaderFilters } from "./components/LeaderFilters";
+import { Button } from "../../../../components/ui/button";
 import { Plus, Download, Upload } from "lucide-react";
+import { toast } from "sonner";
+import { PromoteLeaderDialog } from "./components/PromoteLeaderDialog";
 
-export default function LeadersPage() {
-  const { leaders, loading, totalRows, fetchLeaders } = useLeaders();
+function LeadersPage() {
+  const [leaders, setLeaders] = useState<LeaderListItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [totalRows, setTotalRows] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   });
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState<Record<string, unknown>>({});
-  const [selectedLeader, setSelectedLeader] = useState<Leader | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<"view" | "edit" | "create">("view");
-
-  // Calculate stats from current leaders data
-  const stats = {
-    total: totalRows,
-    active: leaders.filter(l => l.is_active).length,
-    inactive: totalRows - leaders.filter(l => l.is_active).length,
-    byProvince: leaders.reduce((acc, leader) => {
-      const province = leader.village?.province || 'Unknown';
-      acc[province] = (acc[province] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>)
-  };
-
-  const refreshLeaders = useCallback(() => {
-    const params: GetLeadersParams = {
-      page: paginationModel.page + 1,
-      limit: paginationModel.pageSize,
-      search,
-      sortBy: sortModel[0]?.field,
-      sortOrder: sortModel[0]?.sort ?? "asc",
-      ...filters,
-    };
-    fetchLeaders(params);
-  }, [paginationModel, sortModel, search, filters, fetchLeaders]);
-
-  const handleFiltersChange = (newFilters: Record<string, unknown>) => {
-    setFilters(newFilters);
-    setPaginationModel(prev => ({ ...prev, page: 0 }));
-  };
-
-  const handleRowClick = (leader: Leader) => {
-    setSelectedLeader(leader);
-    setModalMode("view");
-    setModalOpen(true);
-  };
-
-  const handleAddLeader = () => {
-    setSelectedLeader(null);
-    setModalMode("create");
-    setModalOpen(true);
-  };
+  const [filters, setFilters] = useState<GetLeadersParams>({});
+  const fetchLeaders = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params: GetLeadersParams = {
+        page: paginationModel.page + 1,
+        limit: paginationModel.pageSize,
+        sortBy: sortModel[0]?.field,
+        sortOrder: sortModel[0]?.sort || "asc",
+        search: search || undefined,
+        ...filters,
+      };
+      const response = await LeaderService.getLeaders(params);
+      setLeaders(response.data || []);
+      setTotalRows(response.meta?.total || 0);
+    } catch (error) {
+      console.error("Failed to fetch leaders:", error);
+      toast.error("Failed to fetch leaders");
+    } finally {
+      setLoading(false);
+    }
+  }, [paginationModel, sortModel, search, filters]);
 
   const handleExport = async () => {
     try {
-      const blob = await LeaderService.exportLeaders(filters);
+      const blob = await LeaderService.exportLeaders({ ...filters, search });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -79,115 +54,101 @@ export default function LeadersPage() {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      toast.success("Leaders data exported successfully");
+      toast.success("Leaders exported successfully");
     } catch (error) {
       console.error("Export failed:", error);
-      toast.error("Failed to export leaders data");
+      toast.error("Failed to export leaders");
     }
   };
 
-  const handleImport = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.csv,.xlsx';
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        try {
-          const result = await LeaderService.importLeaders(file);
-          if (result.success) {
-            toast.success(`Import completed: ${result.data.success} leaders imported`);
-            if (result.data.failed > 0) {
-              toast.warning(`${result.data.failed} leaders failed to import`);
-            }
-            refreshLeaders();
-          } else {
-            toast.error(result.message || "Import failed");
-          }
-        } catch (error) {
-          console.error("Import failed:", error);
-          toast.error("Failed to import leaders data");
-        }
-      }
-    };
-    input.click();
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      await LeaderService.importLeaders(file);
+      toast.success("Leaders imported successfully");
+      fetchLeaders();
+    } catch (error) {
+      console.error("Import failed:", error);
+      toast.error("Failed to import leaders");
+    }
+    event.target.value = '';
   };
 
   useEffect(() => {
-    refreshLeaders();
-  }, [paginationModel.page, paginationModel.pageSize, search, filters, sortModel]);
+    fetchLeaders();
+  }, [fetchLeaders]);
 
   useEffect(() => {
-    // Provide global functions for column actions
-    (window as any).handleEditLeader = (leader: Leader) => {
-      setSelectedLeader(leader);
-      setModalMode("edit");
-      setModalOpen(true);
-    };
-    
-    (window as any).refreshLeaders = refreshLeaders;
-    
-    return () => {
-      delete (window as any).handleEditLeader;
-      delete (window as any).refreshLeaders;
-    };
-  }, [refreshLeaders]);
+    const urlParams = new URLSearchParams(window.location.search);
+    const trigger = urlParams.get('leaderTrigger');
+    if (trigger) {
+      fetchLeaders();
+      urlParams.delete('leaderTrigger');
+      const newUrl = `${window.location.pathname}${urlParams.toString() ? '?' + urlParams.toString() : ''}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [fetchLeaders]);
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Village Leaders</h1>
-          <p className="text-gray-600 mt-1">Manage and monitor village leadership</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleImport}>
-            <Upload className="h-4 w-4 mr-2" />
-            Import
-          </Button>
-          <Button variant="outline" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button onClick={handleAddLeader}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Leader
-          </Button>
-        </div>
-      </div>
-
-      <LeaderStats stats={stats} loading={loading} />
-
+    <div className="space-y-6">
       <LeaderFilters
         filters={filters}
-        onFiltersChange={handleFiltersChange}
+        onFiltersChange={setFilters}
       />
 
-      <DataTable<Leader & { id: string }>
-        title="Leaders Management"
-        description="View and manage village leaders across all locations"
+      <DataTable<LeaderListItem & { id: string }>
+        title="Village Leaders"
+        description="Manage village leaders and their information"
         columns={leaderColumns}
-        data={leaders}
+        data={leaders.map((leader) => ({
+          ...leader,
+          id: leader.user_id!,
+        }))}
         loading={loading}
         totalRows={totalRows}
         paginationModel={paginationModel}
-        onPaginationChange={setPaginationModel}
         sortModel={sortModel}
-        onSortModelChange={setSortModel}
         search={search}
+        onPaginationChange={setPaginationModel}
+        onSortModelChange={setSortModel}
         onSearchChange={setSearch}
-        onRowClick={handleRowClick}
-        pageSizeOptions={[5, 10, 25, 50, 100]}
-        emptyMessage="No leaders found"
-      />
+        searchPlaceholder="Search leaders..."
+        hideSearch={true}
+        additionHeaderContent={
+          <div className="flex gap-2">
+            <Button onClick={handleExport} variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button
+              onClick={() => document.getElementById('import-file')?.click()}
+              variant="outline"
+              size="sm"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Import
+            </Button>
+            <input
+              id="import-file"
+              type="file"
+              accept=".csv,.xlsx"
+              onChange={handleImport}
+              className="hidden"
+            />
 
-      <LeaderDetailModal
-        leader={selectedLeader}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onUpdate={refreshLeaders}
-        mode={modalMode}
+            <PromoteLeaderDialog trigger={<>
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Leader
+              </Button>
+
+            </>} />
+          </div>
+        }
       />
     </div>
   );
 }
+export default LeadersPage

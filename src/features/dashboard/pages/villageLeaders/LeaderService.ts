@@ -3,39 +3,28 @@ import type { ApiResponse } from "../../../../types";
 import api from "../../../../utils/api";
 import type {
   Leader,
-  GetLeadersApiResponse,
   GetLeaderByIdApiResponse,
   UpdateLeaderApiResponse,
   PromoteLeaderApiResponse,
+  GetLeadersApiResponse,
+  GetLeadersParams,
+  GetVillageResidentsApiResponse,
 } from "./leaderTypes";
 
-export interface GetLeadersParams {
-  province?: string;
-  district?: string;
-  sector?: string;
-  cell?: string;
-  village_id?: string;
-  search?: string;
-  limit?: number;
-  page?: number;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-  deletedOnly?: boolean;
-  includeDeleted?: boolean;
-}
+// LeaderService.ts
+export const LEADER_REFRESH_TRIGGER_KEY = "leaderTrigger";
 
 const LeaderService = {
   // List all village leaders
-  getLeaders: async (params: GetLeadersParams = {}, signal?: AbortSignal): Promise<GetLeadersApiResponse> => {
+  getLeaders: async (params: GetLeadersParams = {}): Promise<GetLeadersApiResponse> => {
     const query = new URLSearchParams();
-
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
         query.append(key, String(value));
       }
     });
-
-    const res = await api.get(`/leaders/?${query.toString()}`, { signal });
+    
+    const res = await api.get(`/leaders/?${query.toString()}`);
     return res.data;
   },
 
@@ -92,6 +81,11 @@ const LeaderService = {
     return res.data;
   },
 
+  
+  getVillageResidents: async (villageId: string): Promise<GetVillageResidentsApiResponse> => {
+    const res = await api.get(`/village/${villageId}/residents/`);
+    return res.data;
+  },
   // Bulk operations
   bulkUpdateLeaders: async (
     userIds: string[],
@@ -134,4 +128,4 @@ const LeaderService = {
 };
 
 export default LeaderService;
-export type { GetLeadersParams };
+

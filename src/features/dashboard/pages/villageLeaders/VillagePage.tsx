@@ -8,8 +8,8 @@ import { Separator } from '@/components/ui/separator';
 
 import { Link, useParams } from 'react-router-dom';
 
-import VillageService from '../features/news/newsServices';
-import type { GetVillageNewsApiResponse } from '../features/news/newsTypes';
+import VillageService from '../../../news/newsServices';
+import type { GetVillageNewsApiResponse } from '../../../news/newsTypes';
 import { VolunteeringEventsListCard } from '@/features/volunteering/components/VolunteeringEventsListCard';
 import { Button } from '@/components/ui/button';
 import { useVisitedVillage } from '@/features/homePages/context/VillageContext';

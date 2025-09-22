@@ -9,10 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { X, Filter, Search } from "lucide-react";
 import { useLocationSelector } from "../../../../homePages/hooks/useLocationSelector";
+import type { GetLeadersParams } from "../leaderTypes";
 
 interface LeaderFiltersProps {
-  filters: Record<string, unknown>;
-  onFiltersChange: (filters: Record<string, unknown>) => void;
+  filters: GetLeadersParams;
+  onFiltersChange: (filters: GetLeadersParams) => void;
 }
 
 export function LeaderFilters({ filters, onFiltersChange }: LeaderFiltersProps) {
@@ -30,7 +31,7 @@ export function LeaderFilters({ filters, onFiltersChange }: LeaderFiltersProps) 
   } = useLocationSelector();
 
   useEffect(() => {
-    const newFilters: Record<string, unknown> = {};
+    const newFilters: GetLeadersParams = {};
     
     if (search.trim()) newFilters.search = search.trim();
     if (province) newFilters.province = province;
@@ -53,7 +54,7 @@ export function LeaderFilters({ filters, onFiltersChange }: LeaderFiltersProps) 
     setIsActive(undefined);
   };
 
-  const activeFiltersCount = Object.keys(filters).length;
+  const activeFiltersCount = Object.keys(filters || {}).length;
 
   return (
     <div className="space-y-4">

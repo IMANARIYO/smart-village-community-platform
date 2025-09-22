@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
  * Utility function to trigger data refresh via URL parameter
  * @param triggerKey - The URL parameter key to use for triggering refresh
  */
-export function triggerRefresh(triggerKey: string = 'TriggerLeaders') {
+export function triggerRefresh(triggerKey: string = 'leaderTrigger') {
   try {
     const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set(triggerKey, Date.now().toString());

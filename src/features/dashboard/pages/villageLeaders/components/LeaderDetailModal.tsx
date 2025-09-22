@@ -16,26 +16,26 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { User, Phone, Mail, MapPin, Calendar, Shield } from "lucide-react";
-import type { Leader, LeaderFormData } from "../leaderTypes";
+import { User, Phone, MapPin, Shield } from "lucide-react";
+import type { LeaderFormData, LeaderListItem } from "../leaderTypes";
 import LeaderService from "../LeaderService";
 import { useLocationSelector } from "../../../../homePages/hooks/useLocationSelector";
 import { triggerRefresh } from "../utils/refreshTrigger";
 
 interface LeaderDetailModalProps {
-  leader: Leader | null;
+  leader: LeaderListItem | null;
   open: boolean;
   onClose: () => void;
   onUpdate: () => void;
   mode: "view" | "edit" | "create";
 }
 
-export function LeaderDetailModal({ 
-  leader, 
-  open, 
-  onClose, 
-  onUpdate, 
-  mode 
+export function LeaderDetailModal({
+  leader,
+  open,
+  onClose,
+
+  mode
 }: LeaderDetailModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<LeaderFormData>({
@@ -68,12 +68,12 @@ export function LeaderDetailModal({
         village_id: leader.village?.village_id || "",
         role: leader.role
       });
-      
+
       if (leader.village) {
-        setProvince(leader.village.province);
-        setDistrict(leader.village.district);
-        setSector(leader.village.sector);
-        setCell(leader.village.cell);
+        setProvince(leader.village.province || "");
+        setDistrict(leader.village.district || "");
+        setSector(leader.village.sector || "");
+        setCell(leader.village.cell || "");
         setVillage(leader.village);
       }
     } else if (mode === "create") {
@@ -101,7 +101,7 @@ export function LeaderDetailModal({
 
     try {
       setLoading(true);
-      
+
       if (mode === "edit" && leader) {
         await LeaderService.updateLeader(leader.user_id, {
           person: {
@@ -118,7 +118,7 @@ export function LeaderDetailModal({
       } else if (mode === "create") {
         toast.info("Create functionality needs API endpoint");
       }
-      
+
       triggerRefresh();
       onClose();
     } catch (error) {
@@ -136,13 +136,13 @@ export function LeaderDetailModal({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {mode === "create" ? "Add New Leader" : 
-             mode === "edit" ? "Edit Leader" : "Leader Details"}
+            {mode === "create" ? "Add New Leader" :
+              mode === "edit" ? "Edit Leader" : "Leader Details"}
           </DialogTitle>
           <DialogDescription>
             {mode === "create" ? "Create a new village leader" :
-             mode === "edit" ? "Update leader information" :
-             "View leader details and information"}
+              mode === "edit" ? "Update leader information" :
+                "View leader details and information"}
           </DialogDescription>
         </DialogHeader>
 
@@ -178,7 +178,7 @@ export function LeaderDetailModal({
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="national_id">National ID</Label>
                 <Input
@@ -212,7 +212,7 @@ export function LeaderDetailModal({
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email (Optional)</Label>
                 <Input
@@ -237,8 +237,8 @@ export function LeaderDetailModal({
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
-                <Select 
-                  value={formData.role} 
+                <Select
+                  value={formData.role}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
                   disabled={!isEditable}
                 >
@@ -253,7 +253,7 @@ export function LeaderDetailModal({
                   </SelectContent>
                 </Select>
               </div>
-              
+
               {leader && mode === "view" && (
                 <div className="flex items-center gap-2">
                   <Label>Status:</Label>
@@ -343,8 +343,8 @@ export function LeaderDetailModal({
               {cell && (
                 <div className="space-y-2">
                   <Label htmlFor="village">Village</Label>
-                  <Select 
-                    value={village?.village_id || ""} 
+                  <Select
+                    value={village?.village_id || ""}
                     onValueChange={(value) => {
                       const selectedVillage = villages.find(v => v.village_id === value);
                       setVillage(selectedVillage || null);
@@ -368,7 +368,7 @@ export function LeaderDetailModal({
           </Card>
 
           <Separator />
-          
+
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onClose}>
               {mode === "view" ? "Close" : "Cancel"}

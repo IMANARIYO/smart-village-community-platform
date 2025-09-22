@@ -1,7 +1,6 @@
-import type { ApiResponse, Village } from "../../../../types";
+import type { ApiResponse, SmallPersonInfo, Village } from "../../../../types";
 
 export interface Leader {
-  id?: string;
   user_id: string;
   phone_number: string;
   email: string | null;
@@ -41,10 +40,27 @@ export interface GetLeadersParams {
   includeDeleted?: boolean;
 }
 
-export interface GetLeadersApiResponse extends ApiResponse<Leader[]> {
-  meta: LeadersMeta;
+// Single item type for lists
+export interface LeaderListItem extends Omit<Leader, "village"> {
+  village: Village | null;
 }
 
+export interface GetLeadersParams {
+  province?: string;
+  district?: string;
+  sector?: string;
+  cell?: string;
+  village_id?: string;
+  search?: string;
+  limit?: number;
+  page?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  deletedOnly?: boolean;
+  includeDeleted?: boolean;
+}
+// API response type for list endpoints
+export type GetLeadersApiResponse = ApiResponse<LeaderListItem[]>;
 export type GetLeaderByIdApiResponse = ApiResponse<Leader>;
 export type UpdateLeaderApiResponse = ApiResponse<Leader>;
 export type PromoteLeaderApiResponse = ApiResponse<Leader>;
@@ -83,4 +99,66 @@ export interface ImportResult {
   failed: number;
   errors: string[];
   warnings: string[];
+}
+
+export interface ResidentPerson extends SmallPersonInfo {
+  person_id: string;
+  national_id: number;
+  gender: "male" | "female";
+  person_type: string;
+  registration_date: string;
+}
+
+// Resident info
+export interface ResidentPerson {
+  person_id: string;
+  first_name: string;
+  last_name: string;
+  national_id: number;
+  phone_number: string;
+  gender: "male" | "female";
+  person_type: string;
+  registration_date: string;
+}
+
+// Added by user
+export interface AddedBy {
+  user_id: string;
+  phone_number: string;
+  email: string | null;
+  role: string;
+  is_active: boolean;
+  is_verified: boolean;
+}
+
+// Resident list item
+export interface ResidentListItem {
+  resident_id: string;
+  status: string;
+  has_account: boolean;
+  person: ResidentPerson;
+  added_by: AddedBy;
+  created_at: string;
+  updated_at: string;
+  is_deleted: boolean;
+  deleted_at: string | null;
+}
+
+// Village with optional leader
+export interface VillageWithLeader {
+  village_id: string;
+  province: string;
+  district: string;
+  sector: string;
+  cell: string;
+  village: string;
+  leader: null | { user_id: string; first_name: string; last_name: string }; // optional leader info
+}
+
+// API Response
+export interface GetVillageResidentsApiResponse {
+  success: boolean;
+  message: string;
+  village: VillageWithLeader;
+  residents: ResidentListItem[];
 }
