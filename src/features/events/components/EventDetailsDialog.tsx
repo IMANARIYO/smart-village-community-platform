@@ -139,6 +139,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
               </p>
             </div>
 
+
             {/* Full Size Image */}
             {event.image && (
               <div className="p-4 bg-muted/30 rounded-lg">
@@ -146,25 +147,20 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
                   <ImageIcon className="h-4 w-4" />
                   Event Image
                 </h4>
-                <div className="relative group">
+                <div
+                  className="relative group cursor-pointer"
+                  onClick={() => event.image && window.open(event.image, "_blank")}
+                >
                   <img
                     src={event.image}
                     alt={event.title}
-                    className="w-full max-w-2xl mx-auto rounded-lg shadow-md cursor-pointer transition-transform hover:scale-[1.02]"
-                    onClick={() => event.image && window.open(event.image, '_blank')}
+                    className="w-full max-w-2xl mx-auto rounded-lg shadow-md transition-transform group-hover:scale-[1.02]"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.parentElement!.innerHTML = `
-                        <div class="flex items-center justify-center h-32 bg-muted rounded-lg">
-                          <div class="text-center text-muted-foreground">
-                            <ImageIcon class="h-8 w-8 mx-auto mb-2" />
-                            <p class="text-sm">Image failed to load</p>
-                          </div>
-                        </div>
-                      `;
+                      target.style.display = "none";
                     }}
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all rounded-lg flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all rounded-lg flex items-center justify-center pointer-events-none">
                     <span className="text-white opacity-0 group-hover:opacity-100 text-sm font-medium bg-black bg-opacity-50 px-3 py-1 rounded">
                       Click to view full size
                     </span>
@@ -172,6 +168,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
                 </div>
               </div>
             )}
+
 
             {/* Timestamps */}
             <div className="text-xs text-muted-foreground border-t pt-4 space-y-1">
