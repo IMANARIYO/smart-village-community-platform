@@ -66,7 +66,7 @@ const EventCalendar = () => {
 
   useEffect(() => {
     fetchEvents()
-  }, [])
+  }, [fetchEvents])
 
   // Listen for villageTrigger parameter changes to refetch events
   useEffect(() => {
