@@ -12,17 +12,16 @@ function App() {
   const [apiTestResult, setApiTestResult] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+    console.log('VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
 
-    // Test Axios connection
-    api.get('/user/me') // adjust this endpoint if needed
+    api.get('/user/me')
       .then(res => {
         console.log('API response:', res.data);
         setApiTestResult('✅ API connection successful!');
       })
       .catch(err => {
         console.error('API error:', err);
-        setApiTestResult('❌ API connection failed. Check VITE_API_URL or proxy.');
+        setApiTestResult('❌ API connection failed. Check VITE_API_BASE_URL or proxy.');
       });
   }, []);
 
