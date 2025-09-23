@@ -1,6 +1,5 @@
-"use client";
 
-import React from 'react';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, Users, Calendar, Phone, Bell } from 'lucide-react';
 
@@ -28,20 +27,18 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
         {quickNavItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
-          
+
           return (
             <button
               key={item.href}
               onClick={() => navigate(item.href)}
-              className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 active:scale-95 min-w-0 flex-1 ${
-                active
+              className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 active:scale-95 min-w-0 flex-1 ${active
                   ? 'text-primary bg-primary-light'
                   : 'text-muted-foreground hover:text-primary hover:bg-primary-light/50'
-              }`}
+                }`}
             >
-              <Icon className={`w-5 h-5 mb-1 transition-transform duration-200 ${
-                active ? 'scale-110' : 'group-hover:scale-105'
-              }`} />
+              <Icon className={`w-5 h-5 mb-1 transition-transform duration-200 ${active ? 'scale-110' : 'group-hover:scale-105'
+                }`} />
               <span className="text-xs font-medium truncate max-w-full">
                 {item.label}
               </span>
@@ -52,7 +49,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
           );
         })}
       </div>
-      
+
       {/* Safe area for devices with home indicator */}
       <div className="h-safe-area-inset-bottom bg-card" />
     </nav>

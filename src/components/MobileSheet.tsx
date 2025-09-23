@@ -1,4 +1,4 @@
-"use client";
+
 
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetTrigger, SheetClose } from "./ui/sheet";
@@ -23,34 +23,34 @@ export function MobileSheet({
             <SheetTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="text-white hover:text-green-600 md:hidden p-2 bg-primary-dark"
+                    className="text-white hover:text-primary md:hidden p-2 bg-primary-dark min-h-[44px] min-w-[44px]"
                 >
-                    <Menu className="w-6 h-6" />
+                    <Menu className="w-5 h-5" />
                 </Button>
             </SheetTrigger>
 
             {/* Sheet Content */}
             <SheetContent
                 side="right"
-                className="w-64 sm:w-80 h-[90vh] p-4 rounded-md mt-16 flex flex-col justify-between"
+                className="w-[85vw] max-w-sm h-full p-3 sm:p-4 flex flex-col"
             >
                 {/* Header */}
-                <SheetHeader className="bg-accent rounded-md">
-                    <SheetTitle className="text-lg font-bold text-primary-dark bg-secondary">{title}</SheetTitle>
-                    {description && <SheetDescription className="text-sm text-gray-500">{description}</SheetDescription>}
+                <SheetHeader className="bg-accent rounded-md p-3 mb-4">
+                    <SheetTitle className="text-base sm:text-lg font-bold text-primary-dark">{title}</SheetTitle>
+                    {description && <SheetDescription className="text-xs sm:text-sm text-muted-foreground mt-1">{description}</SheetDescription>}
                 </SheetHeader>
 
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto mt-2">
+                <div className="flex-1 overflow-y-auto">
                     {children}
                 </div>
 
                 {/* Footer */}
                 {footer && (
-                    <SheetFooter className="flex justify-end gap-2">
+                    <SheetFooter className="flex flex-col sm:flex-row justify-end gap-2 mt-4 pt-4 border-t">
                         {footer}
                         <SheetClose asChild>
-                            <Button variant="outline">Close</Button>
+                            <Button variant="outline" className="w-full sm:w-auto">Close</Button>
                         </SheetClose>
                     </SheetFooter>
                 )}

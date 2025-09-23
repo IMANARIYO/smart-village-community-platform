@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+
 
 
 import { useLocation } from "react-router-dom";
@@ -13,38 +13,9 @@ import { useVisitedVillage } from "@/features/homePages/context/VillageContext";
 import { NotificationDropdown } from "@/features/notifications/pages/Notificationspopover";
 import { tokenStorage } from "@/utils/tokenStorage";
 import { UserProfileStorage } from "@/features/auth/utils/UserProfileStorage";
+import { useActiveSection } from "@/hooks/useActiveSection";
 
-export function useActiveSection(ids: string[]) {
-    const [active, setActive] = useState<string>("");
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-
-                const visibleEntries = entries.filter(entry => entry.isIntersecting);
-                if (visibleEntries.length > 0) {
-                    const mostVisible = visibleEntries.reduce((prev, current) =>
-                        current.intersectionRatio > prev.intersectionRatio ? current : prev
-                    );
-                    setActive(mostVisible.target.id);
-                }
-            },
-            {
-                rootMargin: "-20% 0px -70% 0px",
-                threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
-            }
-        );
-
-        ids.forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) observer.observe(el);
-        });
-
-        return () => observer.disconnect();
-    }, [ids]);
-
-    return active;
-}
 interface NavLinkItem {
     id: string;
     label: string;
@@ -181,7 +152,7 @@ export function Navigation() {
                     { id: 'volunteering', label: t.volunteering, to: '#volunteering', group: 'community' as const },
                     { id: 'contacts', label: `{${t.contacts}`, to: '#contacts', group: 'services' as const },
 
-           
+
                     ...(tokenStorage.getAccessToken() && UserProfileStorage.getUserProfile()
                         ? [
                             { id: "visitors", label: t.visitors, to: "#visitors", group: "services" as const },

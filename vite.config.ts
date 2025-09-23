@@ -13,97 +13,47 @@ const __filename = fileURLToPath(import.meta.url);
 // Get the directory name (equivalent to __dirname in CommonJS)
 const __dirname = dirname(__filename);
 
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  server: {
-    port: 3000,
-    host: true,
-    proxy: {
-      // Proxy all Smart Village API endpoints
-      "/event": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/volunter": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/resident": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/user": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/smartvillage": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/village": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
+export default defineConfig(() => {
+  const apiBaseUrl = process.env.VITE_API_BASE_URL || "https://smartville.onrender.com";
+  const devPort = parseInt(process.env.VITE_DEV_PORT || "3000");
 
-      "/contact": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/view": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/join-community-by-coordinates": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/locate": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/me": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/leaders": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/place": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
-      "/participations/": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
+  return {
+    plugins: [react(), tailwindcss()],
+    server: {
+      port: devPort,
+      host: true,
+      proxy: {
+        // Proxy all Smart Village API endpoints
+        "/event": {
+          target: apiBaseUrl,
+          changeOrigin: true,
+          secure: true,
+        },
+        "/volunter": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/resident": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/user": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/smartvillage": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/village": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/contact": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/view": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/join-community-by-coordinates": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/locate": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/me": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/leaders": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/place": { target: apiBaseUrl, changeOrigin: true, secure: true },
+        "/participations/": { target: apiBaseUrl, changeOrigin: true, secure: true },
       },
     },
-  },
-
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@/components": path.resolve(__dirname, "/src/components"),
-      "@/components/ui": path.resolve(__dirname, "/src/components"),
-      "@/lib": path.resolve(__dirname, "./src/lib"),
-      "@/hooks": path.resolve(__dirname, "./src/hooks"),
-      "@/utils": path.resolve(__dirname, "./src/lib/utils"),
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+        "@/components": path.resolve(__dirname, "/src/components"),
+        "@/components/ui": path.resolve(__dirname, "/src/components"),
+        "@/lib": path.resolve(__dirname, "./src/lib"),
+        "@/hooks": path.resolve(__dirname, "./src/hooks"),
+        "@/utils": path.resolve(__dirname, "./src/lib/utils"),
+      },
     },
-  },
-
-  base: "/",
+    base: "/",
+  };
 });

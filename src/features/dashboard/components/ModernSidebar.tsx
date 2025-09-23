@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Home, 
-  X, 
-  ChevronDown, 
-  LogOut, 
-  User, 
+import {
+  Home,
+  X,
+  ChevronDown,
+  LogOut,
+  User,
   Settings,
-  Sparkles
+
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+
 import { sidebarEntries, type NavigationItem, type SidebarEntry } from '../utils/sideBarLinks';
 
 interface SidebarProps {
@@ -41,12 +41,12 @@ const isNavigationItem = (entry: SidebarEntry): entry is NavigationItem => {
   return entry.type === "item" || 'href' in entry;
 };
 
-const ModernSidebar: React.FC<SidebarProps> = ({ 
-  isOpen, 
-  onClose, 
-  variant, 
-  state, 
-  entries = sidebarEntries 
+const ModernSidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  onClose,
+  variant,
+  state,
+  entries = sidebarEntries
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -80,28 +80,23 @@ const ModernSidebar: React.FC<SidebarProps> = ({
       const groupButton = (
         <button
           onClick={() => toggleGroup(item.name)}
-          className={`group w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all duration-200 text-left relative overflow-hidden active:scale-95 ${
-            variant === 'mobile' ? 'min-h-[48px]' : 'py-2.5'
-          } ${
-            activeInGroup 
-              ? 'bg-gradient-to-r from-primary-normal to-primary-dark text-white shadow-lg' 
+          className={`group w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all duration-200 text-left relative overflow-hidden active:scale-95 ${variant === 'mobile' ? 'min-h-[48px]' : 'py-2.5'
+            } ${activeInGroup
+              ? 'bg-gradient-to-r from-primary-normal to-primary-dark text-white shadow-lg'
               : 'text-neutral-normal hover:bg-primary-light hover:text-primary-dark'
-          }`}
+            }`}
         >
           <div className="flex items-center space-x-3 z-10 min-w-0 flex-1">
-            <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
-              activeInGroup ? 'text-white' : 'text-primary-normal'
-            }`} />
+            <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${activeInGroup ? 'text-white' : 'text-primary-normal'
+              }`} />
             {(state === 'expanded' || variant === 'mobile') && (
-              <span className={`font-medium truncate ${
-                variant === 'mobile' ? 'text-base' : 'text-sm'
-              }`}>{item.name}</span>
+              <span className={`font-medium truncate ${variant === 'mobile' ? 'text-base' : 'text-sm'
+                }`}>{item.name}</span>
             )}
           </div>
           {(state === 'expanded' || variant === 'mobile') && (
-            <div className={`transition-transform duration-200 flex-shrink-0 ${
-              expanded ? 'rotate-180' : 'rotate-0'
-            }`}>
+            <div className={`transition-transform duration-200 flex-shrink-0 ${expanded ? 'rotate-180' : 'rotate-0'
+              }`}>
               <ChevronDown className="w-4 h-4" />
             </div>
           )}
@@ -116,11 +111,10 @@ const ModernSidebar: React.FC<SidebarProps> = ({
           <li key={item.name} className="relative">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className={`w-full flex items-center justify-center p-3 rounded-xl transition-all duration-200 group ${
-                  activeInGroup 
-                    ? 'bg-primary-normal text-white shadow-lg' 
+                <button className={`w-full flex items-center justify-center p-3 rounded-xl transition-all duration-200 group ${activeInGroup
+                    ? 'bg-primary-normal text-white shadow-lg'
                     : 'text-neutral-normal hover:bg-primary-light hover:text-primary-dark'
-                }`}>
+                  }`}>
                   <item.icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
                 </button>
               </DropdownMenuTrigger>
@@ -129,11 +123,10 @@ const ModernSidebar: React.FC<SidebarProps> = ({
                   <DropdownMenuItem
                     key={subItem.href}
                     onClick={() => handleNavigation(subItem.href)}
-                    className={`cursor-pointer transition-colors ${
-                      isActive(subItem.href) 
-                        ? 'bg-primary-light text-primary-dark' 
+                    className={`cursor-pointer transition-colors ${isActive(subItem.href)
+                        ? 'bg-primary-light text-primary-dark'
                         : 'hover:bg-primary-light'
-                    }`}
+                      }`}
                   >
                     {subItem.name}
                   </DropdownMenuItem>
@@ -161,11 +154,10 @@ const ModernSidebar: React.FC<SidebarProps> = ({
           )}
 
           {expanded && (state === 'expanded' || variant === 'mobile') && (
-            <ul className={`mt-2 space-y-1 ${
-              variant === 'mobile' 
-                ? 'pl-4 border-l-2 border-primary-light ml-4' 
+            <ul className={`mt-2 space-y-1 ${variant === 'mobile'
+                ? 'pl-4 border-l-2 border-primary-light ml-4'
                 : 'pl-6 border-l-2 border-primary-light ml-2'
-            }`}>
+              }`}>
               {item.items.map(child => renderItem(child, level + 1))}
             </ul>
           )}
@@ -176,23 +168,19 @@ const ModernSidebar: React.FC<SidebarProps> = ({
     const itemButton = (
       <button
         onClick={() => 'href' in item && handleNavigation(item.href)}
-        className={`group w-full flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 text-left relative overflow-hidden active:scale-95 ${
-          variant === 'mobile' ? 'min-h-[48px]' : 'py-2.5'
-        } ${
-          'href' in item && isActive(item.href) 
-            ? 'bg-gradient-to-r from-primary-normal to-primary-dark text-white shadow-lg' 
+        className={`group w-full flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 text-left relative overflow-hidden active:scale-95 ${variant === 'mobile' ? 'min-h-[48px]' : 'py-2.5'
+          } ${'href' in item && isActive(item.href)
+            ? 'bg-gradient-to-r from-primary-normal to-primary-dark text-white shadow-lg'
             : 'text-neutral-normal hover:bg-primary-light hover:text-primary-dark'
-        }`}
+          }`}
       >
         {'icon' in item && (
-          <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${
-            'href' in item && isActive(item.href) ? 'text-white' : 'text-primary-normal'
-          }`} />
+          <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 ${'href' in item && isActive(item.href) ? 'text-white' : 'text-primary-normal'
+            }`} />
         )}
         {(state === 'expanded' || variant === 'mobile') && 'name' in item && (
-          <span className={`font-medium truncate ${
-            variant === 'mobile' ? 'text-base' : 'text-sm'
-          }`}>{item.name}</span>
+          <span className={`font-medium truncate ${variant === 'mobile' ? 'text-base' : 'text-sm'
+            }`}>{item.name}</span>
         )}
         {'href' in item && isActive(item.href) && (
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" />
@@ -223,7 +211,7 @@ const ModernSidebar: React.FC<SidebarProps> = ({
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userName = user?.name || user?.first_name || 'User';
     const userEmail = user?.email || 'user@smartvillage.com';
-    
+
     return (
       <div className="p-3 border-t border-border bg-gradient-to-r from-background-light to-primary-light/20">
         <DropdownMenu>
@@ -259,7 +247,7 @@ const ModernSidebar: React.FC<SidebarProps> = ({
               Preferences
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border" />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={handleLogout}
               className="cursor-pointer text-error-normal hover:bg-error-light hover:text-error-dark"
             >
@@ -277,16 +265,15 @@ const ModernSidebar: React.FC<SidebarProps> = ({
     return (
       <>
         {isOpen && (
-          <div 
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden animate-in fade-in duration-200" 
-            onClick={onClose} 
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden animate-in fade-in duration-200"
+            onClick={onClose}
           />
         )}
-        
-        <aside className={`fixed left-0 top-0 h-full w-full max-w-sm bg-card shadow-2xl transform transition-all duration-300 ease-out z-50 lg:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } flex flex-col`}>
-          
+
+        <aside className={`fixed left-0 top-0 h-full w-full max-w-sm bg-card shadow-2xl transform transition-all duration-300 ease-out z-50 lg:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          } flex flex-col`}>
+
           <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary-normal to-primary-dark text-white shadow-lg">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -305,7 +292,7 @@ const ModernSidebar: React.FC<SidebarProps> = ({
               <X className="w-5 h-5" />
             </button>
           </div>
-          
+
           <nav className="flex-1 overflow-y-auto py-4 px-3">
             <TooltipProvider>
               <ul className="space-y-1">
@@ -313,11 +300,11 @@ const ModernSidebar: React.FC<SidebarProps> = ({
               </ul>
             </TooltipProvider>
           </nav>
-          
+
           <div className="border-t border-border bg-gradient-to-r from-background-light to-primary-light/10">
             <UserProfile />
           </div>
-          
+
           <div className="h-safe-area-inset-bottom bg-gradient-to-r from-background-light to-primary-light/10" />
         </aside>
       </>
@@ -326,13 +313,11 @@ const ModernSidebar: React.FC<SidebarProps> = ({
 
   // Desktop Sidebar
   return (
-    <aside className={`fixed left-0 top-0 h-full bg-card border-r border-border shadow-lg transition-all duration-300 z-30 ${
-      state === 'expanded' ? 'w-64' : state === 'collapsed' ? 'w-16' : 'w-0'
-    }`}>
+    <aside className={`fixed left-0 top-0 h-full bg-card border-r border-border shadow-lg transition-all duration-300 z-30 ${state === 'expanded' ? 'w-64' : state === 'collapsed' ? 'w-16' : 'w-0'
+      }`}>
       <div className="flex flex-col h-full">
-        <div className={`p-4 border-b border-border bg-gradient-to-r from-primary-normal to-primary-dark text-white ${
-          state === 'collapsed' ? 'px-2' : ''
-        }`}>
+        <div className={`p-4 border-b border-border bg-gradient-to-r from-primary-normal to-primary-dark text-white ${state === 'collapsed' ? 'px-2' : ''
+          }`}>
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-white/20 rounded-lg">
               <Home className="w-6 h-6" />

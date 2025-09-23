@@ -10,11 +10,11 @@ interface SEOProps {
 }
 
 const defaultSEO = {
-  title: "Smart Village Community Platform - Connect, Engage, Thrive Together",
-  description: "Join your local community on Smart Village Platform. Connect with residents, participate in events, volunteer for causes, and strengthen community bonds. Digital platform for modern village life.",
+  title: import.meta.env.VITE_SITE_NAME || "Smart Village Community Platform - Connect, Engage, Thrive Together",
+  description: import.meta.env.VITE_SITE_DESCRIPTION || "Join your local community on Smart Village Platform. Connect with residents, participate in events, volunteer for causes, and strengthen community bonds. Digital platform for modern village life.",
   keywords: "community platform, village community, local events, volunteering, resident engagement, community management, digital village, social platform, local government, community activities",
-  image: "/images/smart-village-og.jpg",
-  url: "https://smartvillage.community"
+  image: import.meta.env.VITE_OG_IMAGE || "/images/smart-village-og.jpg",
+  url: import.meta.env.VITE_SITE_URL || "https://smartvillage.community"
 };
 
 export function SEOHead({
@@ -46,12 +46,12 @@ export function SEOHead({
       "potentialAction": [
         {
           "@type": "RegisterAction",
-          "target": `${defaultSEO.url}/auth/signup`,
+          "target": `${import.meta.env.VITE_SITE_URL || defaultSEO.url}/auth/signup`,
           "name": "Register for Smart Village Platform"
         },
         {
           "@type": "JoinAction",
-          "target": `${defaultSEO.url}/events`,
+          "target": `${import.meta.env.VITE_SITE_URL || defaultSEO.url}/events`,
           "name": "Join Community Event"
         }
       ],
