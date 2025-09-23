@@ -25,11 +25,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
-      "https://smartville.onrender.com": {
-        target: "https://smartville.onrender.com",
-        changeOrigin: true,
-        secure: true,
-      },
+
       "/volunter": {
         target: "https://smartville.onrender.com",
         changeOrigin: true,
