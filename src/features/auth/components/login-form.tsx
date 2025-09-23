@@ -57,7 +57,7 @@ export function LoginForm() {
       const response = await UserService.login(payload);
 
       if (response.success) {
-        console.log("Login successful:", response.data);
+
 
 
         if (data.rememberMe) {

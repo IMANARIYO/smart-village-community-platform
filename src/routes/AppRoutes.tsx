@@ -34,7 +34,7 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
+
 
         <Route element={<LandingLayout />}>
           <Route path="/" element={<HomePage />} />
@@ -42,7 +42,7 @@ export default function AppRouter() {
           <Route path="/visitVillage/:villageId" element={<VillagePage />} />
           <Route path="/visitVillage/:villageId" element={<VillagePage />} />
           <Route path="/news/:villageId" element={<VillageNewsPage />} />
-          {/* <Route path="/news" element={<VillageNewsPage />} /> */}
+
           <Route
             path="/VolunteeringEvents/:villageId"
             element={<VolunteeringEvents />}
@@ -138,27 +138,6 @@ export default function AppRouter() {
           path="/offline"
           element={<Navigate to="/dashboard/offline" replace />}
         />
-
-        {/*
-        
-                <Route path="/resident" element={<ResidentLayout />}>
-                    <Route index element={<Dashboard />} />
-                    <Route path="residents" element={<ResidentsManagement />} />
-                    <Route path="visitors" element={<VisitorsManagement />} />
-                    <Route path="news" element={<NewsFeed />} />
-                    <Route path="events" element={<EventCalendar />} />
-                    <Route path="contacts" element={<ContactsDirectory />} />
-                    <Route path="suggestions" element={<SuggestionBox />} />
-                    <Route path="volunteers" element={<VolunteeringBoard />} />
-                    <Route path="incidents" element={<IncidentReporting />} />
-                </Route>
-
-                <Route path="/moderator" element={<ModeratorLayout />}>
-
-                </Route>
-                <Route path="/admin" element={<AdminLayout />}>
-                </Route>
-                <Route path="*" element={<NotFoundPage />} /> */}
         <Route path="*" element={<ProjectOverview />} />
       </Routes>
     </BrowserRouter>
