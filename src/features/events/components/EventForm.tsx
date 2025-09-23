@@ -5,7 +5,6 @@ import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-
 import { EventCategory, EventType, type CreateEventRequest } from "../types";
 import EventService from "../eventService";
 import type { Village } from "@/types";
@@ -24,8 +23,6 @@ export function EventForm({ onSuccess, initialDate }: EventFormProps) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-
-
     const { register, handleSubmit, control, reset } = useForm<EventFormValues>({
         defaultValues: {
             title: "",
@@ -42,8 +39,6 @@ export function EventForm({ onSuccess, initialDate }: EventFormProps) {
     });
 
     const onSubmit: SubmitHandler<EventFormValues> = async (data) => {
-
-
         try {
             setLoading(true);
             const formData = new FormData();
@@ -75,54 +70,66 @@ export function EventForm({ onSuccess, initialDate }: EventFormProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4 mt-2 max-w-3xl mx-auto px-2 sm:px-4 md:px-6"
+        >
+            {/* Title */}
             <input
                 type="text"
                 placeholder="Event Title"
                 {...register("title", { required: true })}
-                className="w-full border rounded px-2 py-1"
+                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
             />
 
+            {/* Description */}
             <textarea
                 placeholder="Description"
                 {...register("description", { required: true })}
-                className="w-full border rounded px-2 py-1"
+                className="w-full border rounded px-3 py-2 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
             />
 
+            {/* Exact Place */}
             <input
                 type="text"
                 placeholder="Exact Place in Village"
                 {...register("exact_place_of_village", { required: true })}
-                className="w-full border rounded px-2 py-1"
+                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
             />
 
-            <div className="flex gap-2">
+            {/* Date & Time */}
+            <div className="flex flex-col sm:flex-row gap-2">
                 <input
                     type="date"
                     {...register("date", { required: true })}
-                    className="flex-1 border rounded px-2 py-1"
+                    className="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
                 />
                 <input
                     type="time"
                     {...register("start_time", { required: true })}
-                    className="flex-1 border rounded px-2 py-1"
+                    className="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
                 />
                 <input
                     type="time"
                     {...register("end_time", { required: true })}
-                    className="flex-1 border rounded px-2 py-1"
+                    className="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
                 />
             </div>
-
-
 
             {/* Category */}
             <Controller
                 name="category"
                 control={control}
                 render={({ field }) => (
-                    <select {...field} className="w-full border rounded px-2 py-1">
-                        {Object.values(EventCategory).map(c => <option key={c} value={c}>{c}</option>)}
+                    <select
+                        {...field}
+                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
+                    >
+                        {Object.values(EventCategory).map((c) => (
+                            <option key={c} value={c}>
+                                {c}
+                            </option>
+                        ))}
                     </select>
                 )}
             />
@@ -132,8 +139,15 @@ export function EventForm({ onSuccess, initialDate }: EventFormProps) {
                 name="type"
                 control={control}
                 render={({ field }) => (
-                    <select {...field} className="w-full border rounded px-2 py-1">
-                        {Object.values(EventType).map(t => <option key={t} value={t}>{t}</option>)}
+                    <select
+                        {...field}
+                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
+                    >
+                        {Object.values(EventType).map((t) => (
+                            <option key={t} value={t}>
+                                {t}
+                            </option>
+                        ))}
                     </select>
                 )}
             />
@@ -147,13 +161,18 @@ export function EventForm({ onSuccess, initialDate }: EventFormProps) {
                         type="file"
                         accept="image/*"
                         onChange={(e) => field.onChange(e.target.files?.[0] || null)}
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sv-primary-light dark:focus:ring-sv-primary-dark transition"
                     />
                 )}
             />
 
+            {/* Submit Button */}
             <div className="flex justify-end gap-2 mt-2">
-                <button type="submit" disabled={loading} className="bg-blue-600 text-white px-4 py-2 rounded">
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-sv-primary-normal hover:bg-sv-primary-dark text-white px-6 py-2 rounded transition disabled:opacity-50"
+                >
                     {loading ? "Creating..." : "Create Event"}
                 </button>
             </div>

@@ -68,7 +68,7 @@ const Dashboard = () => {
               {sidebarState === "expanded" && (
                 <div className="flex items-center space-x-2">
                   <Home className="w-6 h-6 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-gray-800">Community Hub</h2>
+                  <h2 className="text-lg font-semibold text-gray-800">Smart Village Platform</h2>
                 </div>
               )}
               {sidebarState === "collapsed" && <Home className="w-6 h-6 text-blue-600 mx-auto" />}

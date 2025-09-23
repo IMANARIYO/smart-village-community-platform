@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://smartvillage.community/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/private/
+Disallow: /_next/
+Disallow: /auth/reset-password/
+
+# Allow important pages
+Allow: /
+Allow: /about
+Allow: /events
+Allow: /contact
+Allow: /auth/login
+Allow: /auth/signup

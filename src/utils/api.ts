@@ -20,7 +20,7 @@ async function refreshToken(): Promise<string | null> {
   }
 
   try {
-    console.log("Sending refresh token request to /user/token/refresh/");
+
 
     const res = await api.post(
       "/user/token/refresh/",

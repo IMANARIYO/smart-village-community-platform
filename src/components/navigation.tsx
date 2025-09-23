@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-"use client";
+
 
 import { useLocation } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
@@ -11,6 +11,8 @@ import { UserProfilePopover } from "../features/auth/components/UserProfileDialo
 import { NavBartranslations } from "./NavBarTranslation";
 import { useVisitedVillage } from "@/features/homePages/context/VillageContext";
 import { NotificationDropdown } from "@/features/notifications/pages/Notificationspopover";
+import { tokenStorage } from "@/utils/tokenStorage";
+import { UserProfileStorage } from "@/features/auth/utils/UserProfileStorage";
 
 export function useActiveSection(ids: string[]) {
     const [active, setActive] = useState<string>("");
@@ -147,10 +149,20 @@ export function Navigation() {
     const { visitedVillage } = useVisitedVillage();
 
     useEffect(() => {
-        const user = localStorage.getItem("user");
-        if (user) setNavState("logged-in");
-        else if (visitedVillage) setNavState("village-selected");
-        else setNavState("landing");
+        const checkUserAuth = () => {
+            const token = tokenStorage.getAccessToken();
+            const userProfile = UserProfileStorage.getUserProfile();
+
+            if (token && userProfile) {
+                setNavState("logged-in");
+            } else if (visitedVillage) {
+                setNavState("village-selected");
+            } else {
+                setNavState("landing");
+            }
+        };
+
+        checkUserAuth();
     }, [visitedVillage]);
     const getNavLinks = () => {
         switch (navState) {
@@ -167,10 +179,10 @@ export function Navigation() {
                     { id: 'news', label: t.news, to: '#news', group: 'community' as const },
                     { id: 'events', label: t.events, to: '#events', group: 'community' as const },
                     { id: 'volunteering', label: t.volunteering, to: '#volunteering', group: 'community' as const },
-                    { id: 'contacts', label: `{${t.contacts}___`, to: '#contacts', group: 'services' as const },
+                    { id: 'contacts', label: `{${t.contacts}`, to: '#contacts', group: 'services' as const },
 
-                    // Conditionally add visitors & safety if logged in
-                    ...(localStorage.getItem("user")
+           
+                    ...(tokenStorage.getAccessToken() && UserProfileStorage.getUserProfile()
                         ? [
                             { id: "visitors", label: t.visitors, to: "#visitors", group: "services" as const },
                             { id: "safety", label: t.safety, to: "#safety", group: "services" as const },

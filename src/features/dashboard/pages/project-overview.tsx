@@ -134,7 +134,7 @@ export default function ProjectOverview() {
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl text-primary">✅ The Solution</CardTitle>
-                    <CardDescription>Smart Village creates a digital community hub with comprehensive features</CardDescription>
+                    <CardDescription>Smart Village creates a digital Smart Village Platform with comprehensive features</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
