@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 
 
 import React, { useEffect, useState } from 'react';
@@ -13,6 +13,8 @@ import type { GetVillageNewsApiResponse } from '../../../news/newsTypes';
 import { VolunteeringEventsListCard } from '@/features/volunteering/components/VolunteeringEventsListCard';
 import { Button } from '@/components/ui/button';
 import { useVisitedVillage } from '@/features/homePages/context/VillageContext';
+import { LoginDialog } from '../../../auth/components/LoginDialog';
+import { tokenStorage } from '@/utils/tokenStorage';
 
 interface StatCardProps {
     icon: React.ReactNode;
@@ -122,6 +124,17 @@ export default function VillagePage() {
     const [villageData, setVillageData] = useState<GetVillageNewsApiResponse | null>(null);
 
     useEffect(() => {
+        const token = tokenStorage.getAccessToken();
+        setIsSignedIn(!!token);
+    }, []);
+
+    const handleLoginSuccess = () => {
+        setIsSignedIn(true);
+    };
+
+
+
+    useEffect(() => {
         const fetchVillageData = async () => {
             if (!villageId)
                 return
@@ -143,10 +156,11 @@ export default function VillagePage() {
             }
         };
         fetchVillageData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [villageId]);
 
     const stats = [
-        { icon: <Users className="w-6 h-6" />, value: `${villageData?.total_residents}`, label: "Residents", color: "bg-blue-600" },
+        { icon: <Users className="w-6 h-6" />, value: `${villageData?.total_residents ?? 0}`, label: "Residents", color: "bg-blue-600" },
         { icon: <Bell className="w-6 h-6" />, value: "12", label: "Announcements", color: "bg-green-600" },
         { icon: <Calendar className="w-6 h-6" />, value: `${villageData?.total_events}`, label: "Events", color: "bg-yellow-600" },
         { icon: <Shield className="w-6 h-6" />, value: "Excellent", label: "Safety Level", color: "bg-purple-600" }
@@ -154,49 +168,80 @@ export default function VillagePage() {
 
     const announcements = [
         {
-            title: "Umuganda Day: Community Cleanup",
-            description: "Join us this Saturday for a neighborhood cleanup initiative. We'll be cleaning streets, parks, and common areas.",
-            date: "2025-08-04",
-            views: "243 Views"
+            "title": "⚠️ Urgent Community Announcement: Water Supply Maintenance and Infrastructure Upgrade for the Entire Village and Surrounding Areas Covering Multiple Districts, Scheduled Work Will Impact Residents, Businesses, Schools, and Local Health Centers – Please Read Carefully and Prepare in Advance",
+            "description": "Dear residents, this is to inform you that due to an extensive water supply infrastructure upgrade project, scheduled maintenance will occur on Sunday, 3rd August 2025, starting from 9:00 AM and continuing until approximately 3:00 PM. During this time, water services will be temporarily suspended across the entire village and may extend to neighboring sectors. The works include replacement of old underground pipes, installation of new filtration units, and reinforcement of the main distribution channels. All residents are advised to store adequate water in advance for drinking, cooking, sanitation, and other essential needs. Businesses and schools are also advised to make contingency plans. The village leadership, engineers, and community representatives will be coordinating to ensure minimum disruption. Emergency water tanks will be available at designated collection points: the village center, near the health clinic, and next to the primary school. Residents with special medical conditions requiring water support are advised to contact the village leader directly or call the emergency hotline. We sincerely apologize for the inconvenience caused and greatly appreciate your cooperation in this important community development project. Please stay updated through official notices, WhatsApp groups, and the community radio broadcast.",
+            "date": "2025-08-03",
+            "views": "156 Views"
+        }
+        ,
+        {
+            "title": "Water Supply Maintenance",
+            "description": "Scheduled water maintenance from 9 AM to 3 PM on Sunday. Please store water in advance.",
+            "date": "2025-08-03",
+            "views": "156 Views"
         },
         {
-            title: "Water Supply Maintenance",
-            description: "Scheduled water maintenance from 9 AM to 3 PM on Sunday. Please store water in advance.",
-            date: "2025-08-03",
-            views: "156 Views"
+            "title": "Community Clean-Up Day",
+            "description": "Join us this Saturday for a village clean-up event. Bring gloves and trash bags to support.",
+            "date": "2025-08-10",
+            "views": "98 Views"
+        },
+        {
+            "title": "Free Medical Checkup",
+            "description": "Local doctors will provide free checkups and consultations for all residents.",
+            "date": "2025-09-01",
+            "views": "210 Views"
+        },
+        {
+            "title": "Youth Skills Training Workshop",
+            "description": "A 3-day workshop on entrepreneurship and digital skills for the youth of the community.",
+            "date": "2025-09-15",
+            "views": "75 Views"
+        },
+        {
+            "title": "Cultural Festival 2025",
+            "description": "Annual celebration with music, dance, and food. Families are invited to attend.",
+            "date": "2025-10-05",
+            "views": "320 Views"
+        },
+        {
+            "title": "Road Safety Awareness",
+            "description": "Police officers will lead a session on road safety rules and preventive measures.",
+            "date": "2025-10-12",
+            "views": "54 Views"
+        },
+        {
+            "title": "Tree Planting Campaign",
+            "description": "Environmental group will plant trees near the riverbank to prevent erosion. Volunteers needed.",
+            "date": "2025-11-02",
+            "views": "180 Views"
+        },
+        {
+            "title": "Blood Donation Drive",
+            "description": "Village health center organizes blood donation to save lives. All healthy residents encouraged.",
+            "date": "2025-11-15",
+            "views": "142 Views"
+        },
+        {
+            "title": "Village Security Meeting",
+            "description": "Meeting with local authorities to discuss safety and emergency response strategies.",
+            "date": "2025-11-22",
+            "views": "87 Views"
+        },
+        {
+            "title": "End of Year Celebration",
+            "description": "Closing ceremony for 2025 with cultural performances, awards, and fireworks.",
+            "date": "2025-12-30",
+            "views": "410 Views"
         }
     ];
+
 
 
     return (
         <div className="min-h-screen bg-background-normal">
 
-            <header className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center">
-                            <h1 className="text-xl font-bold text-gray-900">{villageData?.village.village}</h1>
-                        </div>
-                        <nav className="hidden md:flex space-x-8">
-                            <a href="#" className="text-gray-700 hover:text-gray-900">Home</a>
-                            <a href="#" className="text-gray-700 hover:text-gray-900">News</a>
-                            <a href="#" className="text-gray-700 hover:text-gray-900">Events</a>
-                            <a href="#" className="text-gray-700 hover:text-gray-900">Contacts</a>
-                        </nav>
-                        <div className="flex items-center space-x-4">
-                            <select className="text-sm border-0 bg-transparent">
-                                <option>🌍 English</option>
-                            </select>
-                            <button
-                                onClick={() => setIsSignedIn(!isSignedIn)}
-                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                            >
-                                👤 {isSignedIn ? 'Sign Out' : 'Sign In'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+
 
             {/* Hero Section */}
             <section className="relative bg-gradient-to-br from-green-600 via-blue-600 to-purple-600 py-20">
@@ -323,12 +368,11 @@ export default function VillagePage() {
                                     <p className="text-sm opacity-90 mb-4">
                                         Access emergency contacts, detailed incident reports, visitor management, and more community features
                                     </p>
-                                    <button
-                                        onClick={() => setIsSignedIn(true)}
-                                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
-                                    >
-                                        👤 Sign In
-                                    </button>
+                                    <LoginDialog onLoginSuccess={handleLoginSuccess}>
+                                        <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                                            👤 Sign In
+                                        </button>
+                                    </LoginDialog>
                                 </div>
                             )}
 

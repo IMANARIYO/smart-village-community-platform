@@ -25,6 +25,13 @@ export enum VolunteeringStatus {
   Rejected = "REJECTED",
   Cancelled = "CANCELLED",
 }
+export interface GetVillageVolunteeringActivitiesOptions {
+  category?: VolunteeringCategory;
+  date?: string; // YYYY-MM-DD
+  page?: number;
+  page_size?: number;
+  status?: VolunteeringStatus;
+}
 
 export interface VolunteeringEvent {
   id: string;
@@ -109,10 +116,32 @@ export interface GetVolunteeringOptions {
   village_id?: string;
   volunteer_id?: string;
 }
+// Village volunteering activities API response
+export interface VillageVolunteeringActivitiesResponse {
+  success: boolean;
+  message: string;
+  count: number;
+  filters: {
+    status: string | null;
+    category: string | null;
+    date: string | null;
+  };
+  village: Village;
+  data: VolunteeringEventListItem[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+    has_next: boolean;
+    has_prev: boolean;
+    next: string | null;
+    previous: string | null;
+  };
+}
+
 // API response types
-export type GetVolunteerEventsApiResponse = ApiResponse<
-  VolunteeringEventListItem[]
->;
+export type GetVolunteerEventsApiResponse = VillageVolunteeringActivitiesResponse;
 export type GetEventDetailApiResponse = ApiResponse<VolunteeringEventListItem>;
 export type GetVolunteerEventByIdApiResponse =
   ApiResponse<VolunteeringEventListItem>;

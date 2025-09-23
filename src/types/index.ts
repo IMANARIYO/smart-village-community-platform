@@ -70,9 +70,9 @@ export interface BaseVolunteringEvent {
   volunteer_id: string;
   title: string;
   description: string;
-  date: string;          // YYYY-MM-DD
-  start_time?: string;   // HH:mm:ss
-  end_time?: string;     // HH:mm:ss
+  date: string;          
+  start_time?: string;   
+  end_time?: string;     
   capacity: number;
   village: Village;
   organizer: User | SmallPersonInfo;
@@ -83,6 +83,8 @@ export interface BaseVolunteringEvent {
   created_at: string;
   updated_at: string;
   approved_at?: string | null;
-
+  approved_volunteers_count?: 0,
+  is_full?: boolean,
+  approved_capacity_display?: string
 
 }

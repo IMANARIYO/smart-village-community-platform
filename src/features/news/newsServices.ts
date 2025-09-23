@@ -6,10 +6,7 @@ const VillageService = {
   getVillageNews: async (
     villageId: string
   ): Promise<ApiResponse<GetVillageNewsApiResponse>> => {
-    const res = await api.get(`/village/${villageId}/news/`, {
-      headers: { "Cache-Control": "no-cache" },
-    });
-
+    const res = await api.get(`/village/${villageId}/news/`);
     return res.data;
   },
 };

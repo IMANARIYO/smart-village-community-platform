@@ -1,26 +1,24 @@
 import { Navigation } from "@/components/navigation";
-import BackToTopButton from "@/features/homePages/components/BackToTopButton";
 import LandingFooter from "@/features/homePages/components/LandingFooter";
 import { Outlet } from "react-router-dom";
 
 export const LandingLayout: React.FC = () => {
     return (
-        <div className="w-screen flex flex-col font-sans overflow-x-hidden">
-
+        <div className="min-h-screen flex flex-col font-sans overflow-x-hidden">
+            {/* Navigation always on top */}
             <Navigation />
 
-
+            {/* Main content grows to fill available space */}
             <main
                 id="main-content"
                 role="main"
-                className="flex-1"
+                className="flex-grow"
                 tabIndex={-1}
             >
                 <Outlet />
             </main>
 
-
-            <BackToTopButton />
+            {/* Footer at the bottom naturally */}
             <LandingFooter />
         </div>
     );

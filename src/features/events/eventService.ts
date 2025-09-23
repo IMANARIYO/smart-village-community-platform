@@ -48,10 +48,7 @@ const EventService = {
     villageId: string
   ): Promise<GetVillageEventsApiResponse> => {
     const res = await api.get(`/village/${villageId}/events/`);
-    console.log(
-      "****trying to fetch the village  events  /village/${villageId}/events/*****",
-      res
-    );
+
     return res.data;
   },
 };

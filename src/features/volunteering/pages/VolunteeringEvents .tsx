@@ -15,6 +15,7 @@ import { VolunteeringEventCard } from '../components/VolunteeringEventCard';
 import { CreateVolunteeringEventDialog } from '../components/CreateVolunteeringEventDialog';
 import VolunteerService from '../volunteeringServices';
 
+
 const VolunteeringEvents = () => {
     const [selectedCategory, setSelectedCategory] = useState<'All Categories' | VolunteeringCategory>('All Categories');
     const [selectedStatus, setSelectedStatus] = useState<'All Statuses' | VolunteeringStatus>('All Statuses');
@@ -52,10 +53,13 @@ const VolunteeringEvents = () => {
         const fetchEvents = async () => {
             setLoading(true);
             try {
-                const data = await VolunteerService.getVolunteeringEvents({
-                    category: selectedCategory !== 'All Categories' ? selectedCategory : undefined,
-                    status: selectedStatus !== 'All Statuses' ? selectedStatus : undefined,
-                });
+                const data = await VolunteerService.getVillageVoluntringActivities(
+                    'f138c017-e26d-418b-85c6-b2978e348e91',
+                    {
+                        category: selectedCategory !== 'All Categories' ? selectedCategory : undefined,
+                        status: selectedStatus !== 'All Statuses' ? selectedStatus : undefined,
+                    }
+                );
                 setEvents(data.data);
             } catch (error) {
                 console.error('Failed to fetch volunteering events', error);
@@ -85,7 +89,7 @@ const VolunteeringEvents = () => {
             <header className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
-                        <h1 className="text-xl font-semibold text-gray-900">Nyarucyamo II</h1>
+                        <h1 className="text-xl font-semibold text-gray-900">Bungwe</h1>
                     </div>
                 </div>
             </header>
@@ -94,7 +98,7 @@ const VolunteeringEvents = () => {
             <div className="bg-gradient-to-r from-yellow-600 to-yellow-700 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">Volunteering Events</h1>
-                    <p className="text-xl mb-2">Nyarucyamo II Village</p>
+                    <p className="text-xl mb-2">Bungwe Village</p>
                     <p className="text-lg opacity-90">Make a difference in your community</p>
                 </div>
             </div>

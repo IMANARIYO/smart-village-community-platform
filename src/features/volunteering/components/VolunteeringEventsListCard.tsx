@@ -15,7 +15,7 @@ import { CreateVolunteeringEventDialog } from "./CreateVolunteeringEventDialog";
 
 import VolunteerService from "../volunteeringServices";
 import { toast } from "sonner";
-import { VolunteeringEventListItem, VolunteeringStatus } from "../types";
+import { VolunteeringEventListItem } from "../types";
 
 
 interface EventsCardProps {
@@ -37,15 +37,14 @@ export const VolunteeringEventsListCard: React.FC<EventsCardProps> = ({
 
     const fetchEvents = useCallback(async () => {
         if (propEvents) return; // Use prop events if provided
+        if (!villageId) return;
 
         try {
             setLoading(true);
-            const params = {
-                limit: maxEvents,
-                village_id: villageId,
-                status: VolunteeringStatus.Approved
-            };
-            const res = await VolunteerService.getVolunteeringEvents(params);
+            const res = await VolunteerService.getVillageVoluntringActivities(villageId, {
+                page_size: maxEvents,
+                status: "APPROVED"
+            });
             setEvents(res.data);
         } catch (err) {
             console.error("Error fetching events:", err);

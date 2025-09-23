@@ -69,6 +69,7 @@ export interface Event {
   image?: string | null;
   created_at: string;
   updated_at: string;
+  Views?: number;
   organizer?: SmallPersonInfo;
 }
 export interface CreateEventRequest {
@@ -160,6 +161,43 @@ export interface GetEventsApiResponse {
   meta: EventsApiMeta;
 }
 
+// Actual API event structure matching the response
+export interface VillageEvent {
+  event_id: string;
+  village: Village;
+  organizer: {
+    person: SmallPersonInfo;
+  };
+  title: string;
+  description: string;
+  exact_place_of_village: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  status: EventStatusEnum;
+  category: EventCategory;
+  type: EventType;
+  image?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// API response meta for village events
+export interface VillageEventsApiMeta {
+  page: number;
+  limit: number;
+  total_pages: number;
+  total_items: number;
+}
+
+// Actual village events API response
+export interface VillageEventsApiResponse {
+  success: boolean;
+  message: string;
+  data: VillageEvent[];
+  meta: VillageEventsApiMeta;
+}
+
 export type GetEventByIdApiResponse = ApiResponse<Event>;
 export type CreateOrUpdateEventApiResponse = ApiResponse<Event>;
-export type GetVillageEventsApiResponse = ApiResponse<VillageEventsResponse>;
+export type GetVillageEventsApiResponse = VillageEventsApiResponse;

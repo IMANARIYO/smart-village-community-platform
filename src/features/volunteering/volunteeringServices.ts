@@ -73,10 +73,17 @@ const VolunteerService = {
   // ------------------------
   // Village-specific Events
   // ------------------------
-  getVillageActivities: async (
-    villageId: string
+  getVillageVoluntringActivities: async (
+    villageId: string,
+    params?: {
+      category?: string;
+      date?: string;
+      page?: number;
+      page_size?: number;
+      status?: string;
+    }
   ): Promise<GetVolunteerEventsApiResponse> => {
-    const res = await api.get(`/volunter/${villageId}/activity/`);
+    const res = await api.get(`/volunter/${villageId}/activity/`, { params });
     return res.data;
   },
 };

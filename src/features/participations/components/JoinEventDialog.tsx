@@ -10,6 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import type { BaseVolunteringEvent } from "@/types";
 import { participationService } from "../service";
+import { LoginDialog } from "@/features/auth/components/LoginDialog";
+import { useAuthStore } from "@/store/authStore";
 
 const participationSchema = z.object({
     notes: z.string().optional(),
@@ -24,6 +26,7 @@ interface JoinEventDialogProps {
 export const JoinEventDialog: React.FC<JoinEventDialogProps> = ({ event }) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { isAuthenticated } = useAuthStore();
 
     const form = useForm<ParticipationFormData>({
         resolver: zodResolver(participationSchema),
@@ -35,7 +38,7 @@ export const JoinEventDialog: React.FC<JoinEventDialogProps> = ({ event }) => {
     const handleJoin = async (data: ParticipationFormData) => {
         setLoading(true);
         try {
-            console.log("erro  joininthe event________@@@@@@@@@@@@@@");
+
             const response = await participationService.create({
                 event: event.volunteer_id,
                 notes: data.notes || undefined,
@@ -75,9 +78,17 @@ export const JoinEventDialog: React.FC<JoinEventDialogProps> = ({ event }) => {
 
     return (
         <>
-            <Button onClick={() => setOpen(true)} className="bg-green-600 hover:bg-green-700">
-                Join Event
-            </Button>
+            {!isAuthenticated ? (
+                <LoginDialog>
+                    <Button className="bg-green-600 hover:bg-green-700">
+                        Join Event
+                    </Button>
+                </LoginDialog>
+            ) : (
+                <Button onClick={() => setOpen(true)} className="bg-green-600 hover:bg-green-700">
+                    Join Event
+                </Button>
+            )}
 
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-md">

@@ -148,7 +148,7 @@ export function CreateVolunteeringEventDialog({
         },
     });
 
-    // Populate form when editing
+
     useEffect(() => {
         if (editEvent && open) {
             setValue("title", editEvent.title);
@@ -160,7 +160,6 @@ export function CreateVolunteeringEventDialog({
             setValue("category", editEvent.category as VolunteeringCategory);
             setValue("skills_required", editEvent.skills_required || []);
 
-            // Set location data
             if (editEvent.village) {
                 setProvince(editEvent.village.province ?? "");
                 setDistrict(editEvent.village.district ?? "");

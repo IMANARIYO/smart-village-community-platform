@@ -28,6 +28,7 @@ import ComingSoon from "@/components/common/ComingSoon";
 import { LandingLayout } from "@/layouts/LandingLayout";
 import { EventTable } from "@/features/events/components/EventsTable";
 import LeadersPage from '@/features/dashboard/pages/villageLeaders/LeadersPage';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 
 export default function AppRouter() {
@@ -39,9 +40,24 @@ export default function AppRouter() {
         <Route element={<LandingLayout />}>
           <Route path="/" element={<HomePage />} />
 
+          <Route path="/visitVillage/:villageId" element={
+
+
+
+
+            <ErrorBoundary>
+              <VillagePage />
+            </ErrorBoundary>
+          } />
           <Route path="/visitVillage/:villageId" element={<VillagePage />} />
-          <Route path="/visitVillage/:villageId" element={<VillagePage />} />
-          <Route path="/news/:villageId" element={<VillageNewsPage />} />
+          <Route path="/news/:villageId" element={
+
+            <ErrorBoundary>
+              <VillageNewsPage />
+            </ErrorBoundary>
+
+
+          } />
 
           <Route
             path="/VolunteeringEvents/:villageId"
