@@ -2,14 +2,43 @@ import axios, { type AxiosRequestConfig } from "axios";
 import { tokenStorage } from "./tokenStorage";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URLggg,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 30000,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
-    "Cache-Control": "no-cache",
-    Pragma: "no-cache",
-    Expires: "0",
+    "Accept": "application/json",
   },
 });
+
+// Add request interceptor to handle CORS
+api.interceptors.request.use(
+  (config) => {
+    // Remove any client-side CORS headers that might cause issues
+    delete config.headers['Access-Control-Allow-Origin'];
+    delete config.headers['Access-Control-Allow-Methods'];
+    delete config.headers['Access-Control-Allow-Headers'];
+    
+    const token = tokenStorage.getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    
+    console.log("API Request:", {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      baseURL: config.baseURL,
+      fullURL: `${config.baseURL}${config.url}`,
+      headers: config.headers
+    });
+    
+    return config;
+  },
+  (error) => {
+    console.error("Request interceptor error:", error);
+    return Promise.reject(error);
+  }
+);
 
 // --- Helper method to refresh token ---
 async function refreshToken(): Promise<string | null> {
@@ -46,17 +75,7 @@ async function refreshToken(): Promise<string | null> {
   }
 }
 
-// --- Attach access token to every request ---
-api.interceptors.request.use(
-  (config) => {
-    const token = tokenStorage.getAccessToken();
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    
-    console.log("Sending request to:", config.url);
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+
 
 // --- Handle 401 and retry original request ---
 api.interceptors.response.use(
