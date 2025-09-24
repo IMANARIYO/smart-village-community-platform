@@ -24,13 +24,13 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    console.log("API Request:", {
-      method: config.method?.toUpperCase(),
-      url: config.url,
-      baseURL: config.baseURL,
-      fullURL: `${config.baseURL}${config.url}`,
-      headers: config.headers
-    });
+    // console.log("API Request:", {
+    //   method: config.method?.toUpperCase(),
+    //   url: config.url,
+    //   baseURL: config.baseURL,
+    //   fullURL: `${config.baseURL}${config.url}`,
+    //   headers: config.headers
+    // });
     
     return config;
   },

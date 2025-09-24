@@ -9,6 +9,7 @@ import { useLanguage } from "../../i18n/useLanguage";
 import { contacttranslations } from "../i18n/contactTransilation";
 import ContactService, { CreateContactRequest, type InquiryType } from "../service";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/extractErrorMessage";
 
 
 function Contact() {
@@ -114,14 +115,14 @@ function Contact() {
 
     const onSubmit = async (data: CreateContactRequest) => {
         try {
-            console.log("Submitting data:", data);
+
             await ContactService.createContact(data);
             toast.success(t.success);
             reset();
             setLocationData(null);
             setHasRequestedLocation(false);
         } catch (error) {
-            console.error("Error submitting the contact message:", error);
+            console.error("Error submitting the contact message:", extractErrorMessage(error));
             toast.error(t.fail);
         }
     };

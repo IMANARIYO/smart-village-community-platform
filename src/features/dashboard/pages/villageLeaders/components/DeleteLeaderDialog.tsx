@@ -11,6 +11,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import LeaderService from "../LeaderService";
 import type { LeaderListItem } from "../leaderTypes";
+import { extractErrorMessage } from "@/utils/extractErrorMessage";
 
 interface DeleteLeaderDialogProps {
   leader: LeaderListItem;
@@ -36,9 +37,8 @@ export function DeleteLeaderDialog({ leader, isOpen, onClose, onSuccess }: Delet
         throw new Error(response.message);
       }
     } catch (error) {
-      console.log("Failed to delete leader", error)
-      const errorMessage = error instanceof Error ? error.message : "Failed to delete leader";
-      toast.error(errorMessage);
+      console.error("Failed to delete leader:", extractErrorMessage(error));
+      toast.error("Failed to delete leader");
     } finally {
       setLoading(false);
     }

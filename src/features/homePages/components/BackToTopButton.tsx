@@ -7,7 +7,7 @@ export default function BackToTopButton() {
     const [visible, setVisible] = useState(false);
 
     const handleScroll = () => {
-        console.log("Scroll Y:", window.scrollY);
+
         setVisible(window.scrollY > 300); // show after scrolling down 300px
     };
 

@@ -1,4 +1,5 @@
 import type { UserProfile } from "../authTypes";
+import { extractErrorMessage } from "@/utils/extractErrorMessage";
 
 export class UserProfileStorage {
   private static readonly STORAGE_KEY = "user_profile_data";
@@ -49,7 +50,7 @@ export class UserProfileStorage {
       const expiryTime = sessionStorage.getItem(this.CACHE_EXPIRY_KEY);
       return expiryTime !== null && Date.now() <= parseInt(expiryTime);
     } catch (error) {
-      console.log("the error ", error);
+      console.warn("Failed to check profile cache:", extractErrorMessage(error));
       return false;
     }
   }

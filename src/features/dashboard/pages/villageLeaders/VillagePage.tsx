@@ -140,7 +140,7 @@ export default function VillagePage() {
                 return
             try {
                 const res = await VillageService.getVillageNews(villageId);
-                console.log("the reponse dta of the vilage", res.data);
+
                 if (res.success) setVillageData(res.data);
                 setVisitedVillage({
                     village_id: res.data.village.village_id,

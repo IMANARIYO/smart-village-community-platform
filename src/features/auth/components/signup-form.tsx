@@ -17,6 +17,7 @@ import { useLocationSelector } from "../../homePages/hooks/useLocationSelector";
 import type { RegisterPayload } from "../authTypes";
 import UserService from "../authService";
 import { Link } from "react-router-dom";
+import { extractErrorMessage } from "@/utils/extractErrorMessage";
 
 
 interface FormData {
@@ -118,7 +119,7 @@ export function SignupForm() {
       const response = await UserService.register(payload);
 
       if (response.success) {
-        console.log("Registration successful:", response.data);
+
 
         localStorage.setItem("phoneNumber", data.phoneNumber);
         localStorage.setItem("password", data.password);
@@ -127,7 +128,7 @@ export function SignupForm() {
         setError(response.message || "Registration failed");
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || "An error occurred during registration");
+      setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }

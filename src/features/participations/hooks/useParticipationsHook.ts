@@ -38,7 +38,7 @@ export function useParticipationsHook() {
 
         const filtersToUse = newFilters || filters;
         const response = await participationService.list(filtersToUse);
-        console.log(response.data);
+
         if (response.success) {
           setParticipations(response.data);
           setPagination(response.meta);
