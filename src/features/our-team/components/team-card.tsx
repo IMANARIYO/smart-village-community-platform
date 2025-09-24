@@ -30,8 +30,8 @@ interface TeamCardProps {
     website?: string
     twitter?: string
     location?: string
-    skills?: Skill[]
-    certifications?: string[]
+    skills?: Skill[] | string[] | string
+    certifications?: string[] | string
 }
 
 export default function TeamCard({
@@ -54,6 +54,21 @@ export default function TeamCard({
 }: TeamCardProps) {
     const [activeTab, setActiveTab] = useState<'about' | 'skills' | 'connect'>('about')
     const [isExpanded, setIsExpanded] = useState(false)
+
+    // Utility function to parse array-like data
+    const parseArrayData = (data: string[] | string | undefined): string[] => {
+        if (!data) return [];
+        if (Array.isArray(data)) return data;
+        if (typeof data === 'string') {
+            // Handle comma-separated strings
+            return data.split(',').map(item => item.trim()).filter(item => item.length > 0);
+        }
+        return [];
+    };
+
+    // Parse skills and certifications
+    const parsedSkills: Skill[] = parseArrayData(skills as string[] | string).map(skill => ({ name: skill }));
+    const parsedCertifications: string[] = parseArrayData(certifications);
 
     const createEmailUrl = (email: string, name: string, role: string) => {
         const subject = encodeURIComponent(`Hello ${name} - Smart Village Platform Inquiry`);
@@ -150,7 +165,7 @@ export default function TeamCard({
                     {/* Quick Stats */}
                     <div className="text-center flex-shrink-0">
                         <div className="text-lg font-bold text-primary">
-                            {skills?.length || 0}
+                            {parsedSkills?.length || 0}
                         </div>
                         <div className="text-xs text-muted-foreground">Skills</div>
                     </div>
@@ -224,14 +239,14 @@ export default function TeamCard({
                         </div>
 
                         {/* Certifications */}
-                        {certifications && certifications.length > 0 && (
+                        {parsedCertifications && parsedCertifications.length > 0 && (
                             <div className="bg-secondary/10 rounded-lg p-3">
                                 <div className="flex items-center gap-2 mb-2">
                                     <Trophy className="w-4 h-4 text-primary" />
                                     <h4 className="text-sm font-semibold">Certifications</h4>
                                 </div>
                                 <div className="flex flex-wrap gap-1">
-                                    {certifications.map((cert, index) => (
+                                    {parsedCertifications.map((cert, index) => (
                                         <Badge
                                             key={index}
                                             variant="secondary"
@@ -248,17 +263,17 @@ export default function TeamCard({
 
                 {activeTab === 'skills' && (
                     <div className="space-y-4 h-full">
-                        {skills && skills.length > 0 ? (
+                        {parsedSkills && parsedSkills.length > 0 ? (
                             <>
                                 <div className="flex items-center gap-2 mb-3">
                                     <Zap className="w-4 h-4 text-primary" />
                                     <h4 className="text-sm font-semibold">Technical Skills</h4>
                                     <Badge variant="outline" className="text-xs">
-                                        {skills.length}
+                                        {parsedSkills.length}
                                     </Badge>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
-                                    {skills.map((skill, index) => {
+                                    {parsedSkills.map((skill, index) => {
                                         const IconComponent = skill.icon
                                         return (
                                             <div
