@@ -4,6 +4,7 @@ import { LanguageProvider } from './features/i18n/LanguageProvider';
 import { Toaster } from 'sonner';
 import { VillageProvider } from './features/homePages/context/VillageContext';
 import { SEOHead } from './components/SEO';
+import { Analytics } from "@vercel/analytics/next"
 
 
 
@@ -21,6 +22,7 @@ function App() {
           <AppRoutes />
 
         </div>
+        <Analytics />
       </VillageProvider>
     </LanguageProvider>
   );
