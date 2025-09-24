@@ -10,44 +10,54 @@ import { useLanguage } from "@/features/i18n/useLanguage";
 import { NavBartranslations } from "@/components/NavBarTranslation";
 import { UserProfileStorage } from "../utils/UserProfileStorage";
 import UserService from "../authService";
+import { useAuthStore } from "@/store/authStore";
 
 export function UserProfilePopover() {
-    const [user, setUser] = useState<UserProfile | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState(false);
     const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
 
     const { language } = useLanguage();
     const t = NavBartranslations[language];
+    const { isAuthenticated, logout } = useAuthStore();
 
     useEffect(() => {
         const fetchUser = async () => {
             const token = tokenStorage.getAccessToken();
-            if (!token) return setLoading(false);
-
-            const cachedProfile = UserProfileStorage.getUserProfile();
-            if (cachedProfile) {
-                setUser(cachedProfile);
-                setLoading(false);
+            if (!token || !isAuthenticated) {
+                setUserProfile(null);
                 return;
             }
 
+
+            if (userProfile) {
+                return;
+            }
+
+            const cachedProfile = UserProfileStorage.getUserProfile();
+            if (cachedProfile) {
+                setUserProfile(cachedProfile);
+                return;
+            }
+
+            setLoading(true);
             try {
                 const res = await UserService.getMyProfile();
                 if (res.success) {
-                    setUser(res.data);
+                    setUserProfile(res.data);
                     UserProfileStorage.setUserProfile(res.data);
                 }
             } catch (err) {
                 console.error("Failed to fetch user profile:", err);
                 const expiredProfile = UserProfileStorage.getUserProfile();
-                if (expiredProfile) setUser(expiredProfile);
+                if (expiredProfile) setUserProfile(expiredProfile);
             } finally {
                 setLoading(false);
             }
         };
         fetchUser();
-    }, []);
+    }, [isAuthenticated, userProfile]);
 
     useEffect(() => {
         const goOnline = () => setIsOnline(true);
@@ -61,9 +71,9 @@ export function UserProfilePopover() {
     }, []);
 
     const handleSignOut = () => {
-        tokenStorage.clearAuth();
+        logout();
         UserProfileStorage.clearUserProfile();
-        setUser(null);
+        setUserProfile(null);
         setOpen(false);
     };
 
@@ -75,7 +85,7 @@ export function UserProfilePopover() {
         try {
             const res = await UserService.getMyProfile();
             if (res.success) {
-                setUser(res.data);
+                setUserProfile(res.data);
                 UserProfileStorage.setUserProfile(res.data);
             }
         } catch (err) {
@@ -85,21 +95,19 @@ export function UserProfilePopover() {
         }
     };
 
-    const getInitials = () =>
-        user ? `${user.first_name[0] || ""}${user.last_name[0] || ""}`.toUpperCase() : "SI";
+    const getInitials = () => {
+        return userProfile ? `${userProfile.first_name?.[0] || ""}${userProfile.last_name?.[0] || ""}`.toUpperCase() : "SI";
+    };
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger>
-                {user ? (
+                {userProfile ? (
                     <div className="flex items-center space-x-4 p-2 text-sm font-medium text-foreground bg-sv-primary-light hover:bg-primary-light-hover rounded-lg cursor-pointer transition-all duration-200 w-full">
                         <div className="h-5 w-5 bg-sv-primary text-primary-foreground rounded-full flex items-center justify-center font-medium">
                             {getInitials()}
                         </div>
-                        {/* <div className="flex flex-col text-left"> */}
-                        {/* <span className="text-sm font-semibold w-full">{`${user.first_name} ${user.last_name}`}</span> */}
-                        <span className="text-xs text-muted-foreground">{user.role}</span>
-                        {/* </div> */}
+                        <span className="text-xs text-muted-foreground">{userProfile.role}</span>
                         <div className="flex items-center ml-auto space-x-1">
                             <div className={`w-2 h-2 rounded-full ${isOnline ? "bg-success-normal" : "bg-muted"}`}></div>
                             <ChevronDown className="w-4 h-4 transition-transform" />
@@ -116,7 +124,7 @@ export function UserProfilePopover() {
             <PopoverContent className="w-full sm:w-80 md:w-96 lg:w-[30vw] max-h-[90vh] overflow-y-auto p-4">
                 {loading ? (
                     <p>{t.loading}</p>
-                ) : user ? (
+                ) : userProfile ? (
                     <div className="bg-card rounded-lg shadow-lg border border-border overflow-hidden">
                         {/* Header */}
                         <div className="px-4 py-3 border-b border-border flex items-center space-x-3">
@@ -124,8 +132,8 @@ export function UserProfilePopover() {
                                 {getInitials()}
                             </div>
                             <div className="flex-1">
-                                <p className="font-semibold text-card-foreground">{`${user.first_name} ${user.last_name}`}</p>
-                                <p className="text-sm text-muted-foreground">{user.role}</p>
+                                <p className="font-semibold text-card-foreground">{`${userProfile.first_name} ${userProfile.last_name}`}</p>
+                                <p className="text-sm text-muted-foreground">{userProfile.role}</p>
                                 <div className="flex items-center mt-1">
                                     <div className={`w-2 h-2 rounded-full mr-2 ${isOnline ? "bg-success-normal" : "bg-muted"}`}></div>
                                     <span className={`text-xs ${isOnline ? "text-success-normal" : "text-muted-foreground"}`}>
@@ -152,25 +160,25 @@ export function UserProfilePopover() {
                         <div className="px-4 py-3 space-y-2 text-sm text-card-foreground border-b border-border">
                             <div className="flex items-center space-x-2">
                                 <User className="w-4 h-4 text-muted-foreground" />
-                                <span>{user.first_name} {user.last_name}</span>
+                                <span>{userProfile.first_name} {userProfile.last_name}</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Phone className="w-4 h-4 text-muted-foreground" />
-                                <span>{user.phone_number}</span>
+                                <span>{userProfile.phone_number}</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <ShieldCheck className="w-4 h-4 text-muted-foreground" />
-                                <span>{user.is_verified ? t.verified : t.notVerified}</span>
+                                <span>{userProfile.is_verified ? t.verified : t.notVerified}</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <IdCard className="w-4 h-4 text-muted-foreground" />
-                                <span>{user.national_id}</span>
+                                <span>{userProfile.national_id}</span>
                             </div>
-                            {user.village && (
+                            {userProfile.village && (
                                 <div className="flex items-center space-x-2">
                                     <MapPin className="w-4 h-4 text-muted-foreground" />
                                     <span>
-                                        {user.village?.name}, {user.village.cell}, {user.village.sector}, {user.village.district}, {user.village.province}
+                                        {userProfile.village.name}, {userProfile.village.cell}, {userProfile.village.sector}, {userProfile.village.district}, {userProfile.village.province}
                                     </span>
                                 </div>
                             )}
@@ -197,6 +205,6 @@ export function UserProfilePopover() {
                     <LoginForm />
                 )}
             </PopoverContent>
-        </Popover>
+        </Popover >
     );
 }
