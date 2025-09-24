@@ -1,4 +1,4 @@
-import type { RoleEnum } from "../features/auth/authTypes";
+import type { RoleEnum } from "../authTypes";
 
 const STORAGE_KEY = "sv_auth_data";
 const SECRET = "SmartVillage2024";
@@ -30,25 +30,26 @@ const decrypt = (encrypted: string): string => {
 };
 
 interface AuthData {
-  accessToken?: string;
-  refreshToken?: string;
-  userId?: string;
-  userRole?: RoleEnum;
+  accessToken: string;
+  refreshToken: string;
+  userId: string;
+  userRole: RoleEnum;
 }
 
-const getStoredData = (): AuthData => {
+const getStoredData = (): AuthData | null => {
   const encrypted = sessionStorage.getItem(STORAGE_KEY);
-  if (!encrypted) return {};
+  if (!encrypted) return null;
 
   try {
     const decrypted = decrypt(encrypted);
     return JSON.parse(decrypted);
   } catch {
-    return {};
+    return null;
   }
 };
 
 const setStoredData = (data: AuthData): void => {
+  console.log("********data  to be stored after encription:********", data);
   const encrypted = encrypt(JSON.stringify(data));
   sessionStorage.setItem(STORAGE_KEY, encrypted);
 };
@@ -68,10 +69,10 @@ export const tokenStorage = {
     });
   },
 
-  getAccessToken: (): string | null => getStoredData().accessToken || null,
-  getRefreshToken: (): string | null => getStoredData().refreshToken || null,
-  getUserId: (): string | null => getStoredData().userId || null,
-  getUserRole: (): RoleEnum | null => getStoredData().userRole || null,
+  getAccessToken: (): string | null => getStoredData()?.accessToken || null,
+  getRefreshToken: (): string | null => getStoredData()?.refreshToken || null,
+  getUserId: (): string | null => getStoredData()?.userId || null,
+  getUserRole: (): RoleEnum | null => getStoredData()?.userRole || null,
 
   clearAuth: () => {
     sessionStorage.removeItem(STORAGE_KEY);

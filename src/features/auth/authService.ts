@@ -1,6 +1,6 @@
 import api from "../../utils/api";
-import { tokenStorage } from "../../utils/tokenStorage";
-import { useAuthStore } from "@/store/authStore";
+import { tokenStorage } from "./utils/tokenStorage";
+import { useAuthStore } from "@/features/auth/authStore";
 import type {
   LoginApiResponse,
   LoginPayload,

@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import EventService from "../eventService";
 import { EventStatus, EventCategory, EventType, type EventListItem } from "../types";
-import { tokenStorage } from "@/utils/tokenStorage";
+import { tokenStorage } from "@/features/auth/utils/tokenStorage";
 
 interface EditEventDialogProps {
   event: EventListItem | null;

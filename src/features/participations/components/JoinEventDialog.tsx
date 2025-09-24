@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { BaseVolunteringEvent } from "@/types";
 import { participationService } from "../service";
 import { LoginDialog } from "@/features/auth/components/LoginDialog";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/features/auth/authStore";
 
 const participationSchema = z.object({
     notes: z.string().optional(),

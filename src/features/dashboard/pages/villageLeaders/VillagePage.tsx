@@ -14,7 +14,7 @@ import { VolunteeringEventsListCard } from '@/features/volunteering/components/V
 import { Button } from '@/components/ui/button';
 import { useVisitedVillage } from '@/features/homePages/context/VillageContext';
 import { LoginDialog } from '../../../auth/components/LoginDialog';
-import { tokenStorage } from '@/utils/tokenStorage';
+import { tokenStorage } from '@/features/auth/utils/tokenStorage';
 
 interface StatCardProps {
     icon: React.ReactNode;

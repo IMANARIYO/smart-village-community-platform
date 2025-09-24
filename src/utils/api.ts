@@ -1,5 +1,5 @@
 import axios, { type AxiosRequestConfig } from "axios";
-import { tokenStorage } from "./tokenStorage";
+import { tokenStorage } from "../features/auth/utils/tokenStorage";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -74,8 +74,6 @@ async function refreshToken(): Promise<string | null> {
     return null;
   }
 }
-
-
 
 // --- Handle 401 and retry original request ---
 api.interceptors.response.use(

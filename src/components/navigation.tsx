@@ -11,7 +11,7 @@ import { UserProfilePopover } from "../features/auth/components/UserProfileDialo
 import { NavBartranslations } from "./NavBarTranslation";
 import { useVisitedVillage } from "@/features/homePages/context/VillageContext";
 import { NotificationDropdown } from "@/features/notifications/pages/Notificationspopover";
-import { tokenStorage } from "@/utils/tokenStorage";
+import { tokenStorage } from "@/features/auth/utils/tokenStorage";
 import { UserProfileStorage } from "@/features/auth/utils/UserProfileStorage";
 import { useActiveSection } from "@/hooks/useActiveSection";
 

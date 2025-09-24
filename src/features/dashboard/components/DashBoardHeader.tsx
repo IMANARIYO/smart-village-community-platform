@@ -3,7 +3,7 @@ import React from 'react';
 import { Menu, ChevronLeft, ChevronRight } from 'lucide-react';
 import { NotificationDropdown } from '@/features/notifications/pages/Notificationspopover';
 import { UserProfilePopover } from '@/features/auth/components/UserProfileDialog';
-import { tokenStorage } from '@/utils/tokenStorage';
+import { tokenStorage } from '@/features/auth/utils/tokenStorage';
 import { UserProfileStorage } from '@/features/auth/utils/UserProfileStorage';
 
 interface HeaderProps {
