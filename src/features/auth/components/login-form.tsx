@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+
 
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -24,7 +24,11 @@ interface FormValues {
   rememberMe: boolean;
 }
 
-export function LoginForm() {
+interface LoginFormProps {
+  onSuccess?: () => void;
+}
+
+export function LoginForm({ onSuccess }: LoginFormProps = {}) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,15 +61,16 @@ export function LoginForm() {
       const response = await UserService.login(payload);
 
       if (response.success) {
-
-
-
         if (data.rememberMe) {
           localStorage.setItem("phoneNumber", data.phoneNumber);
           localStorage.setItem("password", data.password);
         }
 
-        navigate("/dashboard");
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         setError(response.message || "Login failed");
       }

@@ -1,6 +1,5 @@
-import { Globe } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
+import { LanguageSelector } from "@/components/LanguageSelector"
 export function AuthHeader() {
   return (
     <header className="flex items-center justify-between p-6 border-b border-border bg-card">
@@ -9,10 +8,7 @@ export function AuthHeader() {
           Smart Village
         </h1>
       </div>
-      <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-muted">
-        <Globe className="w-4 h-4 mr-2" />
-        English
-      </Button>
+      <LanguageSelector />
     </header>
   )
 }

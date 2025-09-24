@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useLocationSelector } from "../../homePages/hooks/useLocationSelector";
 import type { RegisterPayload } from "../authTypes";
 import UserService from "../authService";
+import { Link } from "react-router-dom";
 
 
 interface FormData {
@@ -300,7 +301,7 @@ export function SignupForm() {
                 )}
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-4 grid sm:grid-cols-1 md:grid-cols-2 justify-end w-full ">
                 <Controller
                   name="province"
                   control={control}
@@ -531,7 +532,18 @@ export function SignupForm() {
               </Button>
             )}
           </div>
+
+
         </form>
+
+        <div className="text-center">
+          <p className="text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link to="/auth/login" className="text-blue-600 hover:underline">
+              Sign in here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

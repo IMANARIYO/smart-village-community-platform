@@ -12,6 +12,7 @@ import { ParticipationDetail } from "../components/ParticipationDetail";
 import { useParticipationsHook } from "../hooks/useParticipationsHook";
 import { useVolunteeringEvents } from "../../volunteering/hooks/useVolunteeringEvents";
 import type { Participation, ParticipationStatus, CreateParticipationRequest, UpdateParticipationRequest } from "../types";
+import { extractErrorMessage } from "@/utils/extractErrorMessage";
 
 export default function ParticipationsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -107,7 +108,7 @@ export default function ParticipationsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center text-red-600">
-              <p>Error loading participations: {error}</p>
+              <p>Error loading participations: {extractErrorMessage(error, "Failed to load participations")}</p>
               <Button onClick={() => fetchParticipations()} className="mt-4">
                 Retry
               </Button>

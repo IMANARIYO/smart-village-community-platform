@@ -1,8 +1,8 @@
 
 import { SignupForm } from "../components/signup-form";
 
+export function SignupPage() {
 
-export default function SignupPage() {
   return (
 
     <SignupForm />

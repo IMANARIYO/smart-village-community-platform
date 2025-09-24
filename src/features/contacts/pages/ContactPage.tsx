@@ -7,7 +7,7 @@ import "react-phone-number-input/style.css";
 
 import { useLanguage } from "../../i18n/useLanguage";
 import { contacttranslations } from "../i18n/contactTransilation";
-import ContactService, { type ContactRequest, type InquiryType } from "../service";
+import ContactService, { CreateContactRequest, type InquiryType } from "../service";
 import { toast } from "sonner";
 
 
@@ -27,9 +27,9 @@ function Contact() {
         formState: { errors, isSubmitting },
         reset,
         setValue,
-        watch,
+
         clearErrors
-    } = useForm<ContactRequest>({
+    } = useForm<CreateContactRequest>({
         mode: "onChange",
         reValidateMode: "onChange",
         defaultValues: {
@@ -42,19 +42,12 @@ function Contact() {
         },
     });
 
-    // Watch all form values to debug
-    const watchedValues = watch();
 
-    // Debug: Log form values and errors
-    useEffect(() => {
-        console.log("Form values:", watchedValues);
-        console.log("Form errors:", errors);
-    }, [watchedValues, errors]);
 
     // Automatically focus the first invalid field
     useEffect(() => {
         if (Object.keys(errors).length > 0) {
-            const firstKey = Object.keys(errors)[0] as keyof ContactRequest;
+            const firstKey = Object.keys(errors)[0] as keyof CreateContactRequest;
             const el = document.getElementById(firstKey);
             el?.focus();
         }
@@ -119,7 +112,7 @@ function Contact() {
         );
     };
 
-    const onSubmit = async (data: ContactRequest) => {
+    const onSubmit = async (data: CreateContactRequest) => {
         try {
             console.log("Submitting data:", data);
             await ContactService.createContact(data);

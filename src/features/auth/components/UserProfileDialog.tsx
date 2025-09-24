@@ -8,8 +8,8 @@ import { LoginForm } from "./login-form";
 import { ChevronDown, LogIn, User, Phone, IdCard, ShieldCheck, MapPin } from "lucide-react";
 import { useLanguage } from "@/features/i18n/useLanguage";
 import { NavBartranslations } from "@/components/NavBarTranslation";
-import api from "@/utils/api";
 import { UserProfileStorage } from "../utils/UserProfileStorage";
+import UserService from "../authService";
 
 export function UserProfilePopover() {
     const [user, setUser] = useState<UserProfile | null>(null);
@@ -33,10 +33,10 @@ export function UserProfilePopover() {
             }
 
             try {
-                const res = await api.get("/me/");
-                if (res.data.status === "success") {
-                    setUser(res.data.data);
-                    UserProfileStorage.setUserProfile(res.data.data);
+                const res = await UserService.getMyProfile();
+                if (res.success) {
+                    setUser(res.data);
+                    UserProfileStorage.setUserProfile(res.data);
                 }
             } catch (err) {
                 console.error("Failed to fetch user profile:", err);
@@ -73,10 +73,10 @@ export function UserProfilePopover() {
         setLoading(true);
         UserProfileStorage.clearUserProfile();
         try {
-            const res = await api.get("/me/");
-            if (res.data.status === "success") {
-                setUser(res.data.data);
-                UserProfileStorage.setUserProfile(res.data.data);
+            const res = await UserService.getMyProfile();
+            if (res.success) {
+                setUser(res.data);
+                UserProfileStorage.setUserProfile(res.data);
             }
         } catch (err) {
             console.error("Failed to refresh user profile:", err);
@@ -170,7 +170,7 @@ export function UserProfilePopover() {
                                 <div className="flex items-center space-x-2">
                                     <MapPin className="w-4 h-4 text-muted-foreground" />
                                     <span>
-                                        {user.village.village}, {user.village.cell}, {user.village.sector}, {user.village.district}, {user.village.province}
+                                        {user.village?.name}, {user.village.cell}, {user.village.sector}, {user.village.district}, {user.village.province}
                                     </span>
                                 </div>
                             )}

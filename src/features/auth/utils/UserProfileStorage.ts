@@ -3,7 +3,7 @@ import type { UserProfile } from "../authTypes";
 export class UserProfileStorage {
   private static readonly STORAGE_KEY = "user_profile_data";
   private static readonly CACHE_EXPIRY_KEY = "user_profile_expiry";
-  private static readonly CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+  private static readonly CACHE_DURATION = 30 * 60 * 1000;
 
   static setUserProfile(profile: UserProfile): void {
     try {

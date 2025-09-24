@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
-import LoginPage from '../features/auth/login/page';
-import SignupPage from '../features/auth/signup/page';
+
 import VillagePage from '../features/dashboard/pages/villageLeaders/VillagePage';
 import VillageNewsPage from '../features/news/pages/VillageNewsPage';
 import VolunteeringEvents from '../features/volunteering/pages/VolunteeringEvents ';
@@ -12,7 +11,6 @@ import ResidentsNews from "../features/residents/pages/ResidentsNews";
 import IncidentReportingPage from "../features/incidents/pages/IncidentReportingPage";
 
 
-import ForgotPasswordPage from "@/features/auth/components/ForgotPasswordPage";
 import { AuthLayout, DashboardLayout } from "@/layouts";
 import ProjectOverview from "@/features/dashboard/pages/project-overview";
 import ProjectFAQ from "@/features/dashboard/pages/project-faq";
@@ -29,6 +27,11 @@ import { LandingLayout } from "@/layouts/LandingLayout";
 import { EventTable } from "@/features/events/components/EventsTable";
 import LeadersPage from '@/features/dashboard/pages/villageLeaders/LeadersPage';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import ParticipationsPage from '@/features/participations/pages/ParticipationsPage';
+import LoginPage from '@/features/auth/pages/Loginpage';
+import { ForgotPasswordPage, ResetPasswordPage, SignupPage } from '@/features/auth/pages';
+
+
 
 
 export default function AppRouter() {
@@ -39,26 +42,17 @@ export default function AppRouter() {
 
         <Route element={<LandingLayout />}>
           <Route path="/" element={<HomePage />} />
-
           <Route path="/visitVillage/:villageId" element={
-
-
-
-
             <ErrorBoundary>
               <VillagePage />
             </ErrorBoundary>
           } />
           <Route path="/visitVillage/:villageId" element={<VillagePage />} />
           <Route path="/news/:villageId" element={
-
             <ErrorBoundary>
               <VillageNewsPage />
             </ErrorBoundary>
-
-
           } />
-
           <Route
             path="/VolunteeringEvents/:villageId"
             element={<VolunteeringEvents />}
@@ -72,21 +66,17 @@ export default function AppRouter() {
           <Route path="/resident/news" element={<ResidentsNews />} />
           <Route path="/resident" element={<ResidentsDashboard />} />
           <Route path="/safety/incidents" element={<IncidentReportingPage />} />
-
-          {/* <Route path="/test" element={<LeadersPage />} /> */}
         </Route>
-
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="signUp" element={<SignupPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
           <Route index element={<Navigate to="login" replace />} />
           <Route index element={<Navigate to="login" replace />} />
         </Route>
-
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="overview" element={<ProjectOverview />} />
-
           <Route path="events" element={<EventTable />} />
           <Route path="faq" element={<ProjectFAQ />} />
           <Route path="docs" element={<ProjectDocumentation />} />
@@ -100,10 +90,10 @@ export default function AppRouter() {
           <Route path="languages" element={<ComingSoon />} />
           <Route path="emergency" element={<ComingSoon />} />
           <Route path="offline" element={<ComingSoon />} />
-          <Route path="test" element={<LeadersPage />} />
+          <Route path="test" element={<ParticipationsPage />} />
+          <Route path="test1" element={<LeadersPage />} />
           <Route index element={<Navigate to="overview" replace />} />
         </Route>
-
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route
           path="/overview"

@@ -16,10 +16,10 @@ import LeaderService from "../LeaderService";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { extractErrorMessage } from "@/utils/extractErrorMessage";
 
 interface PromoteLeaderDialogProps {
     trigger: React.ReactNode;
-
     initialVillageId?: string;
 }
 
@@ -51,27 +51,33 @@ export function PromoteLeaderDialog({ trigger, initialVillageId }: PromoteLeader
                 }
             })
             .catch((err) => {
-                const errorMessage = err instanceof Error ? err.message : "Failed to fetch residents.";
-                toast.error(errorMessage);
+                toast.error(extractErrorMessage(err, "Failed to fetch residents."));
             })
             .finally(() => setLoading(false));
     }, [village]);
 
     const handlePromote = async () => {
         if (!village || !selectedResidentId) return;
+
         try {
             setLoading(true);
-            const response = await LeaderService.promoteLeader(selectedResidentId, village.village_id);
-            
+
+            const response = await LeaderService.promoteLeader(
+                selectedResidentId,
+                village.village_id
+            );
+
             if (response.success) {
                 toast.success("Resident promoted to leader successfully!");
-            } else {
-                toast.error(response.message);
-                throw new Error(response.message);
+                return;
             }
-        } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : "Failed to promote resident.";
-            toast.error(errorMessage);
+
+            const msg = response.message || "Failed to promote resident. Please try again.";
+            toast.error(msg);
+
+        } catch (err: unknown) {
+            toast.error(extractErrorMessage(err, "Failed to promote resident. Please try again."));
+            console.error("Promotion error:", err);
         } finally {
             setLoading(false);
         }
@@ -79,7 +85,7 @@ export function PromoteLeaderDialog({ trigger, initialVillageId }: PromoteLeader
 
     return (
         <Dialog>
-            <DialogTrigger >
+            <DialogTrigger>
                 {trigger}
             </DialogTrigger>
             <DialogContent className="max-w-lg">

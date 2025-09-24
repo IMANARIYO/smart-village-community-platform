@@ -1,4 +1,3 @@
-"use client";
 
 import { useState, useMemo } from "react";
 import { type GridColDef } from "@mui/x-data-grid";

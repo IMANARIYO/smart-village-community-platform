@@ -14,6 +14,7 @@ interface AuthState {
   setUser: (user: User) => void;
   logout: () => void;
   checkAuth: () => void;
+  initializeAuth: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -28,5 +29,19 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkAuth: () => {
     const token = tokenStorage.getAccessToken();
     set({ isAuthenticated: !!token });
+  },
+  initializeAuth: () => {
+    const token = tokenStorage.getAccessToken();
+    const userId = tokenStorage.getUserId();
+    const userRole = tokenStorage.getUserRole();
+    
+    if (token && userId && userRole) {
+      set({ 
+        isAuthenticated: true, 
+        user: { id: userId, role: userRole } 
+      });
+    } else {
+      set({ isAuthenticated: false, user: null });
+    }
   },
 }));

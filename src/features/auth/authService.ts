@@ -1,5 +1,6 @@
 import api from "../../utils/api";
 import { tokenStorage } from "../../utils/tokenStorage";
+import { useAuthStore } from "@/store/authStore";
 import type {
   LoginApiResponse,
   LoginPayload,
@@ -11,6 +12,7 @@ import type {
   ResetRequestPayload,
   VerifyEmailPayload,
 } from "./authTypes";
+import type { GetMyProfileResponse } from "./authTypes";
 import { UserProfileStorage } from "./utils/UserProfileStorage";
 
 const UserService = {
@@ -20,6 +22,8 @@ const UserService = {
     if (res.data.success && res.data.data) {
       const { access, refresh, user } = res.data.data;
       tokenStorage.setAuth(access, refresh, user.id, user.role);
+      const authStore = useAuthStore.getState();
+      authStore.initializeAuth();
     }
 
     return res.data;
@@ -41,6 +45,8 @@ const UserService = {
     }
 
     tokenStorage.setAuth(access, newRefresh, userId, role);
+    const authStore = useAuthStore.getState();
+    authStore.initializeAuth();
     return { access, refresh: newRefresh };
   },
   register: async (data: RegisterPayload): Promise<RegisterApiResponse> => {
@@ -67,10 +73,17 @@ const UserService = {
     const res = await api.post("/user/resend_otp/", data);
     return res.data;
   },
+
+  getMyProfile: async (): Promise<GetMyProfileResponse> => {
+    const res = await api.get("/me/");
+    return res.data;
+  },
   logout: () => {
     tokenStorage.clearAuth();
-    UserProfileStorage.clearUserProfile(); // Clear cached user profile
-    localStorage.removeItem("visitedVillage"); // Clear visited village
+    UserProfileStorage.clearUserProfile();
+    localStorage.removeItem("visitedVillage");
+    const authStore = useAuthStore.getState();
+    authStore.logout();
   },
 };
 

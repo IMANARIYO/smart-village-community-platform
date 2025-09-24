@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -26,7 +26,11 @@ interface JoinEventDialogProps {
 export const JoinEventDialog: React.FC<JoinEventDialogProps> = ({ event }) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { isAuthenticated } = useAuthStore();
+    const { isAuthenticated, checkAuth } = useAuthStore();
+
+    useEffect(() => {
+        checkAuth();
+    }, [checkAuth]);
 
     const form = useForm<ParticipationFormData>({
         resolver: zodResolver(participationSchema),
@@ -79,9 +83,9 @@ export const JoinEventDialog: React.FC<JoinEventDialogProps> = ({ event }) => {
     return (
         <>
             {!isAuthenticated ? (
-                <LoginDialog>
+                <LoginDialog onLoginSuccess={() => checkAuth()}>
                     <Button className="bg-green-600 hover:bg-green-700">
-                        Join Event
+                        log in to Join Event
                     </Button>
                 </LoginDialog>
             ) : (

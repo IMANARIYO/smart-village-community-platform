@@ -1,4 +1,4 @@
-import type { ApiResponse, Village } from "../../types";
+import type { ApiResponse } from "../../types";
 export type RoleEnum = "resident" | "admin" | "leader";
 export interface LoginPayload {
   phone_number: string;
@@ -70,5 +70,15 @@ export interface UserProfile {
   gender: string;
   national_id: string;
   person_type: string;
-  village?: Village;
+  village?: {
+    village_id: string;
+    name: string;
+    cell: string;
+    sector: string;
+    district: string;
+    province: string;
+    status: string;
+  };
 }
+
+export type GetMyProfileResponse = ApiResponse<UserProfile>;

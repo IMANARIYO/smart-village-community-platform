@@ -7,10 +7,15 @@ interface LoginDialogProps {
   onLoginSuccess?: () => void;
 }
 
-export function LoginDialog({ children }: LoginDialogProps) {
+export function LoginDialog({ children, onLoginSuccess }: LoginDialogProps) {
   const [open, setOpen] = useState(false);
 
-
+  const handleLoginSuccess = () => {
+    setOpen(false);
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -22,7 +27,7 @@ export function LoginDialog({ children }: LoginDialogProps) {
           <DialogTitle>Sign In to Unlock Features</DialogTitle>
         </DialogHeader>
         <div className="mt-4">
-          <LoginForm />
+          <LoginForm onSuccess={handleLoginSuccess} />
         </div>
       </DialogContent>
     </Dialog>
