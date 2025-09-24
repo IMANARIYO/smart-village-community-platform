@@ -64,7 +64,7 @@ async function refreshToken(): Promise<string | null> {
 
     if (userId && role) {
       tokenStorage.setAuth(access, newRefresh, userId, role);
-      console.log("Tokens updated in sessionStorage!");
+
     }
 
     return access;
