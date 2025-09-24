@@ -55,13 +55,58 @@ export default function TeamCard({
     const [activeTab, setActiveTab] = useState<'about' | 'skills' | 'connect'>('about')
     const [isExpanded, setIsExpanded] = useState(false)
 
+    const createEmailUrl = (email: string, name: string, role: string) => {
+        const subject = encodeURIComponent(`Hello ${name} - Smart Village Platform Inquiry`);
+        const body = encodeURIComponent(
+            `Hello ${name},\n\n` +
+            `I hope this message finds you well. I came across your profile on the Smart Village Platform and was impressed by your work as ${role}.\n\n` +
+            `I would like to connect with you regarding:\n` +
+            `- [Please specify your inquiry here]\n\n` +
+            `Best regards,\n` +
+            `[Your name]\n\n` +
+            `---\n` +
+            `This message was sent via Smart Village Platform`
+        );
+        return `mailto:${email}?subject=${subject}&body=${body}`;
+    };
+
     const contactLinks = [
-        { url: email ? `mailto:${email}` : undefined, label: "Email", icon: Mail },
-        { url: phone ? `tel:${phone}` : undefined, label: "Call", icon: Phone },
-        { url: linkedin, label: "LinkedIn", icon: Linkedin },
-        { url: github, label: "GitHub", icon: Github },
-        { url: website, label: "Website", icon: Globe },
-        { url: twitter, label: "Twitter", icon: Twitter },
+        { 
+            url: email ? createEmailUrl(email, name, role) : undefined, 
+            label: "Email", 
+            icon: Mail,
+            description: email
+        },
+        { 
+            url: phone ? `tel:${phone}` : undefined, 
+            label: "Call", 
+            icon: Phone,
+            description: phone
+        },
+        { 
+            url: linkedin, 
+            label: "LinkedIn", 
+            icon: Linkedin,
+            description: linkedin?.replace('https://', '')
+        },
+        { 
+            url: github, 
+            label: "GitHub", 
+            icon: Github,
+            description: github?.replace('https://', '')
+        },
+        { 
+            url: website, 
+            label: "Website", 
+            icon: Globe,
+            description: website?.replace('https://', '')
+        },
+        { 
+            url: twitter, 
+            label: "Twitter", 
+            icon: Twitter,
+            description: twitter?.replace('https://', '')
+        },
     ].filter((link) => link.url)
 
     const getInitials = (name: string) =>
@@ -279,7 +324,7 @@ export default function TeamCard({
                                                     <div className="text-left">
                                                         <div className="text-xs font-medium">{link.label}</div>
                                                         <div className="text-xs text-muted-foreground truncate">
-                                                            {link.url?.replace('mailto:', '').replace('tel:', '').replace('https://', '')}
+                                                            {link.description}
                                                         </div>
                                                     </div>
                                                 </a>
