@@ -67,7 +67,18 @@ export default function TeamCard({
     };
 
     // Parse skills and certifications
-    const parsedSkills: Skill[] = parseArrayData(skills as string[] | string).map(skill => ({ name: skill }));
+    const parsedSkills: Skill[] = (() => {
+        if (!skills) return [];
+        if (Array.isArray(skills)) {
+            return skills.map(skill => 
+                typeof skill === 'string' ? { name: skill } : skill
+            );
+        }
+        if (typeof skills === 'string') {
+            return parseArrayData(skills).map(skill => ({ name: skill }));
+        }
+        return [];
+    })();
     const parsedCertifications: string[] = parseArrayData(certifications);
 
     const createEmailUrl = (email: string, name: string, role: string) => {
@@ -138,25 +149,25 @@ export default function TeamCard({
     ]
 
     return (
-        <Card className="h-[480px] w-full hover:shadow-xl transition-all duration-300 border border-muted/20 rounded-xl overflow-hidden group flex flex-col bg-primary-light">
+        <Card className="h-[480px] sm:h-[520px] w-full max-w-sm mx-auto hover:shadow-xl transition-all duration-300 border rounded-xl overflow-hidden group flex flex-col" style={{ backgroundColor: "var(--sv-primary-light)", borderColor: "var(--sv-primary-normal)" }}>
             {/* Compact Header */}
-            <CardHeader className="bg-gradient-to-br from-primary-light/5 to-primary-darker/10 py-4 flex-shrink-0">
-                <div className="flex items-center gap-4">
+            <CardHeader className="py-3 sm:py-4 px-3 sm:px-4 flex-shrink-0" style={{ background: "linear-gradient(135deg, var(--sv-primary-light) 0%, var(--sv-primary-normal) 100%)" }}>
+                <div className="flex items-center gap-2 sm:gap-4">
                     {/* Avatar */}
-                    <Avatar className="w-20 h-20 shadow-lg border-2 border-white group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                    <Avatar className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg border-2 border-white group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
                         <AvatarImage src={photoUrl || "/placeholder.svg"} alt={name} />
-                        <AvatarFallback className="text-lg font-bold bg-primary/20 text-primary">
+                        <AvatarFallback className="text-sm sm:text-lg font-bold text-white" style={{ backgroundColor: "var(--sv-primary-normal)" }}>
                             {getInitials(name)}
                         </AvatarFallback>
                     </Avatar>
 
                     {/* Basic Info */}
                     <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-foreground truncate">{name}</h3>
-                        <p className="text-primary font-semibold text-sm  w-[80%]">{role}</p>
+                        <h3 className="text-sm sm:text-lg font-bold text-white truncate">{name}</h3>
+                        <p className="text-xs sm:text-sm font-semibold text-white/90 leading-tight">{role}</p>
                         {location && (
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                <MapPin className="w-3 h-3" />
+                            <div className="flex items-center gap-1 text-xs text-white/70 mt-1">
+                                <MapPin className="w-3 h-3 flex-shrink-0" />
                                 <span className="truncate">{location}</span>
                             </div>
                         )}
@@ -164,25 +175,25 @@ export default function TeamCard({
 
                     {/* Quick Stats */}
                     <div className="text-center flex-shrink-0">
-                        <div className="text-lg font-bold text-primary">
+                        <div className="text-lg sm:text-xl font-bold text-white">
                             {parsedSkills?.length || 0}
                         </div>
-                        <div className="text-xs text-muted-foreground">Skills</div>
+                        <div className="text-xs text-white/70">Skills</div>
                     </div>
                 </div>
 
                 {/* Tagline - Expandable */}
                 {tagline && (
-                    <div className="mt-3 border-t border-white/20 pt-3">
+                    <div className="mt-2 sm:mt-3 border-t border-white/20 pt-2 sm:pt-3">
                         <div className="flex items-start gap-2">
-                            <Quote className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
-                            <p className={`text-xs italic text-muted-foreground transition-all duration-300 ${isExpanded ? '' : 'line-clamp-3'
+                            <Quote className="w-3 h-3 text-white mt-0.5 flex-shrink-0" />
+                            <p className={`text-xs italic text-white/80 transition-all duration-300 leading-relaxed ${isExpanded ? '' : 'line-clamp-2 sm:line-clamp-3'
                                 }`}>
                                 {tagline}
                             </p>
                             <button
                                 onClick={() => setIsExpanded(!isExpanded)}
-                                className="text-primary hover:text-primary/80 transition-colors flex-shrink-0"
+                                className="text-white hover:text-white/80 transition-colors flex-shrink-0"
                             >
                                 {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                             </button>
@@ -192,65 +203,66 @@ export default function TeamCard({
             </CardHeader>
 
             {/* Tab Navigation */}
-            <div className="flex border-b border-muted/20 bg-muted/5 flex-shrink-0">
+            <div className="flex border-b flex-shrink-0" style={{ borderColor: "var(--sv-primary-light)", backgroundColor: "var(--sv-secondary-light)" }}>
                 {tabs.map((tab) => {
                     const IconComponent = tab.icon
+                    const isActive = activeTab === tab.id;
                     return (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`flex-1 flex items-center justify-center gap-2 py-3 text-xs font-medium transition-all duration-200 ${activeTab === tab.id
-                                ? 'bg-primary text-primary-foreground'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-muted/20'
-                                }`}
+                            className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 text-xs font-medium transition-all duration-200 ${
+                                isActive ? 'text-white' : 'text-muted-foreground hover:text-foreground'
+                            }`}
+                            style={isActive ? { backgroundColor: "var(--sv-primary-normal)" } : { backgroundColor: "transparent" }}
                         >
-                            <IconComponent className="w-4 h-4" />
-                            <span className="hidden sm:inline">{tab.label}</span>
+                            <IconComponent className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden xs:inline sm:inline text-xs">{tab.label}</span>
                         </button>
                     )
                 })}
             </div>
 
             {/* Tab Content */}
-            <CardContent className="flex-1 p-4 overflow-y-auto">
+            <CardContent className="flex-1 p-3 sm:p-4 overflow-y-auto bg-white">
                 {activeTab === 'about' && (
                     <div className="space-y-4 h-full">
                         {/* Education */}
                         {(degree || university) && (
-                            <div className="bg-muted/10 rounded-lg p-3">
+                            <div className="rounded-lg p-2 sm:p-3" style={{ backgroundColor: "var(--sv-secondary-light)" }}>
                                 <div className="flex items-center gap-2 mb-2">
-                                    <GraduationCap className="w-4 h-4 text-primary" />
-                                    <h4 className="text-sm font-semibold">Education</h4>
+                                    <GraduationCap className="w-4 h-4" style={{ color: "var(--sv-primary-normal)" }} />
+                                    <h4 className="text-xs sm:text-sm font-semibold" style={{ color: "var(--sv-primary-normal)" }}>Education</h4>
                                 </div>
                                 <div className="text-xs space-y-1">
-                                    {degree && <p className="font-medium">{degree}</p>}
+                                    {degree && <p className="font-medium text-foreground">{degree}</p>}
                                     {university && <p className="text-muted-foreground">{university}</p>}
                                 </div>
                             </div>
                         )}
 
                         {/* Bio */}
-                        <div className="bg-muted/10 rounded-lg p-3">
+                        <div className="rounded-lg p-2 sm:p-3" style={{ backgroundColor: "var(--sv-secondary-light)" }}>
                             <div className="flex items-center gap-2 mb-2">
-                                <User className="w-4 h-4 text-primary" />
-                                <h4 className="text-sm font-semibold">About</h4>
+                                <User className="w-4 h-4" style={{ color: "var(--sv-primary-normal)" }} />
+                                <h4 className="text-xs sm:text-sm font-semibold" style={{ color: "var(--sv-primary-normal)" }}>About</h4>
                             </div>
                             <p className="text-xs text-muted-foreground leading-relaxed">{bio}</p>
                         </div>
 
                         {/* Certifications */}
                         {parsedCertifications && parsedCertifications.length > 0 && (
-                            <div className="bg-secondary/10 rounded-lg p-3">
+                            <div className="rounded-lg p-2 sm:p-3" style={{ backgroundColor: "var(--sv-accent-light)" }}>
                                 <div className="flex items-center gap-2 mb-2">
-                                    <Trophy className="w-4 h-4 text-primary" />
-                                    <h4 className="text-sm font-semibold">Certifications</h4>
+                                    <Trophy className="w-4 h-4" style={{ color: "var(--sv-accent-normal)" }} />
+                                    <h4 className="text-xs sm:text-sm font-semibold" style={{ color: "var(--sv-accent-normal)" }}>Certifications</h4>
                                 </div>
                                 <div className="flex flex-wrap gap-1">
                                     {parsedCertifications.map((cert, index) => (
                                         <Badge
                                             key={index}
-                                            variant="secondary"
-                                            className="text-xs px-2 py-1 rounded-full"
+                                            className="text-xs px-2 py-1 rounded-full text-white"
+                                            style={{ backgroundColor: "var(--sv-accent-normal)" }}
                                         >
                                             {cert}
                                         </Badge>
@@ -266,35 +278,31 @@ export default function TeamCard({
                         {parsedSkills && parsedSkills.length > 0 ? (
                             <>
                                 <div className="flex items-center gap-2 mb-3">
-                                    <Zap className="w-4 h-4 text-primary" />
-                                    <h4 className="text-sm font-semibold">Technical Skills</h4>
-                                    <Badge variant="outline" className="text-xs">
+                                    <Zap className="w-4 h-4" style={{ color: "var(--sv-primary-normal)" }} />
+                                    <h4 className="text-xs sm:text-sm font-semibold" style={{ color: "var(--sv-primary-normal)" }}>Technical Skills</h4>
+                                    <Badge className="text-xs text-white" style={{ backgroundColor: "var(--sv-primary-normal)" }}>
                                         {parsedSkills.length}
                                     </Badge>
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                    {parsedSkills.map((skill, index) => {
-                                        const IconComponent = skill.icon
-                                        return (
-                                            <div
-                                                key={index}
-                                                className="flex items-center gap-2 p-2 rounded-lg bg-muted/10 hover:bg-primary/10 transition-colors group/skill"
-                                            >
-                                                {IconComponent && (
-                                                    <span className="text-primary group-hover/skill:scale-110 transition-transform">
-                                                        {IconComponent}
-                                                    </span>
-                                                )}
-                                                <span className="text-xs font-medium truncate">{skill.name}</span>
-                                            </div>
-                                        )
-                                    })}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    {parsedSkills.map((skill, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex items-center gap-2 p-2 rounded-lg transition-colors group/skill hover:shadow-sm"
+                                            style={{ backgroundColor: "var(--sv-secondary-light)" }}
+                                        >
+                                            <Code className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" style={{ color: "var(--sv-primary-normal)" }} />
+                                            <span className="text-xs font-medium truncate text-foreground">
+                                                {typeof skill === 'string' ? skill : skill.name}
+                                            </span>
+                                        </div>
+                                    ))}
                                 </div>
                             </>
                         ) : (
                             <div className="flex items-center justify-center h-full text-muted-foreground">
                                 <div className="text-center">
-                                    <Code className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                    <Code className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 opacity-50" />
                                     <p className="text-xs">No skills listed</p>
                                 </div>
                             </div>
@@ -307,8 +315,8 @@ export default function TeamCard({
                         {contactLinks.length > 0 ? (
                             <>
                                 <div className="flex items-center gap-2 mb-3">
-                                    <Globe className="w-4 h-4 text-primary" />
-                                    <h4 className="text-sm font-semibold">Get in Touch</h4>
+                                    <Globe className="w-4 h-4" style={{ color: "var(--sv-primary-normal)" }} />
+                                    <h4 className="text-xs sm:text-sm font-semibold" style={{ color: "var(--sv-primary-normal)" }}>Get in Touch</h4>
                                 </div>
                                 <div className="grid grid-cols-1 gap-2">
                                     {contactLinks.map((link, index) => {
@@ -319,7 +327,17 @@ export default function TeamCard({
                                                 variant="outline"
                                                 size="sm"
                                                 asChild
-                                                className="w-full justify-start gap-3 hover:bg-primary hover:text-primary-foreground transition-all duration-200 h-auto py-3"
+                                                className="w-full justify-start gap-2 sm:gap-3 transition-all duration-200 h-auto py-2 sm:py-3 text-xs hover:text-white"
+                                                style={{ 
+                                                    borderColor: "var(--sv-primary-normal)",
+                                                    '--hover-bg': "var(--sv-primary-normal)"
+                                                } as React.CSSProperties & { '--hover-bg': string }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = "var(--sv-primary-normal)";
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = "transparent";
+                                                }}
                                             >
                                                 <a
                                                     href={link.url}
@@ -333,10 +351,10 @@ export default function TeamCard({
                                                             ? "noopener noreferrer"
                                                             : undefined
                                                     }
-                                                    className="flex items-center gap-3 w-full"
+                                                    className="flex items-center gap-2 sm:gap-3 w-full"
                                                 >
-                                                    <IconComponent className="w-4 h-4 flex-shrink-0" />
-                                                    <div className="text-left">
+                                                    <IconComponent className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                                                    <div className="text-left flex-1 min-w-0">
                                                         <div className="text-xs font-medium">{link.label}</div>
                                                         <div className="text-xs text-muted-foreground truncate">
                                                             {link.description}
@@ -351,7 +369,7 @@ export default function TeamCard({
                         ) : (
                             <div className="flex items-center justify-center h-full text-muted-foreground">
                                 <div className="text-center">
-                                    <Globe className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                    <Globe className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 opacity-50" />
                                     <p className="text-xs">No contact info available</p>
                                 </div>
                             </div>
