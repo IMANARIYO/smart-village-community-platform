@@ -33,7 +33,7 @@ const VillageNewsPage = () => {
 
                 if (res.success) {
 
-                    setNewsItems(res.data);
+                    setNewsItems(res.data.events);
                 }
             } catch (error) {
                 console.error("Failed to fetch village events:", error);

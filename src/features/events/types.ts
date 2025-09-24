@@ -191,12 +191,10 @@ export interface VillageEventsApiMeta {
 }
 
 // Actual village events API response
-export interface VillageEventsApiResponse {
-  success: boolean;
-  message: string;
-  data: VillageEvent[];
-  meta: VillageEventsApiMeta;
-}
+export type VillageEventsApiResponse = ApiResponse<{
+  village: Village;
+  events: VillageEvent[];
+}>;
 
 export type GetEventByIdApiResponse = ApiResponse<Event>;
 export type CreateOrUpdateEventApiResponse = ApiResponse<Event>;
