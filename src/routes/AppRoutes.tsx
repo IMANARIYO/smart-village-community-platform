@@ -30,6 +30,8 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import ParticipationsPage from '@/features/participations/pages/ParticipationsPage';
 import LoginPage from '@/features/auth/pages/Loginpage';
 import { ForgotPasswordPage, ResetPasswordPage, SignupPage } from '@/features/auth/pages';
+import { ContactsManagementPage } from '@/features/contacts';
+import { TeamManagementPage } from '@/features/our-team';
 
 
 
@@ -91,7 +93,9 @@ export default function AppRouter() {
           <Route path="emergency" element={<ComingSoon />} />
           <Route path="offline" element={<ComingSoon />} />
           <Route path="test" element={<ParticipationsPage />} />
-          <Route path="test1" element={<LeadersPage />} />
+          <Route path="leaders" element={<LeadersPage />} />
+          <Route path="contactus" element={<ContactsManagementPage />} />
+          <Route path="our-team" element={<TeamManagementPage />} />
           <Route index element={<Navigate to="overview" replace />} />
         </Route>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

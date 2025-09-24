@@ -29,6 +29,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { sidebarEntries, type NavigationItem, type SidebarEntry } from '../utils/sideBarLinks';
 
+import { useAuthStore } from '@/features/auth/authStore';
+
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -51,18 +53,17 @@ const ModernSidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
-
+  const { logout } = useAuthStore();
   const handleNavigation = (path: string) => {
     navigate(path);
     if (variant === 'mobile') onClose();
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    sessionStorage.clear();
+
+    logout();
     toast.success('Logged out successfully');
-    navigate('/auth/login');
+    navigate('/');
     if (variant === 'mobile') onClose();
   };
 
@@ -112,8 +113,8 @@ const ModernSidebar: React.FC<SidebarProps> = ({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className={`w-full flex items-center justify-center p-3 rounded-xl transition-all duration-200 group ${activeInGroup
-                    ? 'bg-primary-normal text-white shadow-lg'
-                    : 'text-neutral-normal hover:bg-primary-light hover:text-primary-dark'
+                  ? 'bg-primary-normal text-white shadow-lg'
+                  : 'text-neutral-normal hover:bg-primary-light hover:text-primary-dark'
                   }`}>
                   <item.icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
                 </button>
@@ -124,8 +125,8 @@ const ModernSidebar: React.FC<SidebarProps> = ({
                     key={subItem.href}
                     onClick={() => handleNavigation(subItem.href)}
                     className={`cursor-pointer transition-colors ${isActive(subItem.href)
-                        ? 'bg-primary-light text-primary-dark'
-                        : 'hover:bg-primary-light'
+                      ? 'bg-primary-light text-primary-dark'
+                      : 'hover:bg-primary-light'
                       }`}
                   >
                     {subItem.name}
@@ -155,8 +156,8 @@ const ModernSidebar: React.FC<SidebarProps> = ({
 
           {expanded && (state === 'expanded' || variant === 'mobile') && (
             <ul className={`mt-2 space-y-1 ${variant === 'mobile'
-                ? 'pl-4 border-l-2 border-primary-light ml-4'
-                : 'pl-6 border-l-2 border-primary-light ml-2'
+              ? 'pl-4 border-l-2 border-primary-light ml-4'
+              : 'pl-6 border-l-2 border-primary-light ml-2'
               }`}>
               {item.items.map(child => renderItem(child, level + 1))}
             </ul>

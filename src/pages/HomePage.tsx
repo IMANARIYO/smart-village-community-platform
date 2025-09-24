@@ -8,7 +8,7 @@ const AboutPage = React.lazy(() => import("../features/homePages/components/Abou
 const PlatformFeatures = React.lazy(() => import("../features/homePages/components/PlatformFeatures"));
 const CTASection = React.lazy(() => import("../features/homePages/components/CTASectionPage"));
 const Contact = React.lazy(() => import("../features/contacts/pages/ContactPage"));
-const MeetOurTeam = React.lazy(() => import("../features/our-team/components/meet-our-team"));
+const MeetOurTeam = React.lazy(() => import("../features/our-team/pages/meet-our-team-page"));
 const ease: Easing = [0.42, 0, 0.58, 1];
 const fadeUp: Variants = {
     hidden: { opacity: 0, y: 40 },

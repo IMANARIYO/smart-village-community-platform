@@ -87,7 +87,7 @@ const Header: React.FC<HeaderProps> = ({
                         <NotificationDropdown />
                     )}
 
-                    {/* User Profile */}
+
                     <UserProfilePopover />
                 </div>
             </div>

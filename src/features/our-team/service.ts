@@ -1,11 +1,5 @@
+import { ApiResponse } from "@/types";
 import api from "@/utils/api";
-
-interface PaginatedApiResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
 
 export interface TeamMember {
   id: number;
@@ -71,10 +65,11 @@ const TeamService = {
   listTeamMembers: async (
     page = 1,
     limit = 10
-  ): Promise<PaginatedApiResponse<TeamMember>> => {
+  ): Promise<ApiResponse<TeamMember[]>> => {
     const res = await api.get("/team/", {
       params: { page, limit },
     });
+
     return res.data;
   },
 

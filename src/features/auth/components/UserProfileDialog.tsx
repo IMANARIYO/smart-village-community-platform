@@ -5,12 +5,13 @@ import type { UserProfile } from "../authTypes";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { LoginForm } from "./login-form";
-import { ChevronDown, LogIn, User, Phone, IdCard, ShieldCheck, MapPin } from "lucide-react";
+import { ChevronDown, LogIn, User, Phone, IdCard, ShieldCheck, MapPin, LayoutDashboardIcon } from "lucide-react";
 import { useLanguage } from "@/features/i18n/useLanguage";
 import { NavBartranslations } from "@/components/NavBarTranslation";
 import api from "@/utils/api";
 import { UserProfileStorage } from "../utils/UserProfileStorage";
 import { tokenStorage } from "../utils/tokenStorage";
+import { Link } from "react-router-dom";
 
 export function UserProfilePopover() {
     const [user, setUser] = useState<UserProfile | null>(null);
@@ -141,6 +142,13 @@ export function UserProfilePopover() {
                             <a href="#profile" className="flex items-center px-4 py-2 text-sm text-card-foreground hover:bg-muted rounded-md">
                                 <User className="w-4 h-4 mr-3 text-muted-foreground" /> {t.viewProfile}
                             </a>
+
+                            <Link to="/dashboard" className="flex items-center px-4 py-2 text-sm text-card-foreground hover:bg-muted rounded-md">
+                                <LayoutDashboardIcon className="w-4 h-4 mr-3 text-muted-foreground" />
+                                dashbaord
+                                {/* {t.} */}
+
+                            </Link>
                             <a href="#settings" className="flex items-center px-4 py-2 text-sm text-card-foreground hover:bg-muted rounded-md">
                                 <div className="w-4 h-4 mr-3 text-muted-foreground">⚙️</div> {t.settings}
                             </a>

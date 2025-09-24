@@ -14,6 +14,7 @@ interface AuthState {
   user: User | null;
   setAuthenticated: (authenticated: boolean) => void;
   setUser: (user: User) => void;
+
   logout: () => void;
   checkAuth: () => void;
   initializeAuth: () => Promise<void>; // ✅ make it async
@@ -30,6 +31,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     tokenStorage.clearAuth();
     UserProfileStorage.clearUserProfile();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    sessionStorage.clear();
     set({ isAuthenticated: false, user: null });
   },
 

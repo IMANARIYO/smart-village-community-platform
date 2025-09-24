@@ -13,6 +13,7 @@ import {
   Info,
   HelpCircle,
   FileText,
+  MessageSquare,
 } from "lucide-react";
 
 export interface SidebarLink {
@@ -164,6 +165,31 @@ export const sidebarEntries: SidebarEntry[] = [
       { name: "Essential Contacts", href: "/dashboard/contacts", icon: Phone },
     ],
   },
+
+  {
+    type: "group",
+    name: "admin system managemmen",
+    icon: Users,
+    items: [
+      {
+        name: "Village Leaders management",
+        href: "/dashboard/leaders",
+        icon: Users,
+      },
+      {
+        name: "contact us meassege management",
+        href: "/dashboard/contactus",
+        icon: MessageSquare,
+      },
+
+      {
+        name: "team  management",
+        href: "/dashboard/our-team",
+        icon: Users,
+      },
+    ],
+  },
+
   {
     type: "group",
     name: "Engagement & Volunteering",

@@ -28,11 +28,13 @@ export function TeamManagementPage() {
     setLoading(true);
     try {
       const response = await TeamService.listTeamMembers(page, limit);
-      setTeamMembers(response.results);
+
+
+      setTeamMembers(response.data);
       setPagination({
         page,
         limit,
-        total: response.count,
+        total: response.meta.total,
       });
     } catch (error) {
       toast.error(extractErrorMessage(error, "Failed to fetch team members"));
@@ -57,7 +59,7 @@ export function TeamManagementPage() {
 
   const handleDeleteMember = async (id: number) => {
     if (!confirm("Are you sure you want to delete this team member?")) return;
-    
+
     try {
       await TeamService.deleteTeamMember(id);
       toast.success("Team member deleted successfully");
@@ -89,8 +91,8 @@ export function TeamManagementPage() {
       render: (member: TeamMember) => (
         <div className="w-10 h-10 rounded-full overflow-hidden bg-sv-primary-light">
           {member.photo_url ? (
-            <img 
-              src={member.photo_url} 
+            <img
+              src={member.photo_url}
               alt={member.name}
               className="w-full h-full object-cover"
             />
