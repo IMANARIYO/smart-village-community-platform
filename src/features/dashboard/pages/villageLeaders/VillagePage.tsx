@@ -10,11 +10,14 @@ import { Link, useParams } from 'react-router-dom';
 
 import VillageService from '../../../news/newsServices';
 import type { GetVillageNewsApiResponse } from '../../../news/newsTypes';
+import EventService from '../../../events/eventService';
+import type { VillageEventsApiResponse } from '../../../events/types';
 import { VolunteeringEventsListCard } from '@/features/volunteering/components/VolunteeringEventsListCard';
 import { Button } from '@/components/ui/button';
 import { useVisitedVillage } from '@/features/homePages/context/VillageContext';
 import { LoginDialog } from '../../../auth/components/LoginDialog';
 import { tokenStorage } from '@/features/auth/utils/tokenStorage';
+import { extractErrorMessage } from '@/utils/extractErrorMessage';
 
 interface StatCardProps {
     icon: React.ReactNode;
@@ -122,6 +125,8 @@ export default function VillagePage() {
     const { setVisitedVillage } = useVisitedVillage();
     const { villageId } = useParams<{ villageId: string }>();
     const [villageData, setVillageData] = useState<GetVillageNewsApiResponse | null>(null);
+    const [eventsData, setEventsData] = useState<VillageEventsApiResponse | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = tokenStorage.getAccessToken();
@@ -136,23 +141,36 @@ export default function VillagePage() {
 
     useEffect(() => {
         const fetchVillageData = async () => {
-            if (!villageId)
-                return
-            try {
-                const res = await VillageService.getVillageNews(villageId);
+            if (!villageId) return;
 
-                if (res.success) setVillageData(res.data);
-                setVisitedVillage({
-                    village_id: res.data.village.village_id,
-                    village: res.data.village.village,
-                    cell: res.data.village.cell,
-                    sector: res.data.village.sector,
-                    district: res.data.village.district,
-                    province: res.data.village.province,
-                    village_leader: res.data.village.village_leader,
-                });
+            try {
+                setLoading(true);
+
+                const [newsRes, eventsRes] = await Promise.all([
+                    VillageService.getVillageNews(villageId),
+                    EventService.getVillageEvents(villageId)
+                ]);
+
+                if (newsRes.success) {
+                    setVillageData(newsRes.data);
+                    setVisitedVillage({
+                        village_id: newsRes.data.village.village_id,
+                        village: newsRes.data.village.village,
+                        cell: newsRes.data.village.cell,
+                        sector: newsRes.data.village.sector,
+                        district: newsRes.data.village.district,
+                        province: newsRes.data.village.province,
+                        village_leader: newsRes.data.village.village_leader,
+                    });
+                }
+
+                if (eventsRes.success) {
+                    setEventsData(eventsRes);
+                }
             } catch (error) {
-                console.error("Failed to fetch village news:", error);
+                console.error("Failed to fetch village data:", extractErrorMessage(error));
+            } finally {
+                setLoading(false);
             }
         };
         fetchVillageData();
@@ -160,81 +178,22 @@ export default function VillagePage() {
     }, [villageId]);
 
     const stats = [
+
         { icon: <Users className="w-6 h-6" />, value: `${villageData?.total_residents ?? 0}`, label: "Residents", color: "bg-blue-600" },
-        { icon: <Bell className="w-6 h-6" />, value: "12", label: "Announcements", color: "bg-green-600" },
-        { icon: <Calendar className="w-6 h-6" />, value: `${villageData?.total_events}`, label: "Events", color: "bg-yellow-600" },
+        { icon: <Bell className="w-6 h-6" />, value: `${villageData?.total_volunteering_events ?? 0}`, label: "volunteering events", color: "bg-green-600" },
+        { icon: <Calendar className="w-6 h-6" />, value: `${eventsData?.data?.events?.length ?? 0}`, label: "Events", color: "bg-yellow-600" },
         { icon: <Shield className="w-6 h-6" />, value: "Excellent", label: "Safety Level", color: "bg-purple-600" }
     ];
 
-    const announcements = [
-        {
-            "title": "⚠️ Urgent Community Announcement: Water Supply Maintenance and Infrastructure Upgrade for the Entire Village and Surrounding Areas Covering Multiple Districts, Scheduled Work Will Impact Residents, Businesses, Schools, and Local Health Centers – Please Read Carefully and Prepare in Advance",
-            "description": "Dear residents, this is to inform you that due to an extensive water supply infrastructure upgrade project, scheduled maintenance will occur on Sunday, 3rd August 2025, starting from 9:00 AM and continuing until approximately 3:00 PM. During this time, water services will be temporarily suspended across the entire village and may extend to neighboring sectors. The works include replacement of old underground pipes, installation of new filtration units, and reinforcement of the main distribution channels. All residents are advised to store adequate water in advance for drinking, cooking, sanitation, and other essential needs. Businesses and schools are also advised to make contingency plans. The village leadership, engineers, and community representatives will be coordinating to ensure minimum disruption. Emergency water tanks will be available at designated collection points: the village center, near the health clinic, and next to the primary school. Residents with special medical conditions requiring water support are advised to contact the village leader directly or call the emergency hotline. We sincerely apologize for the inconvenience caused and greatly appreciate your cooperation in this important community development project. Please stay updated through official notices, WhatsApp groups, and the community radio broadcast.",
-            "date": "2025-08-03",
-            "views": "156 Views"
-        }
-        ,
-        {
-            "title": "Water Supply Maintenance",
-            "description": "Scheduled water maintenance from 9 AM to 3 PM on Sunday. Please store water in advance.",
-            "date": "2025-08-03",
-            "views": "156 Views"
-        },
-        {
-            "title": "Community Clean-Up Day",
-            "description": "Join us this Saturday for a village clean-up event. Bring gloves and trash bags to support.",
-            "date": "2025-08-10",
-            "views": "98 Views"
-        },
-        {
-            "title": "Free Medical Checkup",
-            "description": "Local doctors will provide free checkups and consultations for all residents.",
-            "date": "2025-09-01",
-            "views": "210 Views"
-        },
-        {
-            "title": "Youth Skills Training Workshop",
-            "description": "A 3-day workshop on entrepreneurship and digital skills for the youth of the community.",
-            "date": "2025-09-15",
-            "views": "75 Views"
-        },
-        {
-            "title": "Cultural Festival 2025",
-            "description": "Annual celebration with music, dance, and food. Families are invited to attend.",
-            "date": "2025-10-05",
-            "views": "320 Views"
-        },
-        {
-            "title": "Road Safety Awareness",
-            "description": "Police officers will lead a session on road safety rules and preventive measures.",
-            "date": "2025-10-12",
-            "views": "54 Views"
-        },
-        {
-            "title": "Tree Planting Campaign",
-            "description": "Environmental group will plant trees near the riverbank to prevent erosion. Volunteers needed.",
-            "date": "2025-11-02",
-            "views": "180 Views"
-        },
-        {
-            "title": "Blood Donation Drive",
-            "description": "Village health center organizes blood donation to save lives. All healthy residents encouraged.",
-            "date": "2025-11-15",
-            "views": "142 Views"
-        },
-        {
-            "title": "Village Security Meeting",
-            "description": "Meeting with local authorities to discuss safety and emergency response strategies.",
-            "date": "2025-11-22",
-            "views": "87 Views"
-        },
-        {
-            "title": "End of Year Celebration",
-            "description": "Closing ceremony for 2025 with cultural performances, awards, and fireworks.",
-            "date": "2025-12-30",
-            "views": "410 Views"
-        }
-    ];
+    const announcements = eventsData?.data?.events
+        ?.filter(event => event.type === 'Announcement' || event.type === 'Alert')
+        ?.slice(0, 3)
+        ?.map(event => ({
+            title: event.title,
+            description: event.description,
+            date: new Date(event.date).toLocaleDateString(),
+            views: "0 Views"
+        })) || [];
 
 
 
@@ -347,9 +306,15 @@ export default function VillagePage() {
                                 </CardHeader>
                                 <Separator className="!w-[94%] bg-primary-light-active mx-auto !h-0.5" />
                                 <CardContent className="space-y-4">
-                                    {announcements.map((announcement, index) => (
-                                        <AnnouncementCard key={index} {...announcement} />
-                                    ))}
+                                    {loading ? (
+                                        <div className="text-center py-4 text-muted-foreground">Loading announcements...</div>
+                                    ) : announcements.length > 0 ? (
+                                        announcements.map((announcement, index) => (
+                                            <AnnouncementCard key={index} {...announcement} />
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-4 text-muted-foreground">No announcements available</div>
+                                    )}
                                 </CardContent>
                             </Card>
 

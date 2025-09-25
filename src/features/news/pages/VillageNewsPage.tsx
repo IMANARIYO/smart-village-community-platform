@@ -2,25 +2,24 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import EventService from '../../events/eventService';
-import { LanguageSelector } from '../../../components/LanguageSelector';
+
 import { VillageEvent } from '@/features/events/types';
 import { Loading } from '@/components/common/Loading';
 import { NewsCard } from '../components/NewsCard';
 import { NewsFilters } from '../components/NewsFilters';
+import { Village } from '@/types';
+
 
 
 
 const VillageNewsPage = () => {
 
-
+    const [village, setVillage] = useState<Village | null>(null)
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [newsItems, setNewsItems] = useState<VillageEvent[]>([]);
     const [sortBy, setSortBy] = useState("created_at");
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-
-
-
     const [loading, setLoading] = useState(false);
     const { villageId } = useParams<{ villageId: string }>();
     useEffect(() => {
@@ -34,6 +33,7 @@ const VillageNewsPage = () => {
                 if (res.success) {
 
                     setNewsItems(res.data.events);
+                    setVillage(res.data.village)
                 }
             } catch (error) {
                 console.error("Failed to fetch village events:", error);
@@ -87,28 +87,7 @@ const VillageNewsPage = () => {
         return <Loading />
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <header className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
-                        <div className="flex items-center">
-                            <h1 className="text-xl font-bold text-gray-900">Nyarucyamo II</h1>
-                        </div>
-                        <nav className="hidden md:flex space-x-8">
-                            <a href="#" className="text-gray-700 hover:text-gray-900">Home</a>
-                            <a href="#" className="text-green-600 font-medium">News</a>
-                            <a href="#" className="text-gray-700 hover:text-gray-900">Events</a>
-                            <a href="#" className="text-gray-700 hover:text-gray-900">Contacts</a>
-                        </nav>
-                        <div className="flex items-center space-x-4">
-                            <LanguageSelector />
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                                👤 Sign In
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+
 
             {/* Hero Section */}
             <section className="bg-green-600 py-16">
@@ -119,7 +98,7 @@ const VillageNewsPage = () => {
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                         Village News
                     </h1>
-                    <h2 className="text-xl text-white/90 mb-2">Nyarucyamo II Village</h2>
+                    <h2 className="text-xl text-white/90 mb-2">{village?.village}</h2>
                     <p className="text-white/80">Community Updates</p>
                 </div>
             </section>
